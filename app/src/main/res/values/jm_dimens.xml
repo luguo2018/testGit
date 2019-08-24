@@ -1,0 +1,37 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="jm_login_icon_width">20dp</dimen>
+    <dimen name="jm_login_icon_height">20dp</dimen>
+    <dimen name="jm_login_width">375dp</dimen>
+    <dimen name="jm_login_height">315dp</dimen>
+    <dimen name="jm_login_height_old">330dp</dimen>
+    <dimen name="jm_login_height_3">250dp</dimen>
+    <dimen name="jm_login_width_4">333dp</dimen>
+    <dimen name="jm_login_height_4">243dp</dimen>
+    <dimen name="jm_register_height_old">314dp</dimen>
+    <dimen name="jm_guest_height_old">287dp</dimen>
+    <dimen name="jm_auto_login_height">300dp</dimen>
+    <dimen name="jm_input_height">48dp</dimen>
+    <dimen name="jm_login_top_height">70dp</dimen>
+    <dimen name="jm_login_top_height_4">56dp</dimen>
+    <dimen name="jm_login_submit_margin_top">45dp</dimen>
+    <dimen name="jm_forget_text_margin_top">12dp</dimen>
+    <dimen name="jm_login_logo_width">30dp</dimen>
+    <dimen name="jm_login_logo_height">40dp</dimen>
+    <dimen name="jm_login_kefu_width">26dp</dimen>
+    <dimen name="jm_login_kefu_height">30dp</dimen>
+    <dimen name="jm_login_switch_width">60dp</dimen>
+    <dimen name="jm_login_switch_height">30dp</dimen>
+    <dimen name="jm_input_icon">30dp</dimen>
+    <dimen name="jm_input_icon_margin_right">8dp</dimen>
+    <dimen name="jm_float_icon_size">24dp</dimen>
+    <dimen name="jm_float_tip_size">10dp</dimen>
+    <dimen name="jm_exit_dialog_height">275dp</dimen>
+    <dimen name="jm_login_radius">12dp</dimen>
+    <dimen name="jm_webview_radius">12dp</dimen>
+    <dimen name="jm_notice_width">471dp</dimen>
+    <dimen name="jm_notice_height">314dp</dimen>
+    <dimen name="jm_notice_radius">8dp</dimen>
+    <dimen name="jm_pay_width">330dp</dimen>
+    <dimen name="jm_pay_height">330dp</dimen>
+</resources>

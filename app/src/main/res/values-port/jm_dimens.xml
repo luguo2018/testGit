@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="jm_login_width">334dp</dimen>
+    <dimen name="jm_login_height">378dp</dimen>
+    <dimen name="jm_login_height_old">378dp</dimen>
+    <dimen name="jm_register_height_old">314dp</dimen>
+    <dimen name="jm_guest_height_old">287dp</dimen>
+    <dimen name="jm_auto_login_height">300dp</dimen>
+    <dimen name="jm_exit_dialog_height">275dp</dimen>
+    <dimen name="jm_notice_width">338dp</dimen>
+    <dimen name="jm_notice_height">369dp</dimen>
+</resources>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/jmloginb"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/content_view"
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height_old"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/jm_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/moblie_bt_user"
+                android:textColor="@color/jmfont_black"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/ivkefu"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/jm_kefu" />
+
+            <TextView
+                android:id="@+id/tvversion"
+                android:layout_below="@+id/ivkefu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v1.0.1"
+                android:layout_alignParentRight="true"
+                android:textColor="#d5dad3"
+                android:textSize="10sp"
+                android:layout_marginRight="15dp"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="34dp" >
+
+                <RelativeLayout
+                    android:id="@+id/iphoe_bg"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp" >
+
+                    <TextView
+                        android:id="@+id/usertv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_text_msg"
+                        android:textColor="@color/jmfont_black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/usertv"
+                        android:background="@drawable/jm_userl" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/userpd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/iphoe_bg" >
+
+                    <EditText
+                        android:id="@+id/edit_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:gravity="center_vertical"
+                        android:hint="@string/user_edit_hint"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLength="22"
+                        android:nextFocusForward="@+id/edit_pwd"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textColorHint="#d5dad3"
+                        android:textSize="15sp" >
+                    </EditText>
+
+                    <ImageButton
+                        android:id="@+id/ibpulldown"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/jm_urpulldown" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.5"
+                android:background="#d6d6d6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="34dp" >
+
+                <RelativeLayout
+                    android:id="@+id/pwr"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp" >
+
+                    <TextView
+                        android:id="@+id/pwdtv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/user_text_pwd"
+                        android:textColor="@color/jmfont_black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/pwdtv"
+                        android:background="@drawable/jm_pwd" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/edit_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/pwr"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/user_edit_pwdhint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLength="22"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textColorHint="#d5dad3"
+                    android:textSize="15sp" >
+                </EditText>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.5"
+                android:background="#d6d6d6" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp" >
+
+            <TextView
+                android:id="@+id/tvforgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/user_forgot_msg"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/userloginbt"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@drawable/jmblues_btn_style"
+                android:gravity="center"
+                android:text="@string/moblie_bt_login"
+                android:textColor="@color/jmfont_white"
+                android:textSize="18sp" />
+
+            <FrameLayout
+                android:id="@+id/iphonebtlg"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/jm_cut_btn">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/jm_cut"
+                    android:text="@string/moblie_login_title"
+                    android:textColor="@color/jmfont_blues"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="25dp" >
+
+                <TextView
+                    android:id="@+id/tvvistor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/moblie_text_visitor"
+                    android:textColor="@color/jmfont_gray"
+                    android:textSize="15sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/ivregister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/moblie_text_register"
+                    android:textColor="@color/jmfont_gray"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

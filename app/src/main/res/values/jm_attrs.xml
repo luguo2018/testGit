@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CornerCompatView">
+        <attr name="jm_radius" format="dimension"/>
+    </declare-styleable>
+</resources>

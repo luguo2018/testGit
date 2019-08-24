@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">极米sdk竖屏</string>
+    <string name="app_name_landscape">极米sdk横屏</string>
+    <string name="init">初始化</string>
+    <string name="login">登录</string>
+    <string name="logout">用户登出</string>
+    <string name="create_role">创建角色</string>
+    <string name="into_server">进入服务器</string>
+    <string name="update_role">角色升级</string>
+    <string name="exit">退出</string>
+    <string name="recharge">充值</string>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="jmtransparent_background">#50000000</color>
+    <color name="jmfont_black">#000000</color>
+    <color name="jmfont_white">#ffffff</color>
+    <color name="jmfont_blues">#2abfff</color>
+    <color name="jmfont_gray">#343434</color>
+    <color name="jmfont_red">#fe3837</color>
+    <color name="jm_other">#00000001</color>
+    <color name="jm_exit_dialog_bg">#94000000</color>
+    <color name="jm_dialog_line">#999999</color>
+    <color name="jm_transparent">@android:color/transparent</color>
+    <color name="jm_green">#2EBB45</color>
+    <color name="jm_green_light">#78D159</color>
+    <color name="jm_orange">#F88520</color>
+    <color name="jm_yellow">#FEDD21</color>
+    <color name="jm_auto_login_bg_4">#B2140C08</color>
+    <color name="jm_login_bg_4">#504A4A</color>
+    <color name="jm_input_layout_bg_4">#EBEBEB</color>
+    <color name="jm_float_text_4">#FFF9C8</color>
+</resources>

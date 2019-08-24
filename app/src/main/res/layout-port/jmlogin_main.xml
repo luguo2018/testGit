@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/jmloginb"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/content_view"
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height_old"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/jm_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/moblie_login_title"
+                android:textColor="@color/jmfont_black"
+                android:textSize="16sp" />
+             <ImageView
+                android:id="@+id/ivkefu"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/jm_kefu" />
+
+            <TextView
+                android:id="@+id/tvversion"
+                android:layout_below="@+id/ivkefu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="v1.0.1"
+                android:layout_alignParentRight="true"
+                android:textColor="#d5dad3"
+                android:textSize="10sp"
+                android:layout_marginRight="15dp"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="34dp" >
+
+                <RelativeLayout
+                    android:id="@+id/iphoe_bg"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp" >
+
+                    <TextView
+                        android:id="@+id/mobileidtv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="+86"
+                        android:textColor="@color/jmfont_black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/ivpull"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/mobileidtv"
+                        android:background="@drawable/jm_iphone" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/edit_iphone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/iphoe_bg"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/moblie_edit_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:nextFocusForward="@+id/edit_code"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textColorHint="#d5dad3"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.5"
+                android:background="#d6d6d6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="34dp" >
+
+                <RelativeLayout
+                    android:id="@+id/code_bg"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="5dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/moblie_text_msg"
+                        android:textColor="@color/jmfont_black"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/edit_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/code_bg"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/moblie_edit_code_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="15"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textColorHint="#d5dad3"
+                    android:textSize="15sp" >
+                </EditText>
+
+                <Button
+                    android:id="@+id/ibcode"
+                    android:layout_width="74dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/jm_blues_codebtn_style"
+                    android:text="@string/moblie_bt_code"
+                    android:textColor="@color/jmfont_white"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.5"
+                android:background="#d6d6d6" />
+        </LinearLayout>
+         <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp" >
+
+            <TextView
+                android:id="@+id/tvforgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="5sp"
+                android:visibility="invisible"
+                android:text="@string/user_forgot_msg"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/mobilebt"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@drawable/jmblues_btn_style"
+                android:padding="5sp"
+                android:text="@string/moblie_bt_login"
+                android:textColor="@color/jmfont_white"
+                android:textSize="18sp" />
+
+            <FrameLayout
+                android:id="@+id/userlgbt"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="13dp"
+                android:background="@drawable/jm_cut_btn">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:drawableLeft="@drawable/jm_cut"
+                    android:text="@string/moblie_bt_user"
+                    android:textColor="@color/jmfont_blues"
+                    android:textSize="18sp" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="25dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/tvvistor"
+                    android:text="@string/moblie_text_visitor"
+                    android:textColor="@color/jmfont_gray"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/ivregister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/moblie_text_register"
+                    android:textColor="@color/jmfont_gray"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
