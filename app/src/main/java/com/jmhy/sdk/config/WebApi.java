@@ -13,7 +13,8 @@ public class WebApi {
 
 	private static final String LOGTAG = "WebApi";
 
-    private static String HOST;// = "https://apisdk.5tc5.com/v1"
+	public static String BASE_HOST;// = "https://apisdk.5tc5.com/v1"
+	public static String HOST;// = "https://apisdk.5tc5.com/v1"
 	//private static final String HOST = "https://test.172jm.com/v1";//测试用
 	//private final String HOST = "https://apisdk.wfg3.com/v1";
 
@@ -23,6 +24,7 @@ public class WebApi {
 	 */
 
 	public static void init(String host){
+		BASE_HOST = host;
 		HOST = host + "/v1";
 		// 初始化接口
 		ACTION_INIT = HOST + "/app/init";

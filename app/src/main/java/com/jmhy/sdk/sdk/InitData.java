@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -90,7 +91,7 @@ public class InitData {
 		msg.sendToTarget();
 	}
 
-	private Handler handler = new Handler() {
+	private Handler handler = new Handler(Looper.getMainLooper()) {
 
 		@Override
 		public void handleMessage(Message msg) {

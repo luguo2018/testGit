@@ -20,6 +20,7 @@ import android.widget.ImageView;
 
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.JspayInterface;
@@ -133,13 +134,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 				Log.i("JiMiSDK","shouldOverrideUrlLoading "+url);
 
 				if (url.startsWith("weixin://wap/pay")) {
-					Intent intent = null;
-
 					try {
-						intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+						Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
 						view.getContext().startActivity(intent);
 
-						finish();
+						refreshPay();
 					} catch (Exception e) {
 						e.printStackTrace();
 
@@ -155,7 +154,7 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 						Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
 						view.getContext().startActivity(intent);
 
-						finish();
+						refreshPay();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -165,19 +164,20 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 					return false;
 				}
 			}
-
-			/*@Override
-			public void onReceivedSslError(WebView view,
-					SslErrorHandler handler, SslError error) {
-				// TODO Auto-generated method stub
-				// super.onReceivedSslError(view, handler, error);
-				handler.proceed();// 接受https所有网站的证书
-			}*/
 		});
 
 		mWebview.setWebChromeClient(new WebChromeClient());
 
 		mWebview.loadUrl(murl);
+	}
+
+	private void refreshPay(){
+		String url = WebApi.BASE_HOST + "/pay_back/info?access_token={access_token}&billno={billno}";
+		url = url.replace("{access_token}", AppConfig.Token);
+		url = url.replace("{billno}", PayDataRequest.getmPayInfo().getCporderid());
+		mWebview.loadUrl(url);
+
+		Log.i(TAG, "url = " + url);
 	}
 
 	@Override

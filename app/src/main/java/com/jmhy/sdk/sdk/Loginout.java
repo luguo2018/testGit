@@ -2,6 +2,7 @@ package com.jmhy.sdk.sdk;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import com.jmhy.sdk.common.JiMiSDK;
@@ -56,7 +57,7 @@ public class Loginout {
 		msg.obj = data;
 		msg.sendToTarget();
 	}
-	private static Handler handler = new Handler() {
+	private static Handler handler = new Handler(Looper.getMainLooper()) {
 
 		@Override
 		public void handleMessage(Message msg) {

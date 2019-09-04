@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -71,7 +72,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private Timer mTimer;
     private TimerTask mTimerTask;
     private static ApiAsyncTask loginouttask;
-    Handler mTimerHandler = new Handler() {
+    Handler mTimerHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_TYPE_HIDE_LOGO:

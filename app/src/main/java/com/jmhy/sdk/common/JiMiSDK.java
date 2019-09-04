@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.StrictMode;
 import android.text.TextUtils;
@@ -66,7 +67,7 @@ public class JiMiSDK {
 
     private static StatisticsSDK statisticsSDK = new StatisticsSDKUtils();
 
-	public static Handler handler = new Handler() {
+	public static Handler handler = new Handler(Looper.getMainLooper()) {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -342,10 +343,13 @@ public class JiMiSDK {
 	public static void setExtData(Context context, String type,String roleid,
 			String rolename,String level,String gender,String serverno,String zoneName,
 			String balance,String power,String viplevel,String roleCTime, String roleLevelMTime,String ext) {
-		Log.i(TAG,"type"+type+"roleid"+ roleid+"rolename"+ rolename+"level"+
-				level+"gender"+ gender+"serverno"+ serverno+"zoneName"+zoneName+
-				"balance"+ balance+"power"+ power+"viplevel" +viplevel+"ext"+ 
-				ext+"roleCTime"+roleCTime +"roleLevelMTime"+roleLevelMTime);
+		Log.i(TAG,"type="+type+",roleid="+ roleid+",rolename="+ rolename+",level="+
+				level+",gender="+ gender+",serverno="+ serverno+",zoneName="+zoneName+
+				",balance="+ balance+",power="+ power+",viplevel=" +viplevel+",ext="+
+				ext+",roleCTime="+roleCTime +",roleLevelMTime="+roleLevelMTime);
+		if(TextUtils.isEmpty(roleid) || "0".equals(roleid)){
+			return;
+		}
 		RoleinfoRequest.getInstatnce(context, type, roleid, rolename,
 				level, gender, serverno,zoneName, balance, power, viplevel, ext);
 		statisticsSDK.setExtData(context, type, roleid, rolename, level, gender, serverno, zoneName, balance, power, viplevel, roleCTime, roleLevelMTime, ext);

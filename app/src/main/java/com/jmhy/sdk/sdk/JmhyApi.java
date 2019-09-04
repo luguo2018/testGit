@@ -17,9 +17,9 @@ import com.jmhy.sdk.utils.Utils;
 public class JmhyApi {
 	private static JmhyApi instance;
 
-	private static int DEVICE = 1;// 安卓设备
+	private final static int DEVICE = 1;// 安卓设备
 
-	DeviceInfo deviceInfo;
+	private DeviceInfo deviceInfo;
 
 	private JmhyApi() {
 
@@ -31,6 +31,10 @@ public class JmhyApi {
 			instance = new JmhyApi();
 		}
 		return instance;
+	}
+
+	public DeviceInfo getDeviceInfo(){
+		return deviceInfo;
 	}
 
 	/**
