@@ -1,7 +1,6 @@
 package com.jmhy.sdk.fragment;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,13 +11,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -60,7 +57,7 @@ public class JmUserRegister2Fragment extends JmBaseFragment implements
 			case AppConfig.REGISTER_SUCCESS:
 				Registermsg registermsg = (Registermsg) msg.obj;
 
-				JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 
 				toAutologin(registermsg);
 
@@ -71,7 +68,7 @@ public class JmUserRegister2Fragment extends JmBaseFragment implements
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
 
-				JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 

@@ -15,11 +15,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.Guest;
 import com.jmhy.sdk.utils.Utils;
@@ -113,7 +111,7 @@ public class JmSetUser2Fragment extends JmBaseFragment implements
 		initView();
 		// getGuest();
 
-		//JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+		//JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 	}
 
 	private void initView() {

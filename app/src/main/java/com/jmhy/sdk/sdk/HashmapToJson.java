@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class HashmapToJson {
 
-    public static String hashMapToJson(HashMap map) {
+    private String hashMapToJson(HashMap<String, Object> map) {
         String string = "{";
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Entry e = (Entry) it.next();

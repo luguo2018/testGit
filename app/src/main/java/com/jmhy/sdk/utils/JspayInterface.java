@@ -7,12 +7,9 @@ import android.webkit.JavascriptInterface;
 
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmpayActivity;
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.sdk.PayDataRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class JspayInterface {
 	public final static String TAG = JspayInterface.class.getSimpleName();
@@ -46,7 +43,7 @@ public class JspayInterface {
 	@JavascriptInterface
     public  void closeWebView(){
 		if(activity!=null){
-			JiMiSDK.apiListenerInfo.onSuccess("close");
+			JMSDK.apiListenerInfo.onSuccess("close");
 			activity.finish();
     	}
 	}
@@ -61,12 +58,12 @@ public class JspayInterface {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				JiMiSDK.userlistenerinfo.onLogout("logout");
+				JMSDK.userlistenerinfo.onLogout("logout");
 				activity.finish();
 				AppConfig.isShow = false;
 				FloatUtils.destroyFloat();
 
-				JiMiSDK.getStatisticsSDK().onSwitchAccount();
+				JMSDK.getStatisticsSDK().onSwitchAccount();
 			}
 		});
 	}
@@ -84,21 +81,21 @@ public class JspayInterface {
 	public void payNotify(String result){
 		//result=0 失败，1 成功
 		if(result.equals("1")){
-			if(JiMiSDK.apiListenerInfo!=null){
-				JiMiSDK.apiListenerInfo.onSuccess("success");
+			if(JMSDK.apiListenerInfo!=null){
+				JMSDK.apiListenerInfo.onSuccess("success");
 			}
 
 			payResult = true;
 			Log.i(TAG, "pay success");
-			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
+			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, true);
 		}else{
-			if(JiMiSDK.apiListenerInfo!=null){
-				JiMiSDK.apiListenerInfo.onSuccess("close");
+			if(JMSDK.apiListenerInfo!=null){
+				JMSDK.apiListenerInfo.onSuccess("close");
 			}
 
 			payResult = false;
 			Log.i(TAG, "pay failure");
-			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
+			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, false);
 		}
 		if(activity!=null){
 			activity.finish();

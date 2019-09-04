@@ -7,13 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.jmhy.sdk.activity.JmLoginActivity;
-import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.Guest;
 import com.jmhy.sdk.utils.Utils;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.net.Uri;
@@ -123,7 +121,7 @@ public class JmSetUserFragment extends JmBaseFragment implements
 			mEtpwd.setText(password);
 		}
 
-		//JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+		//JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 	}
 
 	@Override

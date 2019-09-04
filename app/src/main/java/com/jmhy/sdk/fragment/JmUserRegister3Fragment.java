@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -57,7 +57,7 @@ public class JmUserRegister3Fragment extends JmBaseFragment implements
 			case AppConfig.REGISTER_SUCCESS:
 				Registermsg registermsg = (Registermsg) msg.obj;
 
-				JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 
 				toAutologin(registermsg);
 
@@ -68,7 +68,7 @@ public class JmUserRegister3Fragment extends JmBaseFragment implements
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
 
-				JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 

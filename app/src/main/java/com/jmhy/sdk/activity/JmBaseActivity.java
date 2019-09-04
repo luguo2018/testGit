@@ -11,7 +11,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,7 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessageinfo;
 import com.jmhy.sdk.model.Registermsg;
@@ -161,13 +160,13 @@ public class JmBaseActivity extends Activity {
 
 	public void wrapaLoginInfo(String result, String msg, String userName,
 			String openid, String gametoken) {
-		Log.i("JiMiSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
+		Log.i("JMSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
 
 		if(result.equals("success")){
 			AppConfig.isShow = true;
 		}
 
-		JiMiSDK.getStatisticsSDK().onLogin(openid);
+		JMSDK.getStatisticsSDK().onLogin(openid);
 
 		AppConfig.openid=openid;
 		LoginMessageinfo login = new LoginMessageinfo();
@@ -179,7 +178,7 @@ public class JmBaseActivity extends Activity {
 		Message mssg = new Message();
 		mssg.obj = login;
 		mssg.what = 1;
-		JiMiSDK.handler.sendMessage(mssg);
+		JMSDK.handler.sendMessage(mssg);
 	}
 	public void toUsetlogin(Registermsg registermsg){
 		Intent intent = new Intent(this, JmLoginActivity.class);
@@ -206,7 +205,7 @@ public class JmBaseActivity extends Activity {
 			return;
 		}
 
-		JiMiSDK.handler.postDelayed(new Runnable() {
+		JMSDK.handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Intent intent = new Intent();
@@ -214,8 +213,8 @@ public class JmBaseActivity extends Activity {
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
 				intent.putExtra("notice", true);
-				intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
-				JiMiSDK.context.startActivity(intent);
+				intent.setClass(JMSDK.context, JmUserinfoActivity.class);
+				JMSDK.context.startActivity(intent);
 			}
 		}, 1000);
 	}

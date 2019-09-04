@@ -7,9 +7,8 @@ import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.model.BaseResponse;
 
@@ -43,10 +42,10 @@ public class ApiResponseFactory {
 		try {
 			BaseResponse baseResponse = JSONParse.parseBaseResponse(data);
 			if(forceCode(baseResponse.code)){
-				JiMiSDK.forceLogout(baseResponse.message);
+				JMSDK.forceLogout(baseResponse.message);
 				return null;
 			}else if(!TextUtils.equals(baseResponse.code, BaseResponse.SUCCESS)){
-				//JiMiSDK.showErrorToast(baseResponse.message);
+				//JMSDK.showErrorToast(baseResponse.message);
 				Log.e("JMSDK", "error = " + baseResponse.code + "," + baseResponse.message);
 			}
 		} catch (JSONException e) {

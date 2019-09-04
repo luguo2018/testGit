@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.content.Context;
 import android.util.Log;
 
-import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
@@ -83,7 +82,7 @@ public class JmhyApi {
 		String ext_data = "q=" + (ext.qq ? 1 : 0) +
 				"&wc=" + (ext.wechat ? 1 : 0) +
 				"&ali=" + (ext.alipay ? 1 : 0);
-		Log.i("JiMiSDK", ext_data);
+		Log.i("JMSDK", ext_data);
 
 		paramsdata.put("ext_data", ext_data);
 		HashmapToJson toJson = new HashmapToJson();

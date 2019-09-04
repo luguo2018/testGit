@@ -1,6 +1,7 @@
 package com.jmhy.sdk.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +14,8 @@ import java.io.InputStreamReader;
  * create by yhz on 2018/11/12
  */
 public class ConfigUtils {
+    private final static String TAG = ConfigUtils.class.getSimpleName();
+
     public static JSONObject getConfigData(Context context){
         StringBuilder builder = new StringBuilder();
         BufferedReader bufReader = null;
@@ -24,14 +27,14 @@ public class ConfigUtils {
                 builder.append(line);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
             return null;
         } finally {
             if(bufReader != null){
                 try {
                     bufReader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.w(TAG, e.getMessage());
                 }
             }
         }
@@ -40,7 +43,7 @@ public class ConfigUtils {
         try {
             jsonObject = new JSONObject(builder.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.w(TAG, e.getMessage());
         }
         return jsonObject;
     }

@@ -4,20 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
-import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.common.JMSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.SdkParams;
@@ -25,7 +19,6 @@ import com.meituan.android.walle.ChannelInfo;
 import com.meituan.android.walle.WalleChannelReader;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -370,7 +363,7 @@ public class Utils {
 	 */
 	public static void saveUserToSd(Context context) {
 		List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
-		Seference seference = new Seference(JiMiSDK.context);
+		Seference seference = new Seference(JMSDK.context);
 		UserInfo creatFile = new UserInfo();
 		contentList = seference.getContentList();
 		String data = "";

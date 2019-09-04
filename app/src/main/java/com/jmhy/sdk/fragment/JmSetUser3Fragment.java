@@ -111,7 +111,7 @@ public class JmSetUser3Fragment extends JmBaseFragment implements
 		initView();
 		// getGuest();
 
-		//JiMiSDK.getStatisticsSDK().onRegister("JMSDK", true);
+		//JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
 	}
 
 	private void initView() {

@@ -1,13 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jmhy.sdk.sample">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -27,47 +20,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.jmhy.sdk.activity.JmLoginActivity"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmAutoLoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmUserinfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmpayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmCommunityActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
-        <activity
-            android:name="com.jmhy.sdk.activity.PermissionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-        <activity
-            android:name="com.jmhy.sdk.activity.ForceActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-
-        <service android:name="com.jmhy.sdk.push.PushService" />
     </application>
 </manifest>

@@ -1,5 +1,7 @@
 package com.jmhy.sdk.config;
 
+import android.text.TextUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +26,9 @@ public class WebApi {
 	 */
 
 	public static void init(String host){
+		if(TextUtils.isEmpty(host)){
+			host = "https://apisdk.5tc5.com";
+		}
 		BASE_HOST = host;
 		HOST = host + "/v1";
 		// 初始化接口

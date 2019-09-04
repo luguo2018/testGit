@@ -1,6 +1,5 @@
 package com.jmhy.sdk.http;
 
-import android.os.Looper;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseResponse;
 import com.jmhy.sdk.model.Guest;
@@ -20,7 +18,6 @@ import com.jmhy.sdk.model.MobileUser;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.Registermsg;
-import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.Utils;
 
 public class JSONParse {

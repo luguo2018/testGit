@@ -33,7 +33,6 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.sdk.RoleinfoRequest;
 import com.jmhy.sdk.sdk.StatisticsSDK;
 import com.jmhy.sdk.utils.ActivityStackManager;
-import com.jmhy.sdk.utils.DealCrash;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.StatisticsSDKUtils;
@@ -45,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-public class JiMiSDK {
-	private final static String TAG = JiMiSDK.class.getSimpleName();
+public class JMSDK {
+	private final static String TAG = JMSDK.class.getSimpleName();
 	
 	public static boolean isShow = true;
 	public static boolean iswelcom = true;
@@ -137,9 +136,9 @@ public class JiMiSDK {
 	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
-		JiMiSDK.context = context.getApplicationContext();
+		JMSDK.context = context.getApplicationContext();
 
-		//DealCrash.getInstance().init(JiMiSDK.context);
+		//DealCrash.getInstance().init(JMSDK.context);
 		//setStrictMode();
 
 		try {
@@ -218,7 +217,7 @@ public class JiMiSDK {
 			apiListenerInfo = listener;
 			PayDataRequest.getInstatnce(activity, payInfo, listener);
 
-			JiMiSDK.getStatisticsSDK().onCompleteOrder(payInfo);
+			JMSDK.getStatisticsSDK().onCompleteOrder(payInfo);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
