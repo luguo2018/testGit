@@ -41,6 +41,8 @@
     public static java.lang.String agent;
     public static java.lang.String is_sdk_float_on;
     public static java.lang.String switch_login;
+    public static java.lang.String h5GameUrl;
+    public static java.lang.String loginH5GameUrl;
     public static <methods>;
 }
 -keepclasseswithmembers class com.jmhy.sdk.config.WebApi{
@@ -56,6 +58,7 @@
 -keepclasseswithmembers class com.jmhy.sdk.utils.Utils {
     public static <methods>;
 }
+-keepnames class com.jmhy.sdk.http.ApiAsyncTask
 
 -keep class org.apache.** {*;}
 -keep class android.net.** {*;}
