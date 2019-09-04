@@ -2,7 +2,7 @@ package com.jmhy.sdk.utils;
 
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 
 import android.app.Activity;
@@ -78,7 +78,7 @@ public class JsInterface {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				JMSDK.userlistenerinfo.onLogout("logout");
+				JiMiSDK.userlistenerinfo.onLogout("logout");
 				activity.finish();
 				AppConfig.isShow = false;
 				FloatUtils.destroyFloat();

@@ -2,7 +2,7 @@ package com.jmhy.sdk.fragment;
 
 import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -61,7 +61,7 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
 			case AppConfig.REGISTER_SUCCESS:
 				Registermsg registermsg = (Registermsg) msg.obj;
 
-				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 
 				toAutologin(registermsg);
 
@@ -72,7 +72,7 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
 
-				JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
+				JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 

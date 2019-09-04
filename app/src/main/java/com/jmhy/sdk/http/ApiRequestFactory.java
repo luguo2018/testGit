@@ -96,8 +96,8 @@ public class ApiRequestFactory {
 
 		// http post
 		if (httpType.equals("post")) {
-			Log.d("JMSDK", "url = " + url);
-			Log.d("JMSDK", "method = POST");
+			Log.d("JiMiSDK", "url = " + url);
+			Log.d("JiMiSDK", "method = POST");
 
 			final ArrayList<NameValuePair> postParams = new ArrayList<NameValuePair>();
 			StringBuilder md5Str = new StringBuilder();
@@ -106,7 +106,7 @@ public class ApiRequestFactory {
 				String value = (String) param.get(key);
 					postParams.add(new BasicNameValuePair((String) key,
 							value));
-				Log.d("JMSDK", key + " = " + value);
+				Log.d("JiMiSDK", key + " = " + value);
 					//md5Str.append(value);
 				//	try {
 					/*	if(key.equals("context")){
@@ -131,14 +131,14 @@ public class ApiRequestFactory {
 		    append("context=").append(param.get("context").toString()).append("&");
 
 			md5Str.append("appkey=").append(appKey);
-			Log.d("JMSDK", "md5Str.toString().toLowerCase() = " + md5Str.toString().toLowerCase());
+			Log.d("JiMiSDK", "md5Str.toString().toLowerCase() = " + md5Str.toString().toLowerCase());
 
 			String md5ResultString = SecurityUtils.getMD5Str(md5Str.toString().toLowerCase());
 			postParams.add(new BasicNameValuePair("sign", md5ResultString));
 	
 		    urlBuilderData.append("sign=").append(md5ResultString);
 
-			Log.d("JMSDK", "params: " + urlBuilderData.toString());
+			Log.d("JiMiSDK", "params: " + urlBuilderData.toString());
 		
 		    String data = null;
 		   

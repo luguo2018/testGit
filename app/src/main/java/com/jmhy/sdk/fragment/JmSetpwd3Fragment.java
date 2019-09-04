@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -94,7 +94,7 @@ public class JmSetpwd3Fragment extends JmBaseFragment implements OnClickListener
 			mEtpwd.setText(password);
 		}
 
-		JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
+		JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 	}
 
 	private void initView() {

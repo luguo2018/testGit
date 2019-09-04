@@ -82,7 +82,7 @@ public class JMApiTask extends ApiAsyncTask {
 
 			final int statusCode = response.getStatusLine().getStatusCode();
 
-			Log.d("JMSDK", "response.statusCode = " + statusCode);
+			Log.d("JiMiSDK", "response.statusCode = " + statusCode);
            // Log.i("kk","状态"+statusCode);
 			if (HttpStatus.SC_OK != statusCode) {
 				// 非正常返回

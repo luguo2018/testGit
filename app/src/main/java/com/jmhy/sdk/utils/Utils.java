@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.SdkParams;
@@ -363,7 +363,7 @@ public class Utils {
 	 */
 	public static void saveUserToSd(Context context) {
 		List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
-		Seference seference = new Seference(JMSDK.context);
+		Seference seference = new Seference(JiMiSDK.context);
 		UserInfo creatFile = new UserInfo();
 		contentList = seference.getContentList();
 		String data = "";

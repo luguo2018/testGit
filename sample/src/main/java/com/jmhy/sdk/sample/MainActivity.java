@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.common.ExitListener;
 import com.jmhy.sdk.common.InitListener;
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.common.UserApiListenerInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessageinfo;
@@ -50,11 +50,11 @@ public class MainActivity extends Activity {
         force_exit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JMSDK.forceLogout("账号禁止登录，请联系客服人员");
+                JiMiSDK.forceLogout("账号禁止登录，请联系客服人员");
             }
         });
 
-        JMSDK.setUserListener(new UserApiListenerInfo(){
+        JiMiSDK.setUserListener(new UserApiListenerInfo(){
             @Override
             public void onLogout(Object obj) {
                 mBtnpay.setVisibility(View.GONE);
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
         mBtninit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JMSDK.initInterface(MainActivity.this, appId, appKey, new InitListener() {
+                JiMiSDK.initInterface(MainActivity.this, appId, appKey, new InitListener() {
                     @Override
                     public void Success(String s) {
                         Toast.makeText(MainActivity.this, "init Success", Toast.LENGTH_SHORT).show();
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
         mBtnlogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JMSDK.login(MainActivity.this, appId, appKey, new ApiListenerInfo(){
+                JiMiSDK.login(MainActivity.this, appId, appKey, new ApiListenerInfo(){
                     @Override
                     public void onSuccess(final Object obj) {
                         Log.d(TAG, "login Success");
@@ -104,7 +104,7 @@ public class MainActivity extends Activity {
                                         Log.d(TAG, "login Success a");
 
                                         if(TextUtils.equals(AppConfig.is_sdk_float_on, "1")) {
-                                            JMSDK.showFloat();
+                                            JiMiSDK.showFloat();
                                         }
 
 
@@ -113,8 +113,8 @@ public class MainActivity extends Activity {
                                                 Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                         intent.putExtra("url", "https://test.172jm.com/community/dist/notice_discount.html");
                                         intent.putExtra("notice", true);
-                                        intent.setClass(JMSDK.context, JmUserinfoActivity.class);
-                                        JMSDK.context.startActivity(intent);*/
+                                        intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
+                                        JiMiSDK.context.startActivity(intent);*/
                                     }else{
                                         mBtnpay.setVisibility(View.GONE);
                                         mBtnloginout.setVisibility(View.GONE);
@@ -141,7 +141,7 @@ public class MainActivity extends Activity {
         mBtnexit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JMSDK.exit(MainActivity.this, new ExitListener() {
+                JiMiSDK.exit(MainActivity.this, new ExitListener() {
                     @Override
                     public void ExitSuccess(String s) {
                         Log.d(TAG, "exit Success");
@@ -161,7 +161,7 @@ public class MainActivity extends Activity {
         mBtnloginout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JMSDK.switchAccount(MainActivity.this);
+                JiMiSDK.switchAccount(MainActivity.this);
             }
         });
 
@@ -184,7 +184,7 @@ public class MainActivity extends Activity {
                 paymentInfo.setZoneName("极米1区");
                 paymentInfo.setViplevel("12");
 
-                JMSDK.payment(MainActivity.this, paymentInfo, new ApiListenerInfo() {
+                JiMiSDK.payment(MainActivity.this, paymentInfo, new ApiListenerInfo() {
 
                     @Override
                     public void onSuccess(Object obj) {
@@ -199,55 +199,55 @@ public class MainActivity extends Activity {
             }
         });
 
-        JMSDK.onCreate(this);
+        JiMiSDK.onCreate(this);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        JMSDK.onNewIntent(intent);
+        JiMiSDK.onNewIntent(intent);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //JMSDK.onStart(this);
+        //JiMiSDK.onStart(this);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        JMSDK.onRestart(this);
+        JiMiSDK.onRestart(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        JMSDK.onResume(this);
+        JiMiSDK.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        JMSDK.onPause(this);
+        JiMiSDK.onPause(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        JMSDK.onStop(this);
+        JiMiSDK.onStop(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        JMSDK.onDestroy(this);
+        JiMiSDK.onDestroy(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        JMSDK.onActivityResult(this, requestCode, resultCode, data);
+        JiMiSDK.onActivityResult(this, requestCode, resultCode, data);
     }
 
     @Override

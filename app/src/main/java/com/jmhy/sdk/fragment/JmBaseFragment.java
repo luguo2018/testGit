@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.jmhy.sdk.activity.JmAutoLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessageinfo;
 import com.jmhy.sdk.model.Registermsg;
@@ -69,12 +69,12 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 	 */
 	public void wrapaLoginInfo(String result, String msg, String userName,
 			String openid, String gametoken) {
-		Log.i("JMSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
+		Log.i("JiMiSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
 		if(result.equals("success")){
 			AppConfig.isShow = true;
 		}
 
-		JMSDK.getStatisticsSDK().onLogin(openid);
+		JiMiSDK.getStatisticsSDK().onLogin(openid);
 
 		LoginMessageinfo login = new LoginMessageinfo();
 		AppConfig.openid=openid;
@@ -86,7 +86,7 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		Message mssg = new Message();
 		mssg.obj = login;
 		mssg.what = 1;
-		JMSDK.handler.sendMessage(mssg);
+		JiMiSDK.handler.sendMessage(mssg);
 
 	}
 
@@ -159,7 +159,7 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 			return;
 		}
 
-		JMSDK.handler.postDelayed(new Runnable() {
+		JiMiSDK.handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				Intent intent = new Intent();
@@ -167,8 +167,8 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
 				intent.putExtra("notice", true);
-				intent.setClass(JMSDK.context, JmUserinfoActivity.class);
-                JMSDK.context.startActivity(intent);
+				intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
+                JiMiSDK.context.startActivity(intent);
 			}
 		}, 1000);
 	}

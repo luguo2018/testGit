@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
-public class JMSDK {
-	private final static String TAG = JMSDK.class.getSimpleName();
+public class JiMiSDK {
+	private final static String TAG = JiMiSDK.class.getSimpleName();
 	
 	public static boolean isShow = true;
 	public static boolean iswelcom = true;
@@ -136,9 +136,9 @@ public class JMSDK {
 	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
-		JMSDK.context = context.getApplicationContext();
+		JiMiSDK.context = context.getApplicationContext();
 
-		//DealCrash.getInstance().init(JMSDK.context);
+		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
 
 		try {
@@ -217,7 +217,7 @@ public class JMSDK {
 			apiListenerInfo = listener;
 			PayDataRequest.getInstatnce(activity, payInfo, listener);
 
-			JMSDK.getStatisticsSDK().onCompleteOrder(payInfo);
+			JiMiSDK.getStatisticsSDK().onCompleteOrder(payInfo);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

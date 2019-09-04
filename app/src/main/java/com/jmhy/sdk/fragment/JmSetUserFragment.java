@@ -121,7 +121,7 @@ public class JmSetUserFragment extends JmBaseFragment implements
 			mEtpwd.setText(password);
 		}
 
-		//JMSDK.getStatisticsSDK().onRegister("JMSDK", true);
+		//JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 	}
 
 	@Override

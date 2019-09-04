@@ -143,7 +143,7 @@ public class InitData {
 		    AppConfig.FPWD = Utils.toBase64url(result.getForgetpasswordurl());
 		    AppConfig.add_global_script_url = Utils.toBase64url(result.getAddglobalscripturl());
 			AppConfig.switch_login = result.getSwitch_login();
-			//AppConfig.skin = result.getSkin();
+			AppConfig.skin = result.getSkin();
 			AppConfig.sdkList = result.getChannel_sdk_list();
 			AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
 		    seference.savePreferenceData("game", "token", result.getAccess_token());

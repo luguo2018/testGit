@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -42,7 +42,7 @@ public class Loginout {
 					@Override
 					public void onError(int statusCode) {
 						// TODO Auto-generated method stub
-						//JMSDK.userlistenerinfo.onLogout("logout");
+						//JiMiSDK.userlistenerinfo.onLogout("logout");
 						sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(mContext, "http_rror_msg"),
 								handler);
 					}
@@ -66,8 +66,8 @@ public class Loginout {
 				 ExitLoginout() ;
 				break;
 				case AppConfig.LOGINOUT_SUCCESS:
-					JMSDK.userlistenerinfo.onLogout("logout");
-					JMSDK.getStatisticsSDK().onSwitchAccount();
+					JiMiSDK.userlistenerinfo.onLogout("logout");
+					JiMiSDK.getStatisticsSDK().onSwitchAccount();
 					break;
 			}
 		}

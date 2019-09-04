@@ -16,7 +16,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.sdk.PayDataRequest;
@@ -128,7 +128,7 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 			}
 
 			private boolean shouldOverrideUrl(WebView view, String url){
-				Log.i("JMSDK","shouldOverrideUrlLoading "+url);
+				Log.i("JiMiSDK","shouldOverrideUrlLoading "+url);
 
 				if (url.startsWith("weixin://wap/pay")) {
 					try {
@@ -141,7 +141,7 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 
 						finish();
 
-						Activity activity = JMSDK.stackManager.getBottomActivity();
+						Activity activity = JiMiSDK.stackManager.getBottomActivity();
 						DialogUtils.showTip(activity, AppConfig.getString(activity, "jm_no_install_wechat"));
 					}
 
@@ -185,8 +185,8 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 			// mWebview.goBack();
 
 			// } else {
-			if (JMSDK.apiListenerInfo != null) {
-				JMSDK.apiListenerInfo.onSuccess("close");
+			if (JiMiSDK.apiListenerInfo != null) {
+				JiMiSDK.apiListenerInfo.onSuccess("close");
 			}
 			finish();
 
@@ -239,10 +239,10 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 	public void finish() {
 		if(jspayInterface != null && jspayInterface.isPayResult() == null){
 			Log.i(JspayInterface.TAG, "pay cancel");
-			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, false);
+			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
 
-			if(JMSDK.apiListenerInfo != null){
-				JMSDK.apiListenerInfo.onSuccess("cancel");
+			if(JiMiSDK.apiListenerInfo != null){
+				JiMiSDK.apiListenerInfo.onSuccess("cancel");
 			}
 		}
 
@@ -280,11 +280,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 			Log.i(TAG, "pay success");
 			jspayInterface.setPayResult(true);
 
-			if(JMSDK.apiListenerInfo != null){
-				JMSDK.apiListenerInfo.onSuccess("success");
+			if(JiMiSDK.apiListenerInfo != null){
+				JiMiSDK.apiListenerInfo.onSuccess("success");
 			}
 
-			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, true);
+			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
 		}
 
 		@Override
@@ -292,11 +292,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 			Log.i(TAG, "pay failure");
 			jspayInterface.setPayResult(false);
 
-			if(JMSDK.apiListenerInfo != null){
-				JMSDK.apiListenerInfo.onSuccess("close");
+			if(JiMiSDK.apiListenerInfo != null){
+				JiMiSDK.apiListenerInfo.onSuccess("close");
 			}
 
-			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, false);
+			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
 		}
 
 		@Override
@@ -304,11 +304,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 			Log.i(TAG, "pay cancel");
 			jspayInterface.setPayResult(false);
 
-			if(JMSDK.apiListenerInfo != null){
-				JMSDK.apiListenerInfo.onSuccess("cancel");
+			if(JiMiSDK.apiListenerInfo != null){
+				JiMiSDK.apiListenerInfo.onSuccess("cancel");
 			}
 
-			JMSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JMSDK.payChannel, false);
+			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
 		}
 	};*/
 }

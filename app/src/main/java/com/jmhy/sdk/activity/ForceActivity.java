@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import com.jmhy.sdk.common.JMSDK;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.view.TipDialog;
 
 import java.lang.ref.WeakReference;
@@ -47,8 +47,8 @@ public class ForceActivity extends Activity {
     public void finish() {
         super.finish();
 
-        JMSDK.hideFloat();
-        JMSDK.clearAllActivity();
+        JiMiSDK.hideFloat();
+        JiMiSDK.clearAllActivity();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
