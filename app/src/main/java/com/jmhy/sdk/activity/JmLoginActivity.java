@@ -3,10 +3,8 @@ package com.jmhy.sdk.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.fragment.EmailLoginFragment;
