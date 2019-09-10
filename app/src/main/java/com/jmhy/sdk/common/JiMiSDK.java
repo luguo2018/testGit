@@ -22,6 +22,7 @@ import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
+import com.jmhy.sdk.model.LoginMessageinfo;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
@@ -86,8 +87,6 @@ public class JiMiSDK {
 						// TODO: handle exception
 					}
 					break;
-				
-				
 				}
                 
                 	
@@ -191,18 +190,34 @@ public class JiMiSDK {
 	 * @param context
 	 * @param listener
 	 */
-	public static void login(Activity context, int appid, String appkey, ApiListenerInfo listener) {
+	public static void login(Activity context, int appid, String appkey, final ApiListenerInfo listener) {
 		if(!init){
 			Log.w(TAG, "sdk not initialized yet");
 			return;
 		}
 		try {
-			apiListenerInfo = listener;
+			apiListenerInfo = createUserListener(listener);
 			Logindata.selectLogin(context);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 	}
+
+	private static ApiListenerInfo createUserListener(final ApiListenerInfo listener){
+		return new ApiListenerInfo(){
+			@Override
+			public void onSuccess(Object obj) {
+				if(obj instanceof LoginMessageinfo) {
+					LoginMessageinfo login = (LoginMessageinfo) obj;
+					if (TextUtils.equals(login.getResult(), "success")) {
+						showFloat();
+					}
+				}
+				listener.onSuccess(obj);
+			}
+		};
+	}
+
 	/**
 	 * 充值接口
 	 * 
@@ -214,7 +229,7 @@ public class JiMiSDK {
 	public static void payment(Activity activity, PaymentInfo payInfo,
 			ApiListenerInfo listener) {
 		try {
-			apiListenerInfo = listener;
+			apiListenerInfo = createUserListener(listener);;
 			PayDataRequest.getInstatnce(activity, payInfo, listener);
 
 			JiMiSDK.getStatisticsSDK().onCompleteOrder(payInfo);
@@ -226,7 +241,7 @@ public class JiMiSDK {
 
 	public static void payment(Activity activity, PayData payData,
 							   ApiListenerInfo listener) {
-		apiListenerInfo = listener;
+		apiListenerInfo = createUserListener(listener);;
 		String url = Utils.toBase64url(payData.getOcontent());
 		PayDataRequest.turnToIntent(activity, url);
 	}

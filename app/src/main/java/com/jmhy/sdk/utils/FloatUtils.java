@@ -9,12 +9,10 @@ public class FloatUtils {
     private static FloatView mFloatView;
 
     public static void showFloat(Activity activity) {
-        if(mFloatView != null){
-            mFloatView.destroy();
-            mFloatView = null;
+        if(mFloatView == null){
+            mFloatView = new FloatView(activity);
+            mFloatView.show();
         }
-        mFloatView = new FloatView(activity);
-        mFloatView.show();
     }
 
     /*public static void hideFloat() {

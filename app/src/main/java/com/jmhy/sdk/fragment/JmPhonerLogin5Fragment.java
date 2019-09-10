@@ -122,42 +122,6 @@ public class JmPhonerLogin5Fragment extends JmBaseFragment implements
 				String resultmsg = (String) msg.obj;
 				showMsg(resultmsg);
 				break;
-			case AppConfig.MOBILELOGIN_SUCCESS:
-				flag = false;
-				MobileUser mobileUser = (MobileUser) msg.obj;
-				if (mobileUser.getPhone_register().equals("1")) {
-					// 跳转设置密码
-					Bundle args = new Bundle();
-					// Log.i("kk",mobileUser.getMoblie());
-					args.putString("username", mobileUser.getUnname());
-					args.putString("moblie", mobileUser.getMoblie());
-					args.putString("code_area", mobileUser.getCode_area());
-					args.putString("code", mobileUser.getMoblie_code());
-					Fragment mJmSetpwdFragment = FragmentUtils.getJmSetpwdFragment(getActivity(), args);
-					addFragmentToActivity(getFragmentManager(),
-							mJmSetpwdFragment, AppConfig.resourceId(
-									getActivity(), "content", "id"));
-
-				} else {
-					// 直接登录成功，返回数据
-					mSeference.saveAccount(mobileUser.getUnname(), "~~test",
-							mobileUser.getLogin_token());
-					AppConfig.saveMap(mobileUser.getUnname(), "~~test",
-							mobileUser.getLogin_token());
-					Utils.saveUserToSd(getActivity());
-					wrapaLoginInfo("success", mobileUser.getMessage(),
-							mobileUser.getUnname(), mobileUser.getOpenid(),
-							mobileUser.getGame_token());
-					showUserMsg(mobileUser.getUnname());
-					AppConfig.USERURL = Utils.toBase64url(mobileUser
-							.getFloat_url_user_center());
-					String url = Utils.toBase64url(mobileUser
-							.getShow_url_after_login());
-					turnToIntent(url);
-					getActivity().finish();
-
-				}
-				break;
 			case AppConfig.REGISTER_SUCCESS:
 				Registermsg registermsg = (Registermsg) msg.obj;
 				autologin(registermsg.getAuto_login_token());

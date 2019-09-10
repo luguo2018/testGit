@@ -23,9 +23,10 @@
 -keep class com.jmhy.sdk.model.** {*;}
 -keep class com.jmhy.sdk.common.** {*;}
 -keep class com.jmhy.sdk.http.ApiRequestListener {*;}
+-keepnames class com.jmhy.sdk.http.ApiAsyncTask
 -keep class com.jmhy.sdk.sdk.StatisticsSDK {*;}
 -keepclasseswithmembers class com.jmhy.sdk.sdk.HashmapToJson {
-    public <methods>;
+    public java.lang.String toJson(java.util.HashMap);
 }
 -keepclasseswithmembers class com.jmhy.sdk.sdk.JmhyApi {
     public static com.jmhy.sdk.sdk.JmhyApi get();
@@ -58,7 +59,6 @@
 -keepclasseswithmembers class com.jmhy.sdk.utils.Utils {
     public static <methods>;
 }
--keepnames class com.jmhy.sdk.http.ApiAsyncTask
 
 -keep class org.apache.** {*;}
 -keep class android.net.** {*;}
