@@ -38,7 +38,7 @@ public class AppConfig {
 	public static String appKey = "";
 	public static String agent = "";
 	public static String version = "";
-    public static String sdk_version ="1.2.3";
+    public static String sdk_version ="1.2.4";
 	public static String supportEnglish ="0";
 	public static int skin = 1;
 	public static int userType = 0;
@@ -75,11 +75,11 @@ public class AppConfig {
 	public static boolean showGiftTip;
 
 	public static String Token = "";
-	public static Map<String, String> tempMap = new HashMap<String, String>();// 临时保存未激活的注册账号和修改密码页面的用户信息
-	public static Map<String, String> loginMap = new HashMap<String, String>();// 临时保存文件系统中的user0信息
-	public static Map<String, String> initMap = new HashMap<String, String>();// 临时保存初始化信�?
+	public static Map<String, String> tempMap = new HashMap<>();// 临时保存未激活的注册账号和修改密码页面的用户信息
+	public static Map<String, String> loginMap = new HashMap<>();// 临时保存文件系统中的user0信息
+	public static Map<String, String> initMap = new HashMap<>();// 临时保存初始化信�?
 
-	public static List<String> iphoneidList = new ArrayList<String>();
+	public static List<String> iphoneidList = new ArrayList<>();
 
 	public static void saveMap(String user, String pwd, String uid) {
 		loginMap.put("user", user);

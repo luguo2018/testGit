@@ -28,10 +28,10 @@ public class JmAutoLoginActivity extends JmBaseActivity {
 	private TextView mTvname;
 	private ApiAsyncTask mautoLoginTask;
 	private View mBtback;
-	List<String> moreCountList = new ArrayList<String>();
-	List<String> morePwdList = new ArrayList<String>();
-	List<String> moreUidList = new ArrayList<String>();
-	List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
+	List<String> moreCountList = new ArrayList<>();
+	List<String> morePwdList = new ArrayList<>();
+	List<String> moreUidList = new ArrayList<>();
+	List<HashMap<String, String>> contentList = new ArrayList<>();
 	TimerTask task;
     Timer timer ;
     String temUid;
@@ -79,9 +79,6 @@ public class JmAutoLoginActivity extends JmBaseActivity {
 	};
 
 	private void initView() {
-		// TODO Auto-generated method stub
-		
-		
 		mTvname = (TextView)findViewById(AppConfig.resourceId(this, "tvusername", "id"));
         mBtback = findViewById(AppConfig.resourceId(this, "btbacklogin", "id"));
         mBtback.setOnClickListener(backListener);
@@ -112,9 +109,8 @@ public class JmAutoLoginActivity extends JmBaseActivity {
         }};
         timer = new Timer();
         timer.schedule(task, 3000);//设置延迟3秒访问
-       
-		 
 	}
+
 	private Handler handler = new Handler() {
 
 		@Override
@@ -149,8 +145,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
 		moreCountList.clear();
 		morePwdList.clear();
 		moreUidList.clear();
-		Map<String, String> map = new HashMap<String, String>();
-		map = mUserinfo.userMap();
+		Map<String, String> map = mUserinfo.userMap();
 		// 判断由于程序出现什么异常导致某些信息没有写入文件系统
 		for (int i = 0; i < map.size(); i++) {
 			String tU = map.get("user" + i);
@@ -200,44 +195,44 @@ public class JmAutoLoginActivity extends JmBaseActivity {
 		}
 		return true;
 	}
-public void autoLogin( String logintoken ){
-	mautoLoginTask = JmhyApi.get().starlAutoLogin(this,AppConfig.appKey , logintoken, new ApiRequestListener() {
-		
-		@Override
-		public void onSuccess(Object obj) {
-			// TODO Auto-generated method stub
-			if(obj!=null){
-				LoginMessage loginMessage = (LoginMessage)obj;
-				
-				if(loginMessage.getCode().equals("0")){
-					mSeference.saveAccount(loginMessage.getUname(), "~~test",
-							loginMessage.getLogin_token());
-					AppConfig.saveMap(loginMessage.getUname(), "~~test",
-							loginMessage.getLogin_token());
-					Utils.saveUserToSd(JmAutoLoginActivity.this);
-					wrapaLoginInfo("success", loginMessage.getMessage(),
-							loginMessage.getUname(),loginMessage.getOpenid(),
-							loginMessage.getGame_token());
-					sendData(AppConfig.AUTO_LOGIN_SUCCESS, obj,
-							handler);
-					
+
+	public void autoLogin( String logintoken ){
+		mautoLoginTask = JmhyApi.get().starlAutoLogin(this,AppConfig.appKey , logintoken, new ApiRequestListener() {
+
+			@Override
+			public void onSuccess(Object obj) {
+				if(obj!=null){
+					LoginMessage loginMessage = (LoginMessage)obj;
+
+					if(loginMessage.getCode().equals("0")){
+						mSeference.saveAccount(loginMessage.getUname(), "~~test",
+								loginMessage.getLogin_token());
+						AppConfig.saveMap(loginMessage.getUname(), "~~test",
+								loginMessage.getLogin_token());
+						Utils.saveUserToSd(JmAutoLoginActivity.this);
+						wrapaLoginInfo("success", loginMessage.getMessage(),
+								loginMessage.getUname(),loginMessage.getOpenid(),
+								loginMessage.getGame_token());
+						sendData(AppConfig.AUTO_LOGIN_SUCCESS, obj,
+								handler);
+
+					}else{
+
+						sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(),
+								handler);
+					}
 				}else{
-					
-					sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(),
+
+					sendData(AppConfig.FLAG_FAIL, AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
 							handler);
 				}
-			}else{
-				
-				sendData(AppConfig.FLAG_FAIL, AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
+			}
+
+			@Override
+			public void onError(int statusCode) {
+				sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
 						handler);
 			}
-		}
-		
-		@Override
-		public void onError(int statusCode) {
-			sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
-					handler);
-		}
-	});
-}
+		});
+	}
 }

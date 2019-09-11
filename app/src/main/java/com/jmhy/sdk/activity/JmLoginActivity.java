@@ -36,7 +36,7 @@ public class JmLoginActivity extends JmBaseActivity {
 			addFragmentToActivity(getFragmentManager(), fragment,
 					AppConfig.resourceId(this, "content", "id"));
 		}else{
-			if (AppConfig.ismobillg || AppConfig.skin == 4 || AppConfig.skin == 5) {
+			if (AppConfig.ismobillg) {
 				Fragment mUserLoginFragment = FragmentUtils.getJmPhonerLoginFragment(this);
 				addFragmentToActivity(getFragmentManager(), mUserLoginFragment,
 						AppConfig.resourceId(this, "content", "id"));
@@ -54,22 +54,6 @@ public class JmLoginActivity extends JmBaseActivity {
 		reference = null;
 		super.onDestroy();
 	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
-
-	/*@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// TODO Auto-generated method stub
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			finish();
-			wrapaLoginInfo("登录取消", "back", "", "","");
-		}
-		return super.onKeyDown(keyCode, event);
-	}*/
 
 	public void resetContentViewSize(int height){
 		RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)content.getLayoutParams();
