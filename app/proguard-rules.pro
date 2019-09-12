@@ -59,6 +59,9 @@
 -keepclasseswithmembers class com.jmhy.sdk.utils.Utils {
     public static <methods>;
 }
+-keepclasseswithmembers class com.jmhy.sdk.utils.ConfigUtils {
+    public static <methods>;
+}
 
 -keep class org.apache.** {*;}
 -keep class android.net.** {*;}
