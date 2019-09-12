@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
-import com.jmhy.sdk.model.LoginMessageinfo;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
@@ -129,10 +127,6 @@ public class JiMiSDK {
 			}
 		});
 	}
-	private static void setStrictMode() {
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
-	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
 		JiMiSDK.context = context.getApplicationContext();
@@ -196,26 +190,11 @@ public class JiMiSDK {
 			return;
 		}
 		try {
-			apiListenerInfo = createUserListener(listener);
+			apiListenerInfo = listener;
 			Logindata.selectLogin(context);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-	}
-
-	private static ApiListenerInfo createUserListener(final ApiListenerInfo listener){
-		return new ApiListenerInfo(){
-			@Override
-			public void onSuccess(Object obj) {
-				if(obj instanceof LoginMessageinfo) {
-					LoginMessageinfo login = (LoginMessageinfo) obj;
-					if (TextUtils.equals(login.getResult(), "success")) {
-						showFloat();
-					}
-				}
-				listener.onSuccess(obj);
-			}
-		};
 	}
 
 	/**
@@ -229,7 +208,7 @@ public class JiMiSDK {
 	public static void payment(Activity activity, PaymentInfo payInfo,
 			ApiListenerInfo listener) {
 		try {
-			apiListenerInfo = createUserListener(listener);;
+			apiListenerInfo = listener;
 			PayDataRequest.getInstatnce(activity, payInfo, listener);
 
 			JiMiSDK.getStatisticsSDK().onCompleteOrder(payInfo);
@@ -241,7 +220,7 @@ public class JiMiSDK {
 
 	public static void payment(Activity activity, PayData payData,
 							   ApiListenerInfo listener) {
-		apiListenerInfo = createUserListener(listener);;
+		apiListenerInfo = listener;
 		String url = Utils.toBase64url(payData.getOcontent());
 		PayDataRequest.turnToIntent(activity, url);
 	}
