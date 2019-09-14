@@ -36,6 +36,7 @@
     public static <methods>;
 }
 -keepclasseswithmembers class com.jmhy.sdk.config.AppConfig{
+    public static java.lang.String openid;
     public static java.lang.String Token;
     public static int appId;
     public static java.lang.String appKey;
