@@ -126,6 +126,7 @@ public class JmPhonerLogin5Fragment extends JmBaseFragment implements
 				Registermsg registermsg = (Registermsg) msg.obj;
 				autologin(registermsg.getAuto_login_token());
 				break;
+			case AppConfig.AUTO_LOGIN_SUCCESS:
 			case AppConfig.LOGIN_SUCCESS:
 				LoginMessage result = (LoginMessage) msg.obj;
 				showUserMsg(result.getUname());

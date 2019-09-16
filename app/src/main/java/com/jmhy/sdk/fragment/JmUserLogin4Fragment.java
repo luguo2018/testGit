@@ -170,7 +170,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
 				showMsg(resultmsg);
 				mPasswordEt.setText("");
 				break;
-
+			case AppConfig.AUTO_LOGIN_SUCCESS:
 			case AppConfig.LOGIN_SUCCESS:
 				LoginMessage result = (LoginMessage) msg.obj;
 				showUserMsg(result.getUname());

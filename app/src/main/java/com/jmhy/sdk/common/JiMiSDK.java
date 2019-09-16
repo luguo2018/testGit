@@ -72,9 +72,6 @@ public class JiMiSDK {
 			try {
 				switch (msg.what) {
 				case 1:
-                    JmLoginActivity.closeActivity();
-					apiListenerInfo.onSuccess(msg.obj);
-					break;
 				case 2:
                     apiListenerInfo.onSuccess(msg.obj);
 					break;
@@ -86,8 +83,6 @@ public class JiMiSDK {
 					}
 					break;
 				}
-                
-                	
 			} catch (Exception e) {
 				// TODO: handle exception
 			}

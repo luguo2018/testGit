@@ -25,11 +25,8 @@ public class MainActivity extends Activity {
     private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout;
     private View force_exit;
 
-    /*private final int appId = 100001;
-    private final String appKey = "69a1f04568822163d335aca0564fd666";*/
-
-    private final int appId = 103609;
-    private final String appKey = "24687b687f6f858182b26dc5180258a0";
+    private final int appId = 100001;
+    private final String appKey = "69a1f04568822163d335aca0564fd666";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

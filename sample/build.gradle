@@ -42,13 +42,13 @@ android {
         //约定：开发服develop，测试服perProduce，生产服produce
         landscape {
             applicationId "com.jmhy.sdk.landscape"
-            manifestPlaceholders = [ORIENTATION : "landscape",
+            manifestPlaceholders = [ORIENTATION : "sensorLandscape",
                                     APP_NAME : "@string/app_name_landscape"]
             dimension "develop"
         }
         portrait {
             applicationId "com.jmhy.sdk.portrait"
-            manifestPlaceholders = [ORIENTATION : "portrait",
+            manifestPlaceholders = [ORIENTATION : "sensorPortrait",
                                     APP_NAME : "@string/app_name"]
             dimension "develop"
         }
