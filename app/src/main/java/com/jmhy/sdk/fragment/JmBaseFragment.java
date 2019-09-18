@@ -58,18 +58,15 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		transaction.commit();
 	}
 
-	/**
-	 * 
-	 * @param result
-	 * @param msg
-	 * @param userName
-	 * @param uid
-	 * @param time
-	 * @param gametoken
-	 */
 	public void wrapaLoginInfo(String result, String msg, String userName,
 			String openid, String gametoken) {
 		Log.i("JiMiSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
+
+		if(TextUtils.isEmpty(openid) || TextUtils.isEmpty(gametoken)){
+			Log.w("JiMiSDK", "wrapaLoginInfo openid or gametoken is null");
+			return;
+		}
+
 		if(result.equals("success")){
 			AppConfig.isShow = true;
 		}
@@ -87,7 +84,6 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		mssg.obj = login;
 		mssg.what = 1;
 		JiMiSDK.handler.sendMessage(mssg);
-
 	}
 
 	/**

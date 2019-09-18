@@ -101,11 +101,11 @@ public class PermissionActivity extends Activity {
             return;
         }
 
-        int sdkVersion = context.getApplicationInfo().targetSdkVersion;
+        /*int sdkVersion = context.getApplicationInfo().targetSdkVersion;
         if(sdkVersion < VERSION_CODES.M) {
             listener.onPermissionResult(true);
             return;
-        }
+        }*/
 
         PermissionActivity.listener = listener;
         PermissionActivity.permissionList = permissionList;
@@ -121,11 +121,11 @@ public class PermissionActivity extends Activity {
             return;
         }
 
-        int sdkVersion = context.getApplicationInfo().targetSdkVersion;
+        /*int sdkVersion = context.getApplicationInfo().targetSdkVersion;
         if(sdkVersion < VERSION_CODES.M) {
             listener.onPermissionResult(true);
             return;
-        }
+        }*/
 
         if(Settings.canDrawOverlays(context)){
             listener.onPermissionResult(true);
@@ -140,11 +140,11 @@ public class PermissionActivity extends Activity {
     }
 
     private void requestFloatPermission(){
-        int sdkVersion = getApplicationInfo().targetSdkVersion;
+        /*int sdkVersion = getApplicationInfo().targetSdkVersion;
         if(sdkVersion < VERSION_CODES.M) {
             onPermissionResult(true);
             return;
-        }
+        }*/
 
         if (!Settings.canDrawOverlays(this)) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));

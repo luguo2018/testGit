@@ -165,7 +165,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             addView(createView(mContext));
             mWindowManager.addView(this, mWmParams);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.w(TAG, e);
         }
         mTimer = new Timer();
         // hide();

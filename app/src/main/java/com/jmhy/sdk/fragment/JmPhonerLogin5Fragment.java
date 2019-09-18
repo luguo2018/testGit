@@ -14,17 +14,12 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.jmhy.sdk.activity.JmAutoLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.Guest;
 import com.jmhy.sdk.model.LoginMessage;
-import com.jmhy.sdk.model.MobileUser;
-import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
@@ -364,5 +359,20 @@ public class JmPhonerLogin5Fragment extends JmBaseFragment implements
 					}
 				});
 
+	}
+
+	@Override
+	public void onDestroy() {
+		if(mGuestTask != null){
+			mGuestTask.cancel(false);
+		}
+		if(mSmsTask != null){
+			mSmsTask.cancel(false);
+		}
+		if(mLoginmobileTask != null){
+			mLoginmobileTask.cancel(false);
+		}
+
+		super.onDestroy();
 	}
 }

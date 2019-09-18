@@ -252,4 +252,9 @@ public class MainActivity extends Activity {
         Log.i(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
+
+    @Override
+    public void onBackPressed() {
+        mBtnexit.performClick();
+    }
 }

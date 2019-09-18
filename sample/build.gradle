@@ -45,14 +45,20 @@ android {
             manifestPlaceholders = [ORIENTATION : "sensorLandscape",
                                     APP_NAME : "@string/app_name_landscape"]
             dimension "develop"
+            versionName releaseTime()
         }
         portrait {
             applicationId "com.jmhy.sdk.portrait"
             manifestPlaceholders = [ORIENTATION : "sensorPortrait",
                                     APP_NAME : "@string/app_name"]
             dimension "develop"
+            versionName releaseTime()
         }
     }
+}
+
+def static releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08:00"))
 }
 
 dependencies {

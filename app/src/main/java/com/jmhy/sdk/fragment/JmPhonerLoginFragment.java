@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -638,14 +637,22 @@ public class JmPhonerLoginFragment extends JmBaseFragment implements
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
+		if(mGuestTask != null){
+			mGuestTask.cancel(false);
+		}
+		if(mSmsTask != null){
+			mSmsTask.cancel(false);
+		}
+		if(mLoginmobileTask != null){
+			mLoginmobileTask.cancel(false);
+		}
+
 		super.onDestroy();
 		mIbcode.setClickable(true);
 		flag = false;
 		mIbcode.setText(""
 				+ AppConfig.getString(getActivity(),
 						"moblie_bt_code"));
-
 		j = 0;
 	}
 

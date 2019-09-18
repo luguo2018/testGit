@@ -23,26 +23,26 @@ public class Logindata {
                 if (AppConfig.isswitch) {
                     //自动登录界面
                     Intent intent = new Intent(context, JmAutoLoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(intent);
                 } else {
                     AppConfig.isswitch = true;
                     Intent intent = new Intent(context, JmLoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(intent);
                 }
             } else {
                 Intent intent = new Intent(context, JmLoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);
             }
         } else {
             //登录界面
             Intent intent = new Intent(context, JmLoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(intent);
         }

@@ -2,6 +2,8 @@ package com.jmhy.sdk.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 
 import com.jmhy.sdk.view.FloatView;
 

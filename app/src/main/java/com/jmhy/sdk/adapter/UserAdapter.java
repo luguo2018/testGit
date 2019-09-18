@@ -31,7 +31,7 @@ public class UserAdapter extends BaseAdapter{
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public String getItem(int position) {
 		return null;
 	}
 
@@ -68,7 +68,7 @@ public class UserAdapter extends BaseAdapter{
 		return convertView;
 	}
 
-	class Item {
+	private class Item {
 
 		private TextView user;
 		private ImageView cancel;

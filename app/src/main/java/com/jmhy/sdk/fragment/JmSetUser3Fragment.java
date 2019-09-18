@@ -27,6 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class JmSetUser3Fragment extends JmBaseFragment implements
 		OnClickListener {
@@ -152,20 +153,13 @@ public class JmSetUser3Fragment extends JmBaseFragment implements
 	 * 截屏
 	 */
 	private void saveCurrentImage() {
-		// 获取当前屏幕的大小
-		int width = getActivity().getWindow().getDecorView().getRootView()
-				.getWidth();
-		int height = getActivity().getWindow().getDecorView().getRootView()
-				.getHeight();
-		// 生成相同大小的图片
-		Bitmap temBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 		// 找到当前页面的跟布局
 		View view = getActivity().getWindow().getDecorView().getRootView();
 		// 设置缓存
 		view.setDrawingCacheEnabled(true);
 		view.buildDrawingCache();
 		// 从缓存中获取当前屏幕的图片
-		temBitmap = view.getDrawingCache();
+		Bitmap temBitmap = view.getDrawingCache();
 		path = Environment.getExternalStorageDirectory() + File.separator
 				+ "DCIM" + File.separator + "Camera" + File.separator;
 		file = new File(path);
@@ -174,8 +168,7 @@ public class JmSetUser3Fragment extends JmBaseFragment implements
 
 		}
 
-		 SimpleDateFormat formatter = new
-		 SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
 		 Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 		 String str = formatter.format(curDate);
 		String fname = path + str + ".jpg";

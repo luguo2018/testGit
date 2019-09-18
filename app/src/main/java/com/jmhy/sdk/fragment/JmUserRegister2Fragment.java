@@ -292,4 +292,16 @@ public class JmUserRegister2Fragment extends JmBaseFragment implements
 					}
 				});
 	}
+
+	@Override
+	public void onDestroy() {
+		if(mGuestTask != null){
+			mGuestTask.cancel(false);
+		}
+		if(mRegisterTask != null){
+			mRegisterTask.cancel(false);
+		}
+
+		super.onDestroy();
+	}
 }

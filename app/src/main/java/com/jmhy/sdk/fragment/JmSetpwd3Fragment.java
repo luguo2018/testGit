@@ -186,4 +186,13 @@ public class JmSetpwd3Fragment extends JmBaseFragment implements OnClickListener
 
 		super.onSaveInstanceState(outState);
 	}
+
+	@Override
+	public void onDestroy() {
+		if(mRegisterTask != null){
+			mRegisterTask.cancel(false);
+		}
+
+		super.onDestroy();
+	}
 }

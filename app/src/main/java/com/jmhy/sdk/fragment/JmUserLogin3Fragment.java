@@ -609,4 +609,19 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
 
 		return msg;
 	}
+
+	@Override
+	public void onDestroy() {
+		if(mGuestTask != null){
+			mGuestTask.cancel(false);
+		}
+		if(mLoginTask != null){
+			mLoginTask.cancel(false);
+		}
+		if(mautoLoginTask != null){
+			mautoLoginTask.cancel(false);
+		}
+
+		super.onDestroy();
+	}
 }

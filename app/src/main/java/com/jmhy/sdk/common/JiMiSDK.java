@@ -253,12 +253,12 @@ public class JiMiSDK {
 		if(!TextUtils.equals(AppConfig.is_sdk_float_on, "1")){
 			return;
 		}
-        handler.postDelayed(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 showFloatDelayed();
             }
-        }, 300);
+        });
 	}
 
 	private static void showFloatDelayed(){

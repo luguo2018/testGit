@@ -461,7 +461,15 @@ public class JmPhonerLogin4Fragment extends JmBaseFragment implements
 
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
+		if(mGuestTask != null){
+			mGuestTask.cancel(false);
+		}
+		if(mSmsTask != null){
+			mSmsTask.cancel(false);
+		}
+		if(mLoginmobileTask != null){
+			mLoginmobileTask.cancel(false);
+		}
 		super.onDestroy();
 		mIbcode.setClickable(true);
 		flag = false;

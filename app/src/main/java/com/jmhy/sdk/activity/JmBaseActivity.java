@@ -162,6 +162,10 @@ public class JmBaseActivity extends Activity {
 			String openid, String gametoken) {
 		Log.i("JiMiSDK", "wrapaLoginInfo result=" + result+",msg=" +msg + ",openid=" + openid + ",gametoken=" + gametoken+",userName="+userName);
 
+		if(TextUtils.isEmpty(openid) || TextUtils.isEmpty(gametoken)){
+			Log.w("JiMiSDK", "wrapaLoginInfo openid or gametoken is null");
+			return;
+		}
 		if(result.equals("success")){
 			AppConfig.isShow = true;
 		}
