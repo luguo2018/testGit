@@ -1,27 +1,14 @@
 package com.jmhy.sdk.fragment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import com.jmhy.sdk.activity.JmLoginActivity;
-import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.utils.Utils;
-
-import android.content.Intent;
+import android.Manifest;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.net.Uri;
+import android.graphics.Canvas;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +17,19 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.jmhy.sdk.activity.JmLoginActivity;
+import com.jmhy.sdk.activity.PermissionActivity;
+import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
+import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.model.Guest;
+import com.jmhy.sdk.utils.MediaUtils;
+import com.jmhy.sdk.utils.Utils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JmSetUserFragment extends JmBaseFragment implements
 		OnClickListener {
@@ -175,53 +175,44 @@ public class JmSetUserFragment extends JmBaseFragment implements
 		}
 	}
 
+	private void saveCurrentImage() {
+		if(VERSION.SDK_INT < VERSION_CODES.Q){
+			List<String> permission = new ArrayList<>();
+			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			PermissionActivity.requestPermission(getActivity(), permission, new PermissionResultListener() {
+				@Override
+				public void onPermissionResult(boolean grant) {
+					if(!grant) {
+						JiMiSDK.permissionTip(getActivity(), "jm_permission_tip_init");
+					}else{
+						saveCurrentSnapshot();
+					}
+				}
+			});
+		}else{
+			saveCurrentSnapshot();
+		}
+	}
+
 	/**
 	 * 截屏
 	 */
-	private void saveCurrentImage() {
+	private void saveCurrentSnapshot() {
+		if(contentView == null){
+			return;
+		}
 		// 找到当前页面的跟布局
-		View view = getActivity().getWindow().getDecorView().getRootView();
 		// 设置缓存
-		view.setDrawingCacheEnabled(true);
-		view.buildDrawingCache();
-		// 从缓存中获取当前屏幕的图片
-		Bitmap temBitmap = view.getDrawingCache();
-		path = Environment.getExternalStorageDirectory() + File.separator
-				+ "DCIM" + File.separator + "Camera" + File.separator;
-		file = new File(path);
-		if (!file.exists()) {
-			file.mkdirs();
+		contentView.setDrawingCacheEnabled(true);
+		contentView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+		Bitmap temBitmap = Bitmap.createBitmap(contentView.getWidth(), contentView.getHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(temBitmap);
+		contentView.draw(canvas);
+		contentView.destroyDrawingCache();
 
-		}
-
-		 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault());
-		 Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
-		 String str = formatter.format(curDate);
-		String fname = path + str + ".jpg";
-		// 输出到sd卡
-		if (temBitmap != null) {
-			// System.out.println("bitmapgot!");
-			try {
-
-				FileOutputStream out = new FileOutputStream(fname);
-
-				temBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-				// System.out.println("file" + fname + "outputdone.");
-				String snapshot = AppConfig.getString(getActivity(), "snapshot_save");
-				showMsg(snapshot + path);
-
-			} catch (Exception e) {
-			}
-			 try {
-			        MediaStore.Images.Media.insertImage(getActivity().getContentResolver(),
-							file.getAbsolutePath(), str + ".jpg", null);
-			    } catch (FileNotFoundException e) {
-			        e.printStackTrace();
-			    }
-			    // 最后通知图库更新
-			    getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + fname)));
-		}
+		MediaUtils.saveImage(getActivity(), temBitmap);
+		String snapshot = AppConfig.getString(getActivity(), "snapshot_save");
+		showMsg(snapshot);
 	}
 
 	class TimeCount extends CountDownTimer {

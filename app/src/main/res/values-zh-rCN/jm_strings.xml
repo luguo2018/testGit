@@ -38,7 +38,7 @@
     <string name="user_forgot_msg">忘记密码</string>
     <string name="login_tip">亲，快点登陆吧！</string>
     <string name="function_not_open">此功能暂未开通</string>
-    <string name="snapshot_save">截图已保存</string>
+    <string name="snapshot_save">截图已保存到相册</string>
     <string name="exit_title">是否退出游戏？</string>
     <string name="exit_no">继续游戏</string>
     <string name="exit_yes">退出游戏</string>

@@ -99,8 +99,6 @@ public class IntenetUtil {
      * @return 运营商名字
      */
     public static String getOperator(Context context) {
-
-
         String ProvidersName = "";
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String IMSI = telephonyManager.getSubscriberId();

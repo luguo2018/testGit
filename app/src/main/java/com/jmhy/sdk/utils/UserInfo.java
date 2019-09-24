@@ -12,21 +12,29 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Environment;
 import android.util.Log;
 
+import com.jmhy.sdk.common.JiMiSDK;
+
 public class UserInfo {
-	private static String path = "";
-	private static String name = "";
-	private File file;
-	private static File file_name;
+	private File dir;
+	private File file_name;
 
 	public UserInfo() {
-		path = Environment.getExternalStorageDirectory().getAbsolutePath()
-				+ "/jmsdk/";
-		name = "jmsdk";
-		file = new File(path);
-		file_name = new File(path + name);
+		if(VERSION.SDK_INT < VERSION_CODES.Q){
+			dir = new File(Environment.getExternalStorageDirectory(), "jmsdk");
+		}else{
+			dir = new File(JiMiSDK.context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "jmsdk");
+		}
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		file_name = new File(dir, "jmsdk");
+
+		Log.i("UserInfo", "file = " + file_name.getAbsolutePath());
 	}
 
 	/**
@@ -67,18 +75,20 @@ public class UserInfo {
 		// }
 		RandomAccessFile rFile = null;
 		data = Base64.encode(data.getBytes());
-		if (!file.exists()) {
-			file.mkdirs();
+		if (!dir.exists()) {
+			dir.mkdirs();
 		}
-		String fileName = path + name;
+
+		//FileUtils.saveFile(JiMiSDK.context, file_name, data);
+
 		FileOutputStream fout;
 		try {
-			fout = new FileOutputStream(fileName);
+			fout = new FileOutputStream(file_name);
 			byte[] bytes = data.getBytes();
 			fout.write(bytes);
 			fout.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
@@ -137,7 +147,6 @@ public class UserInfo {
 	/**
 	 * 读取用户信息
 	 * 
-	 * @throws FileNotFoundException
 	 */
 	public String readUserInfo() {
 		String result = "";
@@ -200,7 +209,7 @@ public class UserInfo {
 	/**
      * 删除已存储的文件
      */
-    public static void deletefile() {
+    public void deletefile() {
         try {
             // 找到文件所在的路径并删除该文件
             if(file_name.exists()){

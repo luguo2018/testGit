@@ -6,16 +6,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.jmhy.sdk.activity.ForceActivity;
-import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.activity.PermissionActivity;
 import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
@@ -37,7 +37,7 @@ import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.StatisticsSDKUtils;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.view.Exitdialog;
-import com.jmhy.sdk.view.Exitdialog.Exitdialoglistener;
+import com.jmhy.sdk.view.Exitdialog.ExitDialogListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +56,7 @@ public class JiMiSDK {
 
 	public static ApiListenerInfo apiListenerInfo;
 	public static UserApiListenerInfo userlistenerinfo;
-	private static Exitdialog exitdialog;
-	
+
     private static ApiAsyncTask RoleinfoTask;
 	public static Context context;
 
@@ -105,22 +104,26 @@ public class JiMiSDK {
         Log.i(TAG, "version : " + AppConfig.sdk_version);
 
 		final Activity activity = (Activity)context;
-		List<String> permission = new ArrayList<>();
-		permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-		permission.add(Manifest.permission.READ_PHONE_STATE);
-		PermissionActivity.requestPermission(context, permission, new PermissionResultListener() {
-			@Override
-			public void onPermissionResult(boolean grant) {
-				Log.i(TAG, "onPermissionResult " + grant);
-				if(!grant) {
-					permissionTip(activity, "jm_permission_tip_init");
+		if(VERSION.SDK_INT < VERSION_CODES.Q){
+			List<String> permission = new ArrayList<>();
+			permission.add(Manifest.permission.READ_PHONE_STATE);
+			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+			PermissionActivity.requestPermission(context, permission, new PermissionResultListener() {
+				@Override
+				public void onPermissionResult(boolean grant) {
+					Log.i(TAG, "onPermissionResult " + grant);
+					if(!grant) {
+						permissionTip(activity, "jm_permission_tip_init");
 
-					listener.fail("fail");
-				}else{
-					init(activity, appid, appkey, listener);
+						listener.fail("fail");
+					}else{
+						init(activity, appid, appkey, listener);
+					}
 				}
-			}
-		});
+			});
+		}else{
+			init(activity, appid, appkey, listener);
+		}
 	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
@@ -156,6 +159,7 @@ public class JiMiSDK {
 			new InitData(context, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
+					Log.i(TAG, "init success");
 					init = true;
 					listener.Success(msg);
 
@@ -164,6 +168,7 @@ public class JiMiSDK {
 
 				@Override
 				public void fail(String msg) {
+					Log.i(TAG, "init fail : " + msg);
 					listener.fail(msg);
 				}
 			});// point浮点的显示
@@ -351,29 +356,24 @@ public class JiMiSDK {
 			final ExitListener exitlistener) {
 
 		Log.i(TAG, "---exit--");
-	
-		exitdialog = new Exitdialog(activity, AppConfig.resourceId(activity,
-				"jm_MyDialog", "style"), new Exitdialoglistener() {
 
-			public void onClick(View v) {
-				if (v.getId() == AppConfig.resourceId(activity, "dialog_exit",
-						"id")) {
-					PushService.closeSchedule();
-					Intent intentFour = new Intent(activity, PushService.class);
-					activity.stopService(intentFour);
+		Exitdialog exitdialog = new Exitdialog(activity, AppConfig.resourceId(activity,
+				"jm_MyDialog", "style"), new ExitDialogListener() {
+			@Override
+			public void onExit() {
+				PushService.closeSchedule();
+				Intent intentFour = new Intent(activity, PushService.class);
+				activity.stopService(intentFour);
 
-					FloatUtils.destroyFloat();
-					WebApi.shutdown();
-					statisticsSDK.onExit();
-					exitlistener.ExitSuccess("success");
+				FloatUtils.destroyFloat();
+				WebApi.shutdown();
+				statisticsSDK.onExit();
+				exitlistener.ExitSuccess("success");
+			}
 
-					exitdialog.dismiss();
-				} else if (v.getId() == AppConfig.resourceId(activity,
-						"dialog_cancel", "id")) {
-
-					exitlistener.fail("fail");
-					exitdialog.dismiss();
-				}
+			@Override
+			public void onCancel() {
+				exitlistener.fail("fail");
 			}
 		});
 		// exitdialog.setCancelable(false);
@@ -428,7 +428,7 @@ public class JiMiSDK {
 		});
 	}
 
-	private static void permissionTip(Activity activity, String tipRes){
+	public static void permissionTip(Activity activity, String tipRes){
 		String tip = AppConfig.getString(activity, tipRes);
 		String button = AppConfig.getString(activity, "jm_confirm");
 		Dialog dialog = new AlertDialog.Builder(activity, AlertDialog.THEME_HOLO_LIGHT)

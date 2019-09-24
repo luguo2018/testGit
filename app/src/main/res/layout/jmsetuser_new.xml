@@ -7,6 +7,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
+        android:id="@+id/content_view"
         android:layout_width="@dimen/jm_login_width"
         android:layout_height="@dimen/jm_login_height"
         android:paddingLeft="15dp"

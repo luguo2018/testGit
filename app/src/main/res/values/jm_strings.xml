@@ -38,7 +38,7 @@
     <string name="user_forgot_msg">Password forgotten</string>
     <string name="login_tip">Dear customer, please login in!</string>
     <string name="function_not_open">This function is temporarily not open</string>
-    <string name="snapshot_save">Screenshot is saved</string>
+    <string name="snapshot_save">Screenshot is save to Album</string>
     <string name="exit_title">To exit the game?</string>
     <string name="exit_no">Continue the game</string>
     <string name="exit_yes">Exit the game</string>

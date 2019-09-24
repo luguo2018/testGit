@@ -368,7 +368,7 @@ public class Utils {
 		contentList = seference.getContentList();
 		String data = "";
 		if (contentList == null) {
-			UserInfo.deletefile();
+			creatFile.deletefile();
 			return;
 		} else {
 			for (int i = 0; i < contentList.size(); i++) {
