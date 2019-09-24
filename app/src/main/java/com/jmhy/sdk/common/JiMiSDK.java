@@ -26,6 +26,7 @@ import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
 import com.jmhy.sdk.push.PushService;
 import com.jmhy.sdk.sdk.InitData;
+import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.sdk.Logindata;
 import com.jmhy.sdk.sdk.Loginout;
 import com.jmhy.sdk.sdk.PayDataRequest;
@@ -445,11 +446,11 @@ public class JiMiSDK {
 		Toast.makeText(context, content, Toast.LENGTH_LONG).show();
 	}
 
-	private static DeviceInfo deviceInfo;
 	public static String getUUID(){
-		if(deviceInfo == null) {
-			deviceInfo = new DeviceInfo(context);
+		if(JmhyApi.get().getDeviceInfo() == null) {
+			DeviceInfo deviceInfo = new DeviceInfo(context);
+			return deviceInfo.getUuid();
 		}
-        return deviceInfo.getUuid();
-    }
+		return JmhyApi.get().getDeviceInfo().getUuid();
+	}
 }
