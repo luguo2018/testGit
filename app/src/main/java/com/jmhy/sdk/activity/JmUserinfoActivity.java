@@ -84,6 +84,11 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 
 		View view =  findViewById(AppConfig.resourceId(this,
 				"content", "id"));
+		//测试view是否为空
+		if (view == null){
+			Log.e("JiMiSDK","JmuserinfoActivity view == null");
+			return;
+		}
 		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)view.getLayoutParams();
 		switch (AppConfig.skin){
 			case 5:

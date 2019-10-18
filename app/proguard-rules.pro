@@ -22,6 +22,7 @@
 
 -keep class com.jmhy.sdk.model.** {*;}
 -keep class com.jmhy.sdk.common.** {*;}
+-keep class com.jmhy.sdk.push.** {*;}
 -keep class com.jmhy.sdk.http.ApiRequestListener {*;}
 -keepnames class com.jmhy.sdk.http.ApiAsyncTask
 -keep class com.jmhy.sdk.sdk.StatisticsSDK {*;}

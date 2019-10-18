@@ -29,6 +29,7 @@ import java.util.TimerTask;
 
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.utils.DisplayUtil;
@@ -41,7 +42,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private WindowManager.LayoutParams mWmParams;
     private WindowManager mWindowManager;
-    private Context mContext;
+    private static Context mContext;
 
     private ImageView mIvFloatLogo;
     private LinearLayout mLlFloatMenu;
@@ -127,8 +128,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         init(context);
     }
 
-    private void init(Context mContext) {
-        this.mContext = mContext;
+    private void init(Context context) {
+        this.mContext = context;
 
         //mWindowManager = ((Activity) mContext).getWindowManager();
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -356,6 +357,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        if (mContext == null){
+            Log.e("JiMiSDK","floatview mcontext is null");
+        }
         removeTimerTask();
         // 获取相对屏幕的坐标，即以屏幕左上角为原点
         int x = (int) event.getRawX();
@@ -474,8 +478,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private void removeFloatView() {
         try {
-            mWmParams.alpha = 0;
-            mWindowManager.updateViewLayout(this, mWmParams);
+      /*      mWmParams.alpha = 0;
+            mWindowManager.updateViewLayout(this, mWmParams);*/
+            Log.e("JiMiSDK","floatview removeFloatView");
+
             mWindowManager.removeView(this);
             mWindowManager = null;
             removeAllViews();
@@ -499,6 +505,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * 显示悬浮窗
      */
     public void show() {
+        Log.i("JiMiSDK","显示悬浮窗...");
+
         try {
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
@@ -638,6 +646,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     }
 
     public void destroy() {
+        Log.e("JiMiSDK","floatview destroy");
         mContext = null;
         removeTimerTask();
         mTimer.cancel();

@@ -60,6 +60,7 @@ public class JiMiSDK {
 
     private static ApiAsyncTask RoleinfoTask;
 	public static Context context;
+	public static Context mCreateContext;
 
     public static ActivityStackManager stackManager = new ActivityStackManager();
 
@@ -102,7 +103,7 @@ public class JiMiSDK {
 			return;
 		}
 
-        Log.i(TAG, "version : " + AppConfig.sdk_version);
+        Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version);
 
 		final Activity activity = (Activity)context;
 		if(VERSION.SDK_INT < VERSION_CODES.Q){
@@ -228,6 +229,7 @@ public class JiMiSDK {
 
 	public static void onCreate(Activity activity) {
 		Log.i(TAG, "onCreate");
+		JiMiSDK.mCreateContext = (Context)activity;
 		stackManager.pushActivity(activity);
 		statisticsSDK.onCreate(activity);
 	}
@@ -273,7 +275,7 @@ public class JiMiSDK {
             Log.i(TAG, "showFloat top activity is null");
             return;
         }
-        PermissionActivity.requestFloatPermission(activity, new PermissionResultListener() {
+        PermissionActivity.requestFloatPermission(JiMiSDK.mCreateContext, new PermissionResultListener() {
             @Override
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
@@ -386,6 +388,7 @@ public class JiMiSDK {
 	 */
 	public static void switchAccount(Context context){
 		Log.i(TAG,"触发切换账号");
+		FloatUtils.destroyFloat();
 		if(userlistenerinfo == null) {
 			return;
 		}
@@ -393,7 +396,6 @@ public class JiMiSDK {
 		AppConfig.isShow = false;
 		AppConfig.ismobillg=false;
 		AppConfig.isswitch = false;
-		FloatUtils.destroyFloat();
 	}
 
 	public static void clearAllActivity(){
