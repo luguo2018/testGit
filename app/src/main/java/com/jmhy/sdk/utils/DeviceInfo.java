@@ -1,5 +1,6 @@
 package com.jmhy.sdk.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.provider.Settings.Secure;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -34,13 +36,13 @@ public class DeviceInfo {
 	private String model = "";//手机型号
 	private String deviceScreen = "";//手机分辨率
 	private String appVersion = "";//应用版本号
-	private String imsi="";//手机sim卡的串号
-	private String mac ="";
+	private String imsi = "";//手机sim卡的串号
+	private String mac = "";
 	private String packagename = "";//包名
 	private String network = "";//网络制式
 	private String operator = "";//运营商
 	private String is_charged;//是否在充电
-   
+
 
 	// private static UUID uuid;
 
@@ -48,18 +50,21 @@ public class DeviceInfo {
 
 		// this.context = context;
 		getData(context);
-	
-         
+
+
 	}
-	
+
 	private void getData(Context context) {
 		TelephonyManager telephonyManager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
 
-		if(VERSION.SDK_INT < VERSION_CODES.Q){
-			imei = telephonyManager.getDeviceId();
-			serialId = telephonyManager.getSimSerialNumber();
-			imsi = telephonyManager.getSubscriberId();
+		if (VERSION.SDK_INT < VERSION_CODES.Q) {
+			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+				imei = telephonyManager.getDeviceId();
+				serialId = telephonyManager.getSimSerialNumber();
+				imsi = telephonyManager.getSubscriberId();
+			}
+
 
 			operator = IntenetUtil.getOperator(context);
 		}

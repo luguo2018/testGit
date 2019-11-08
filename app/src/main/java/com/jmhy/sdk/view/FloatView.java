@@ -79,6 +79,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 case HANDLER_TYPE_HIDE_LOGO:
                     // 比如隐藏悬浮框
                     if (mCanHide) {
+                        Log.i(TAG, "隐藏悬浮框");
+
                         mCanHide = false;
                         /*if (mIsRight) {
                             // 靠边隐藏图片
@@ -112,9 +114,15 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         refreshIconTip();
 
                         mWmParams.alpha = 0.7f;
-                        mWindowManager.updateViewLayout(FloatView.this, mWmParams);
-                        refreshFloatMenu(mIsRight);
-                        mLlFloatMenu.setVisibility(View.GONE);
+                        if (mContext == null) {
+                            Log.i(TAG, "mContext is null");
+                        }else {
+                            Log.i(TAG, "mContext is not null");
+
+                            mWindowManager.updateViewLayout(FloatView.this, mWmParams);
+                            refreshFloatMenu(mIsRight);
+                            mLlFloatMenu.setVisibility(View.GONE);
+                        }
 
                     }
                     break;
@@ -219,6 +227,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         LayoutInflater inflater = LayoutInflater.from(context);
         // 从布局文件获取浮动窗口视图
         View rootFloatView;
+        Log.i(TAG, "AppConfig.skin == " + AppConfig.skin);
+
         switch (AppConfig.skin){
             case 5:
             case 4:
@@ -505,7 +515,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * 显示悬浮窗
      */
     public void show() {
-        Log.i("JiMiSDK","显示悬浮窗...");
+        Log.i(TAG,"显示悬浮窗...");
 
         try {
             if (getVisibility() != View.VISIBLE) {
@@ -621,6 +631,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * 定时隐藏float view
      */
     private void timerForHide() {
+        Log.i(TAG, "timerForHide");
+
         mCanHide = true;
 
         // 结束任务

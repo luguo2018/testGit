@@ -10,46 +10,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application>
-        <activity
-            android:name="com.jmhy.sdk.activity.JmLoginActivity"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmAutoLoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmUserinfoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmpayActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@style/jm_Transparent" />
-        <activity
-            android:name="com.jmhy.sdk.activity.JmCommunityActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen" />
-        <activity
-            android:name="com.jmhy.sdk.activity.PermissionActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-        <activity
-            android:name="com.jmhy.sdk.activity.ForceActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="behind"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
-        <service android:name="com.jmhy.sdk.push.PushService" />
     </application>
 </manifest>

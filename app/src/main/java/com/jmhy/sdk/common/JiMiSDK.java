@@ -33,6 +33,7 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.sdk.RoleinfoRequest;
 import com.jmhy.sdk.sdk.StatisticsSDK;
 import com.jmhy.sdk.utils.ActivityStackManager;
+import com.jmhy.sdk.utils.DealCrash;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.StatisticsSDKUtils;
@@ -54,6 +55,7 @@ public class JiMiSDK {
 	public final static String payChannel = "jm";
 
 	private static boolean init;
+
 
 	public static ApiListenerInfo apiListenerInfo;
 	public static UserApiListenerInfo userlistenerinfo;
@@ -103,7 +105,7 @@ public class JiMiSDK {
 			return;
 		}
 
-        Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version);
+        Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 
 		final Activity activity = (Activity)context;
 		if(VERSION.SDK_INT < VERSION_CODES.Q){
@@ -129,11 +131,10 @@ public class JiMiSDK {
 	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
+		Log.i(TAG, "---init---");
 		JiMiSDK.context = context.getApplicationContext();
-
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
-
 		try {
 			SdkParams params = Utils.getSdkParams(context);
 			WebApi.init(params.host);
@@ -187,6 +188,8 @@ public class JiMiSDK {
 	 * @param listener
 	 */
 	public static void login(Activity context, int appid, String appkey, final ApiListenerInfo listener) {
+		Log.i(TAG, "---login---");
+
 		if(!init){
 			Log.w(TAG, "sdk not initialized yet");
 			return;
@@ -229,6 +232,7 @@ public class JiMiSDK {
 
 	public static void onCreate(Activity activity) {
 		Log.i(TAG, "onCreate");
+		Log.i(TAG, "activity = " + activity.toString());
 		JiMiSDK.mCreateContext = (Context)activity;
 		stackManager.pushActivity(activity);
 		statisticsSDK.onCreate(activity);
@@ -258,15 +262,16 @@ public class JiMiSDK {
 	}
 
 	public static void showFloat(){
+
 		if(!TextUtils.equals(AppConfig.is_sdk_float_on, "1")){
 			return;
 		}
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 showFloatDelayed();
             }
-        });
+        },5000);
 	}
 
 	private static void showFloatDelayed(){
@@ -275,12 +280,13 @@ public class JiMiSDK {
             Log.i(TAG, "showFloat top activity is null");
             return;
         }
-        PermissionActivity.requestFloatPermission(JiMiSDK.mCreateContext, new PermissionResultListener() {
+        PermissionActivity.requestFloatPermission(context, new PermissionResultListener() {
             @Override
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
                 if(grant){
-                    FloatUtils.showFloat(activity);
+					Log.i(TAG, "activity = " + JiMiSDK.mCreateContext.toString());
+					FloatUtils.showFloat((Activity)JiMiSDK.mCreateContext);
                 }else{
                     permissionTip(activity, "jm_permission_tip_float");
                 }
@@ -339,6 +345,7 @@ public class JiMiSDK {
 	public static void setExtData(Context context, String type,String roleid,
 			String rolename,String level,String gender,String serverno,String zoneName,
 			String balance,String power,String viplevel,String roleCTime, String roleLevelMTime,String ext) {
+		JiMiSDK.mCreateContext = context;
 		Log.i(TAG,"type="+type+",roleid="+ roleid+",rolename="+ rolename+",level="+
 				level+",gender="+ gender+",serverno="+ serverno+",zoneName="+zoneName+
 				",balance="+ balance+",power="+ power+",viplevel=" +viplevel+",ext="+

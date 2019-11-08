@@ -1,5 +1,6 @@
 package com.jmhy.sdk.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -172,6 +173,7 @@ public class JmPhonerLoginFragment extends JmBaseFragment implements
 				AppConfig.resourceId(getActivity(), "content_view", "id"));
 	}
 
+	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 
 		@Override
@@ -292,7 +294,7 @@ public class JmPhonerLoginFragment extends JmBaseFragment implements
 				showMsg(msg2.getMessage());
 				break;
 			case AppConfig.CODE_FAIL:
-				
+
 				mIbcode.setClickable(true);
 				flag = false;
 				mIbcode.setText(""

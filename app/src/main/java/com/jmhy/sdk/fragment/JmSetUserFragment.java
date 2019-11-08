@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -177,11 +178,15 @@ public class JmSetUserFragment extends JmBaseFragment implements
 
 	private void saveCurrentImage() {
 		if(VERSION.SDK_INT < VERSION_CODES.Q){
+			Log.i("JiMiSDKKK","VERSION.SDK_INT < VERSION_CODES.Q");
+
 			List<String> permission = new ArrayList<>();
 			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 			PermissionActivity.requestPermission(getActivity(), permission, new PermissionResultListener() {
 				@Override
 				public void onPermissionResult(boolean grant) {
+					Log.i("JiMiSDKKK","PermissionActivity.requestPermission");
+
 					if(!grant) {
 						JiMiSDK.permissionTip(getActivity(), "jm_permission_tip_init");
 					}else{
@@ -190,6 +195,8 @@ public class JmSetUserFragment extends JmBaseFragment implements
 				}
 			});
 		}else{
+			Log.i("JiMiSDKKK","VERSION.SDK_INT > VERSION_CODES.Q");
+
 			saveCurrentSnapshot();
 		}
 	}
