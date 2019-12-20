@@ -363,7 +363,7 @@ public class Utils {
 	 */
 	public static void saveUserToSd(Context context) {
 		List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
-		Seference seference = new Seference(JiMiSDK.context);
+		Seference seference = new Seference(JiMiSDK.mContext);
 		UserInfo creatFile = new UserInfo();
 		contentList = seference.getContentList();
 		String data = "";

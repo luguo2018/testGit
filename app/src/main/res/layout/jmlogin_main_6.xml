@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width_6"
+        android:layout_height="@dimen/jm_login_height_6"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/jm_login_bg_6"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_login_top_height_6"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/colsebtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_close6" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_input_height"
+                android:gravity="center_vertical"
+                android:background="@drawable/jm_phone_input_6"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/jm_phone_4"/>
+
+                <EditText
+                    android:id="@+id/edit_iphone"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="35dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/moblie_edit_hint"
+                    android:inputType="number"
+                    android:maxLength="11"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null"
+                    android:nextFocusDown="@+id/edit_code"
+                    android:textColor="#000000"
+                    android:textColorHint="#d5dad3"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_input_height"
+                android:gravity="center_vertical"
+                android:background="@drawable/jm_phone_input_6"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/jm_code_4"/>
+
+                <EditText
+                    android:id="@+id/edit_code"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="35dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/moblie_edit_code_hint"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@null"
+                    android:imeOptions="actionDone"
+                    android:textColor="#000000"
+                    android:textColorHint="#d5dad3"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/ibcode"
+                    android:layout_width="100dp"
+                    android:layout_height="33dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/jm_button_getcode_6"
+                    android:text="@string/moblie_bt_code"
+                    android:textColor="@color/jmfont_white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/jm_input_height"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:orientation="horizontal">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/ibcode"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:text="@string/jm_next_step"-->
+                    <!--android:gravity="center"-->
+                    <!--android:textColor="@color/jmfont_white"-->
+                    <!--android:textSize="15sp"-->
+                    <!--android:background="@drawable/jm_button_nextstep_6"/>-->
+            <!--</LinearLayout>-->
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/jm_forget_text_margin_top"
+                android:button="@drawable/jm_agree_button_6"
+                android:paddingLeft="4dp"
+                android:checked="true"
+                android:text="@string/jm_agreement"
+                android:textColor="@color/jmfont_black"
+                android:textSize="11sp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/agree"
+                android:layout_width="113dp"
+                android:layout_height="33dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/jm_protocol6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jm_user_protocol"
+                    android:textColor="@color/jmfont_black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+            <View
+                android:id="@+id/line"
+                android:layout_width="1dp"
+                android:layout_height="15dp"
+                android:layout_toRightOf="@id/logo"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:background="@color/jm_dialog_line"/>
+
+            <LinearLayout
+                android:id="@+id/ivkefu"
+                android:layout_width="113dp"
+                android:layout_height="33dp"
+                android:orientation="horizontal"
+                android:layout_gravity="end"
+                android:gravity="center"
+                >
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/jm_kefu6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/jm_contact_kefu"
+                    android:textColor="@color/jmfont_black"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -23,6 +23,7 @@ android {
             keyPassword '123456'
             storeFile file('sample.jks')
             storePassword '123456'
+
         }
     }
 

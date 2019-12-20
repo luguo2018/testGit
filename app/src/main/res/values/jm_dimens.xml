@@ -8,12 +8,15 @@
     <dimen name="jm_login_height_3">250dp</dimen>
     <dimen name="jm_login_width_4">333dp</dimen>
     <dimen name="jm_login_height_4">243dp</dimen>
+    <dimen name="jm_login_width_6">333dp</dimen>
+    <dimen name="jm_login_height_6">223dp</dimen>
     <dimen name="jm_register_height_old">314dp</dimen>
     <dimen name="jm_guest_height_old">287dp</dimen>
     <dimen name="jm_auto_login_height">300dp</dimen>
     <dimen name="jm_input_height">48dp</dimen>
     <dimen name="jm_login_top_height">70dp</dimen>
     <dimen name="jm_login_top_height_4">56dp</dimen>
+    <dimen name="jm_login_top_height_6">38dp</dimen>
     <dimen name="jm_login_submit_margin_top">45dp</dimen>
     <dimen name="jm_forget_text_margin_top">12dp</dimen>
     <dimen name="jm_login_logo_width">30dp</dimen>
