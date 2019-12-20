@@ -1,6 +1,7 @@
 package com.jmhy.sdk.utils;
 
 import android.app.Activity;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
@@ -13,8 +14,11 @@ public class ActivityStackManager {
     private LinkedList<WeakReference<Activity>> activityStack = new LinkedList<>();
 
     public void pushActivity(Activity activity){
+
         WeakReference<Activity> reference = new WeakReference<>(activity);
         activityStack.push(reference);
+        Log.i("JimiSDK", "activityStack = " + activityStack.size() + "  push activity = " + activity.toString());
+
     }
 
     public Activity popActivity(){
@@ -55,6 +59,10 @@ public class ActivityStackManager {
     }
 
     public Activity getBottomActivity() {
+        Log.i("JiMiSDK", "activityStack getBottomactivity = " + activityStack.size());
+        if (activityStack.size() == 0){
+            return null;
+        }
         WeakReference<Activity> reference = activityStack.get(0);
         if(reference == null){
             return null;

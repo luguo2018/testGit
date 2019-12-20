@@ -9,6 +9,7 @@ import com.jmhy.sdk.fragment.JmPhonerLogin2Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin3Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin4Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin5Fragment;
+import com.jmhy.sdk.fragment.JmPhonerLogin6Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLoginFragment;
 import com.jmhy.sdk.fragment.JmSetUser2Fragment;
 import com.jmhy.sdk.fragment.JmSetUser3Fragment;
@@ -31,6 +32,8 @@ import com.jmhy.sdk.fragment.JmUserRegisterFragment;
 public class FragmentUtils {
     public static Fragment getJmPhonerLoginFragment(Context context){
         switch (AppConfig.skin){
+            case 6:
+                return Fragment.instantiate(context, JmPhonerLogin6Fragment.class.getName());
             case 5:
                 return Fragment.instantiate(context, JmPhonerLogin5Fragment.class.getName());
             case 4:
@@ -46,6 +49,8 @@ public class FragmentUtils {
 
     public static Fragment getJmUserLoginFragment(Context context){
         switch (AppConfig.skin){
+            case 6:
+                return Fragment.instantiate(context, JmPhonerLogin6Fragment.class.getName());
             case 5:
             case 4:
                 return Fragment.instantiate(context, JmUserLogin4Fragment.class.getName());

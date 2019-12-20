@@ -163,8 +163,8 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
 				intent.putExtra("notice", true);
-				intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
-                JiMiSDK.context.startActivity(intent);
+				intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
+                JiMiSDK.mContext.startActivity(intent);
 			}
 		}, 1000);
 	}

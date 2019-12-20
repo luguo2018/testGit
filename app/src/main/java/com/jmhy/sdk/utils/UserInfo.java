@@ -27,7 +27,7 @@ public class UserInfo {
 		if(VERSION.SDK_INT < VERSION_CODES.Q){
 			dir = new File(Environment.getExternalStorageDirectory(), "jmsdk");
 		}else{
-			dir = new File(JiMiSDK.context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "jmsdk");
+			dir = new File(JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "jmsdk");
 		}
 		if (!dir.exists()) {
 			dir.mkdir();

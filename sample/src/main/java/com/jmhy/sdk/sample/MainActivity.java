@@ -28,11 +28,17 @@ public class MainActivity extends Activity {
     private final int appId = 100001;
     private final String appKey = "69a1f04568822163d335aca0564fd666";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        /************************
+         *    onCreate调用       *
+         *    生命周期记得哦^_^  *
+         ************************/
+        JiMiSDK.onCreate(this);
 
         mBtninit = (Button) findViewById(R.id.initbt);
         mBtnlogin = (Button) findViewById(R.id.loginbt);
@@ -48,6 +54,23 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 JiMiSDK.forceLogout("账号禁止登录，请联系客服人员");
+            }
+        });
+        /************************
+         *    初始化接口调用        *
+         *   接口在主线程调用哦^_^  *
+         ************************/
+        JiMiSDK.initInterface(MainActivity.this, appId, appKey, new InitListener() {
+            @Override
+            public void Success(String s) {
+                Toast.makeText(MainActivity.this, "init Success", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "init Success");
+            }
+
+            @Override
+            public void fail(String s) {
+                Toast.makeText(MainActivity.this, "init failure", Toast.LENGTH_SHORT).show();
+                Log.w(TAG, "init fail");
             }
         });
 
@@ -99,19 +122,12 @@ public class MainActivity extends Activity {
                                         mBtnlogin.setVisibility(View.GONE);
 
                                         Log.d(TAG, "login Success a");
+                                        /************************
+                                         *         显示浮点         *
+                                         *   接口在主线程调用哦^_^  *
+                                         ************************/
+                                        JiMiSDK.showFloat();
 
-                                        if(TextUtils.equals(AppConfig.is_sdk_float_on, "1")) {
-                                            JiMiSDK.showFloat();
-                                        }
-
-
-                                        /*Intent intent = new Intent();
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                                                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                        intent.putExtra("url", "https://test.172jm.com/community/dist/notice_discount.html");
-                                        intent.putExtra("notice", true);
-                                        intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
-                                        JiMiSDK.context.startActivity(intent);*/
                                     }else{
                                         mBtnpay.setVisibility(View.GONE);
                                         mBtnloginout.setVisibility(View.GONE);
@@ -187,16 +203,31 @@ public class MainActivity extends Activity {
                     public void onSuccess(Object obj) {
                         super.onSuccess(obj);
                         if (obj != null) {
-                            Log.w(TAG, "exit fail");
+                            /************************
+                             *   支付回调
+                             *   成功: success
+                             *   失败：fail
+                             *   取消: cancel
+                             ************************/
+                            String str = (String)obj;
+                            switch (str) {
+                                case "success":
+                                    Toast.makeText(MainActivity.this,"支付成功",Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "fail":
+                                    Toast.makeText(MainActivity.this,"支付失败",Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "cancel":
+                                    Toast.makeText(MainActivity.this,"支付取消",Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
                             return;
                         }
-                        Log.d(TAG, "exit success");
                     }
                 });
             }
         });
 
-        JiMiSDK.onCreate(this);
     }
 
     @Override

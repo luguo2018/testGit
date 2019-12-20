@@ -42,6 +42,7 @@ public class JmBaseActivity extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
 		Utils.getSeferencegame(this);
+
 		mSeference = new Seference(this);
 		mUserinfo = new UserInfo();
 	}
@@ -217,8 +218,8 @@ public class JmBaseActivity extends Activity {
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
 				intent.putExtra("notice", true);
-				intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
-				JiMiSDK.context.startActivity(intent);
+				intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
+				JiMiSDK.mContext.startActivity(intent);
 			}
 		}, 1000);
 	}

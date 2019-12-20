@@ -67,4 +67,8 @@
     <string name="jm_error_password_confirm">密码不一致</string>
     <string name="jm_empty_email">请输入邮箱</string>
     <string name="jm_password_again">请再次输入密码</string>
+    <string name="jm_next_step">下一步</string>
+    <string name="jm_user_protocol">用户协议</string>
+    <string name="jm_contact_kefu">联系客服</string>
+
 </resources>

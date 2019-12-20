@@ -64,6 +64,10 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		mGifImageView = (GifImageView) findViewById(AppConfig.resourceId(this,
 				"gif", "id"));
 		switch (AppConfig.skin){
+			case 6:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_new",
+						"drawable"));
+				break;
 			case 5:
 			case 4:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_4",
@@ -222,9 +226,15 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
-		if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebview.canGoBack()) {
-			mWebview.goBack(); // goBack()表示返回WebView的上一页面
-			return true;
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			if(mWebview.canGoBack()){
+				mWebview.goBack(); // goBack()表示返回WebView的上一页面
+				return true;
+			}else {
+				return true;
+
+			}
+
 		}
 		return super.onKeyDown(keyCode, event);
 	}

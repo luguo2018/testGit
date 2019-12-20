@@ -37,7 +37,7 @@ public class MediaUtils {
         if(VERSION.SDK_INT < VERSION_CODES.Q){
             dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
         }else{
-            dir = JiMiSDK.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            dir = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         }
         if (dir != null && !dir.exists()) {
             dir.mkdirs();

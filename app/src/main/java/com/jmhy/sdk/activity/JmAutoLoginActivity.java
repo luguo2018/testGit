@@ -42,6 +42,9 @@ public class JmAutoLoginActivity extends JmBaseActivity {
 		//setContentView(AppConfig.resourceId(this, "jmautologin", "layout"));
 
 		switch (AppConfig.skin){
+			case 6:
+				setContentView(AppConfig.resourceId(this, "jmautologin_6", "layout"));
+				break;
 			case 5:
 			case 4:
 				setContentView(AppConfig.resourceId(this, "jmautologin_4", "layout"));

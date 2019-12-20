@@ -61,8 +61,7 @@ public class JiMiSDK {
 	public static UserApiListenerInfo userlistenerinfo;
 
     private static ApiAsyncTask RoleinfoTask;
-	public static Context context;
-	public static Context mCreateContext;
+	public static Context mContext;
 
     public static ActivityStackManager stackManager = new ActivityStackManager();
 
@@ -105,7 +104,6 @@ public class JiMiSDK {
 			return;
 		}
 
-        Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 
 		final Activity activity = (Activity)context;
 		if(VERSION.SDK_INT < VERSION_CODES.Q){
@@ -132,7 +130,7 @@ public class JiMiSDK {
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
 		Log.i(TAG, "---init---");
-		JiMiSDK.context = context.getApplicationContext();
+		JiMiSDK.mContext = context;
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
 		try {
@@ -162,6 +160,7 @@ public class JiMiSDK {
 			new InitData(context, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
+					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
 					listener.Success(msg);
@@ -233,7 +232,7 @@ public class JiMiSDK {
 	public static void onCreate(Activity activity) {
 		Log.i(TAG, "onCreate");
 		Log.i(TAG, "activity = " + activity.toString());
-		JiMiSDK.mCreateContext = (Context)activity;
+		JiMiSDK.mContext = (Context)activity;
 		stackManager.pushActivity(activity);
 		statisticsSDK.onCreate(activity);
 	}
@@ -271,7 +270,7 @@ public class JiMiSDK {
             public void run() {
                 showFloatDelayed();
             }
-        },5000);
+        },1000);
 	}
 
 	private static void showFloatDelayed(){
@@ -280,13 +279,12 @@ public class JiMiSDK {
             Log.i(TAG, "showFloat top activity is null");
             return;
         }
-        PermissionActivity.requestFloatPermission(context, new PermissionResultListener() {
+        PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
             @Override
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
                 if(grant){
-					Log.i(TAG, "activity = " + JiMiSDK.mCreateContext.toString());
-					FloatUtils.showFloat((Activity)JiMiSDK.mCreateContext);
+					FloatUtils.showFloat((Activity)mContext);
                 }else{
                     permissionTip(activity, "jm_permission_tip_float");
                 }
@@ -345,7 +343,7 @@ public class JiMiSDK {
 	public static void setExtData(Context context, String type,String roleid,
 			String rolename,String level,String gender,String serverno,String zoneName,
 			String balance,String power,String viplevel,String roleCTime, String roleLevelMTime,String ext) {
-		JiMiSDK.mCreateContext = context;
+		JiMiSDK.mContext = context;
 		Log.i(TAG,"type="+type+",roleid="+ roleid+",rolename="+ rolename+",level="+
 				level+",gender="+ gender+",serverno="+ serverno+",zoneName="+zoneName+
 				",balance="+ balance+",power="+ power+",viplevel=" +viplevel+",ext="+
@@ -410,7 +408,7 @@ public class JiMiSDK {
 	}
 
 	public static void forceLogout(final String message){
-		if(context == null){
+		if(mContext == null){
 			return;
 		}
 
@@ -419,11 +417,11 @@ public class JiMiSDK {
 			public void run() {
 				Log.i(TAG,"forceLogout");
 
-				Intent intent = new Intent(context, ForceActivity.class);
+				Intent intent = new Intent(mContext, ForceActivity.class);
 				intent.putExtra("message", message);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				context.startActivity(intent);
+				mContext.startActivity(intent);
 			}
 		});
 	}
@@ -449,15 +447,15 @@ public class JiMiSDK {
 	}
 
 	private static void showToast(String content){
-	    if(context == null){
+	    if(mContext == null){
 	        return;
         }
-		Toast.makeText(context, content, Toast.LENGTH_LONG).show();
+		Toast.makeText(mContext, content, Toast.LENGTH_LONG).show();
 	}
 
 	public static String getUUID(){
 		if(JmhyApi.get().getDeviceInfo() == null) {
-			DeviceInfo deviceInfo = new DeviceInfo(context);
+			DeviceInfo deviceInfo = new DeviceInfo(mContext);
 			return deviceInfo.getUuid();
 		}
 		return JmhyApi.get().getDeviceInfo().getUuid();

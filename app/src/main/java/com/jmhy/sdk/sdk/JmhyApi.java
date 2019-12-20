@@ -136,8 +136,8 @@ public class JmhyApi {
 	 * @return
 	 */
 	public ApiAsyncTask startloginMoblie(Context context, String appKey,
-			String mobile, String codearea, String code,
-			ApiRequestListener listener) {
+											  String mobile, String codearea, String code,
+											  ApiRequestListener listener) {
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
@@ -145,6 +145,37 @@ public class JmhyApi {
 		params.put("time", System.currentTimeMillis() / 1000 + "");
 		paramsdata.put("mobile", mobile + "");
 		paramsdata.put("code_area", codearea + "");
+		paramsdata.put("code", code);
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", toJson.toJson(paramsdata));
+		return WebApi.startThreadRequest(WebApi.ACTION_PHONE_LOGIN, listener,
+				params, appKey);
+	}
+
+	/**
+	 * 手机号码登陆
+	 *
+	 * @param context
+	 * @param appKey
+	 * @param mobile手机号码
+	 * @param codearea
+	 *            区号
+	 * @param code
+	 *            验证码
+	 * @param listener
+	 * @return
+	 */
+	public ApiAsyncTask startloginMoblie(Context context, String appKey,
+										 String mobile, String codearea, String code, String autoReg,
+										 ApiRequestListener listener) {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", AppConfig.Token + "");
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		paramsdata.put("mobile", mobile + "");
+		paramsdata.put("code_area", codearea + "");
+		paramsdata.put("auto_reg", autoReg);
 		paramsdata.put("code", code);
 		HashmapToJson toJson = new HashmapToJson();
 		params.put("context", toJson.toJson(paramsdata));

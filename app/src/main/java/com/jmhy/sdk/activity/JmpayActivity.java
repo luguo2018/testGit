@@ -60,7 +60,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 		mGifImageView = (GifImageView) findViewById(AppConfig.resourceId(this,
 				"gif", "id"));
 
-		switch (AppConfig.skin){
+		switch (AppConfig.skin) {
+			case 6:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_new",
+						"drawable"));
+				break;
 			case 5:
 			case 4:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_4",
@@ -142,7 +146,10 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 						finish();
 
 						Activity activity = JiMiSDK.stackManager.getBottomActivity();
-						DialogUtils.showTip(activity, AppConfig.getString(activity, "jm_no_install_wechat"));
+						if (activity != null) {
+							Log.i(TAG, "getBottomactivity = " + activity.toString());
+							DialogUtils.showTip(activity, AppConfig.getString(activity, "jm_no_install_wechat"));
+						}
 					}
 
 					return true;

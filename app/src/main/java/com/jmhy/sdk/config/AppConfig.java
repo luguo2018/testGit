@@ -38,7 +38,7 @@ public class AppConfig {
 	public static String appKey = "";
 	public static String agent = "";
 	public static String version = "";
-    public static String sdk_version ="1.3.1";
+    public static String sdk_version ="1.3.2";
 	public static String supportEnglish ="0";
 	public static int skin = 1;
 	public static int userType = 0;
