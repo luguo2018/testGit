@@ -8,4 +8,6 @@
     <dimen name="jm_exit_dialog_height">275dp</dimen>
     <dimen name="jm_notice_width">338dp</dimen>
     <dimen name="jm_notice_height">369dp</dimen>
+    <dimen name="jm_realname_width">330dp</dimen>
+    <dimen name="jm_realname_height">370dp</dimen>
 </resources>

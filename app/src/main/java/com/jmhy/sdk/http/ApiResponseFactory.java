@@ -55,7 +55,7 @@ public class ApiResponseFactory {
 		Object result = null;
 
 		try {
-			//Log.i("kk", "data"+data);
+			Log.i("kk", "data"+data);
 			if (webApi.equals(WebApi.ACTION_INIT)) {
 				result = JSONParse.parseInitMsg(data);
 			}else if (webApi.equals(WebApi.ACTION_USERREGISTER)) {
@@ -78,6 +78,8 @@ public class ApiResponseFactory {
 				result = JSONParse.parseThirdPlatformLogin(data);
 			}else if(webApi.equals(WebApi.RECHARGE_NOTIFY)){
 				result = JSONParse.parseRechargeNotify(data);
+			}else if(webApi.equals(WebApi.ACTION_ONLINE)){
+				result = JSONParse.parseOnlineNotify(data);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -7,9 +7,13 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.jmhy.sdk.activity.JmRealNameActivity;
+import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.model.OnlineMessage;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.SeferenceGame;
 import com.jmhy.sdk.utils.Utils;
@@ -30,7 +34,7 @@ import java.util.TimerTask;
 public class PushService extends Service {
 	private final static String TAG = PushService.class.getSimpleName();
 
-	public static long startTime = 3000 * 60;// 3分钟之后请求一次
+	public static long startTime = 3000;// 3分钟之后请求一次
 	private static Timer timer;
 	private Task task;
 	private Handler handler;
@@ -48,6 +52,9 @@ public class PushService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		//Log.i("kk", "onCreate = "+ AppConfig.ONLIE_TIEM);
+		long period = AppConfig.ONLIE_TIEM * 10;
+
 		if (timer == null) {
 			timer = new Timer();
 		}
@@ -57,9 +64,10 @@ public class PushService extends Service {
 		handler = new Handler();
 		lastTime = 0;
 		onLineTime = 0;
-		timer.schedule(task, startTime, AppConfig.ONLIE_TIEM * 1000);
+		timer.schedule(task, startTime, period);
 
 		Log.i(TAG, "定时任务初始化成功...");
+		Log.i(TAG, "时间间隔..." + period);
 	}
 
 	@Override
@@ -159,15 +167,57 @@ public class PushService extends Service {
 
 					@Override
 					public void onSuccess(Object obj) {
-						// TODO Auto-generated method stub
+						Log.i(TAG, "onSuccess = " + obj);
+						if (obj != null) {
+							final OnlineMessage msg = (OnlineMessage)obj;
+							String murl = Utils.toBase64url(msg.getShowUrl());
+							int exit = msg.getExit();
+							//exit = 1;
+							if (!TextUtils.isEmpty(murl)){
+								turnToNotice(murl);
+							}
+							//如果不是0，强制关闭
+							if (exit != 0 ){
+								JiMiSDK.handler.postDelayed(new Runnable() {
+									@Override
+									public void run() {
+										closeSchedule();
+										JiMiSDK.forceLogout(msg.getShowMsg());
+									}
+								},exit * 1000);
+
+							}
+
+						}
 
 					}
 
 					@Override
 					public void onError(int statusCode) {
-						// TODO Auto-generated method stub
+						Log.i(TAG, "onError = " + statusCode);
 
 					}
 				});
+	}
+
+
+	public void turnToNotice(final String url) {
+		if (TextUtils.isEmpty(url)) {
+			// Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		JiMiSDK.handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+						Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.putExtra("url", url);
+				intent.setClass(JiMiSDK.context, JmRealNameActivity.class);
+				//intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
+				JiMiSDK.context.startActivity(intent);
+			}
+		}, 1000);
 	}
 }

@@ -16,6 +16,7 @@ import com.jmhy.sdk.model.InitMsg;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.MobileUser;
 import com.jmhy.sdk.model.Msg;
+import com.jmhy.sdk.model.OnlineMessage;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.utils.Utils;
@@ -349,4 +350,25 @@ public class JSONParse {
 		response.message = jsonObject.optString("message");
 		return response;
 	}
+
+    public static OnlineMessage parseOnlineNotify(String data) throws JSONException {
+		//测试用例
+		data = "{\"code\":0,\"data\":[],\"message\":\"成功\"}";
+		OnlineMessage msg = new OnlineMessage();
+		JSONObject jsonObject = new JSONObject(data);
+		String code = jsonObject.optString("code");
+		msg.setCode(code);
+		msg.setMessage(jsonObject.optString("message"));
+		if (code.equals("0")) {
+			JSONObject dataObject = jsonObject.optJSONObject("data");
+			if(dataObject == null){
+				return msg;
+			}
+			msg.setShowUrl(dataObject.optString("showUrl",""));
+			msg.setShowMsg(dataObject.optString("showMsg",""));
+			msg.setExit(dataObject.optInt("exit"));
+		}
+		return msg;
+
+    }
 }

@@ -5,34 +5,33 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.graphics.drawable.ClipDrawable;
+import android.graphics.Color;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.webkit.SslErrorHandler;
+import android.view.Window;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.utils.DisplayUtil;
 import com.jmhy.sdk.utils.JsInterface;
+import com.jmhy.sdk.view.CornerCompatView;
 import com.jmhy.sdk.view.GifImageView;
 
-public class JmUserinfoActivity extends JmBaseActivity implements OnClickListener {
-	private final static String TAG = JmUserinfoActivity.class.getSimpleName();
+public class JmRealNameActivity extends JmBaseActivity implements OnClickListener {
+	private final static String TAG = JmRealNameActivity.class.getSimpleName();
 
 	private WebView mWebview;
 	private GifImageView mGifImageView;
@@ -42,22 +41,22 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 	private ValueCallback<Uri[]> uploadMessageAboveL;
 	private ValueCallback<Uri> uploadMessage;
 	private final static int FILE_CHOOSER_RESULT_CODE = 0x01;
+	private CornerCompatView mCornerCompatView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		boolean notice = getIntent().getBooleanExtra("notice", false);
-		if(notice) {
-			setContentView(AppConfig.resourceId(this, "jmnotice", "layout"));
-		}else {
-			setContentView(AppConfig.resourceId(this, "jmuserinfo", "layout"));
-		}
+		setContentView(AppConfig.resourceId(this, "jmuser_realname", "layout"));
 		murl = getIntent().getStringExtra("url");
+		JiMiSDK.stackManager.pushActivity(this);
+
 		intView();
 	}
 
 	private void intView() {
+		Log.e("kk","JmuserinfoActivity intView");
+
 		// TODO Auto-generated method stub
 		mWebview = (WebView) findViewById(AppConfig.resourceId(this,
 				"webview", "id"));
@@ -86,17 +85,16 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 				"content", "id"));
 		//测试view是否为空
 		if (view == null){
-			Log.e("JiMiSDK","JmuserinfoActivity view == null");
 			return;
 		}
-		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)view.getLayoutParams();
-		switch (AppConfig.skin){
-			case 5:
-			case 4:
-				layoutParams.width = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_width_4", "dimen"));
-				layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_height_4", "dimen"));;
-				break;
-		}
+//		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)view.getLayoutParams();
+//		switch (AppConfig.skin){
+//			case 5:
+//			case 4:
+//				layoutParams.width = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_width_4", "dimen"));
+//				layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_height_4", "dimen"));;
+//				break;
+//		}
 
 		mWebview.setVerticalScrollBarEnabled(false);
 		mWebview.getSettings().setSupportZoom(false);
@@ -115,12 +113,12 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 			public boolean onTouch(View v, MotionEvent event) {
 
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_UP:
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
@@ -227,7 +225,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 				mWebview.goBack(); // goBack()表示返回WebView的上一页面
 				return true;
 			}else{
-				//return true;
+				return true;
 			}
 
 		}

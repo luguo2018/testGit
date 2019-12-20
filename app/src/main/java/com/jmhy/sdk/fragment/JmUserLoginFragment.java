@@ -220,6 +220,7 @@ public class JmUserLoginFragment extends JmBaseFragment implements
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
 
+
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 
 					Bundle args = new Bundle();

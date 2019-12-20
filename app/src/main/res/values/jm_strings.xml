@@ -67,4 +67,5 @@
     <string name="jm_error_password_confirm">密码不一致</string>
     <string name="jm_empty_email">请输入邮箱</string>
     <string name="jm_password_again">请再次输入密码</string>
+    <string name="jm_guest_tips" translatable="false">游客登录体验下，将无法完全正常体验游戏内容，为保证您的游戏体验，请在1个小时内完成实名认证。完善信息即可获得超值礼包哦~</string>
 </resources>

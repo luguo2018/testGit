@@ -117,6 +117,19 @@ public class JsInterface {
 		});
 	}
 
+
+	@JavascriptInterface
+	public void forceLogout(final String str){
+		Log.i("JsInterface", "forceLogout");
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				JiMiSDK.forceLogout(str);
+
+			}
+		});
+	}
+
 	@JavascriptInterface
 	public void openWebView(String url, int type){
 		Intent intent = new Intent(activity, JmCommunityActivity.class);

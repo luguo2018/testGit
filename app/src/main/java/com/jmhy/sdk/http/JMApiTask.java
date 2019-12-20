@@ -83,7 +83,7 @@ public class JMApiTask extends ApiAsyncTask {
 			final int statusCode = response.getStatusLine().getStatusCode();
 
 			Log.d("JiMiSDK", "response.statusCode = " + statusCode);
-           // Log.i("kk","状态"+statusCode);
+            Log.i("kk","状态"+statusCode);
 			if (HttpStatus.SC_OK != statusCode) {
 				// 非正常返回
 				request.abort();
@@ -143,6 +143,7 @@ public class JMApiTask extends ApiAsyncTask {
 				return;
 			}
 		}
+		Log.i("kk","result = "+result);
 
 		listener.onSuccess(result);
 	}

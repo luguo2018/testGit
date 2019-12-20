@@ -247,6 +247,8 @@ public class JiMiSDK {
 		Log.i(TAG, "onDestroy");
 		stackManager.removeActivity(activity);
 		statisticsSDK.onDestroy(activity);
+		PushService.closeSchedule();
+
 	}
 
 	public static void onResume(Activity activity) {

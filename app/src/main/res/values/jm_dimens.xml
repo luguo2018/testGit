@@ -34,4 +34,6 @@
     <dimen name="jm_notice_radius">8dp</dimen>
     <dimen name="jm_pay_width">330dp</dimen>
     <dimen name="jm_pay_height">330dp</dimen>
+    <dimen name="jm_realname_width">510dp</dimen>
+    <dimen name="jm_realname_height">300dp</dimen>
 </resources>

@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 public class InitData {
@@ -103,7 +104,7 @@ public class InitData {
 
 			case AppConfig.INIT_SUCCESS:
 				InitMsg init = (InitMsg) msg.obj;
-				// Log.i("kk",init.toString());
+				 Log.i("kk",init.toString());
 				setInit(init);
 				break;
 			case AppConfig.FLAG_FAIL:

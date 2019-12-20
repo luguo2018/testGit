@@ -39,6 +39,12 @@
             android:launchMode="singleTop"
             android:theme="@style/jm_Transparent" />
         <activity
+            android:name="com.jmhy.sdk.activity.JmRealNameActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="behind"
+            android:launchMode="singleTop"
+            android:theme="@style/jm_Transparent" />
+        <activity
             android:name="com.jmhy.sdk.activity.JmpayActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="behind"
