@@ -64,6 +64,10 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		mGifImageView = (GifImageView) findViewById(AppConfig.resourceId(this,
 				"gif", "id"));
 		switch (AppConfig.skin){
+			case 6:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_new",
+						"drawable"));
+				break;
 			case 5:
 			case 4:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_4",
@@ -115,12 +119,12 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 			public boolean onTouch(View v, MotionEvent event) {
 
 				switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_UP:
-					if (!v.hasFocus()) {
-						v.requestFocus();
-					}
-					break;
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_UP:
+						if (!v.hasFocus()) {
+							v.requestFocus();
+						}
+						break;
 				}
 				return false;
 			}
@@ -143,8 +147,8 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				Log.i(TAG, "shouldOverrideUrlLoading " + url);
-				
-			
+
+
 				if (url.startsWith("weixin://wap/pay")) {
 					Intent intent = null;
 
@@ -209,10 +213,10 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		if (v.getId() == AppConfig.resourceId(this, "iphoneback", "id")) {
 			if (mWebview.canGoBack()) {
 				mWebview.goBack();
-				
+
 			} else {
 				finish();
-				
+
 			}
 		}else if (v.getId()==AppConfig.resourceId(this, "ivclose", "id")){
 			finish();
@@ -223,11 +227,12 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			if (mWebview.canGoBack()) {
+			if(mWebview.canGoBack()){
 				mWebview.goBack(); // goBack()表示返回WebView的上一页面
 				return true;
-			}else{
-				//return true;
+			}else {
+				return true;
+
 			}
 
 		}
@@ -261,7 +266,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		}
 
 		super.onDestroy();
-		
+
 	}
 
 	public void hiddenLoading() {

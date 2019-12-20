@@ -353,7 +353,8 @@ public class JSONParse {
 
     public static OnlineMessage parseOnlineNotify(String data) throws JSONException {
 		//测试用例
-		data = "{\"code\":0,\"data\":[],\"message\":\"成功\"}";
+		//data = "{\"code\":0,\"data\":[],\"message\":\"成功\"}";
+		//data = "{\"code\":0,\"data\":{\"showUrl\":\"aHR0cDovL3Rlc3QuMTcyam0uY29tL2dvL3RvP2FjY2Vzc190b2tlbj0xMDAwMDFfMTU3NjA1MDkyMmViMmIwZmRkYzVhNWM0Y2FmZmI4YjA4NmEzZTk2MjM5ZjUzMTExZDUxMGQ0OGUzMSZyZWRpcmVjdF91cmw9aHR0cHMlM0ElMkYlMkZ0ZXN0LjE3MmptLmNvbSUyRmNvbW11bml0eSUyRmRpc3QlMkZzZXRfYXV0aGVudGljYXRpb24uaHRtbCUzRmZyb21HYW1lJTNEMSUyNmNsb3NlJTNEMTA=\",\"showMsg\":\"哈哈哈哈哈\",\"exit\":5},\"message\":\"成功\"}";
 		OnlineMessage msg = new OnlineMessage();
 		JSONObject jsonObject = new JSONObject(data);
 		String code = jsonObject.optString("code");

@@ -34,7 +34,7 @@ import java.util.TimerTask;
 public class PushService extends Service {
 	private final static String TAG = PushService.class.getSimpleName();
 
-	public static long startTime = 3000;// 3分钟之后请求一次
+	public static long startTime = 3000 * 60;// 3分钟之后请求一次
 	private static Timer timer;
 	private Task task;
 	private Handler handler;
@@ -53,7 +53,7 @@ public class PushService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		//Log.i("kk", "onCreate = "+ AppConfig.ONLIE_TIEM);
-		long period = AppConfig.ONLIE_TIEM * 10;
+		long period = AppConfig.ONLIE_TIEM * 1000;
 
 		if (timer == null) {
 			timer = new Timer();
@@ -214,9 +214,9 @@ public class PushService extends Service {
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
-				intent.setClass(JiMiSDK.context, JmRealNameActivity.class);
+				intent.setClass(JiMiSDK.mContext, JmRealNameActivity.class);
 				//intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
-				JiMiSDK.context.startActivity(intent);
+				JiMiSDK.mContext.startActivity(intent);
 			}
 		}, 1000);
 	}

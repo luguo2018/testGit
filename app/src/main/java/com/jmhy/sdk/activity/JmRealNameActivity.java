@@ -50,7 +50,6 @@ public class JmRealNameActivity extends JmBaseActivity implements OnClickListene
 		setContentView(AppConfig.resourceId(this, "jmuser_realname", "layout"));
 		murl = getIntent().getStringExtra("url");
 		JiMiSDK.stackManager.pushActivity(this);
-
 		intView();
 	}
 
