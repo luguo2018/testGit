@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -43,6 +44,7 @@ import com.jmhy.sdk.view.Exitdialog.ExitDialogListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 
 public class JiMiSDK {
@@ -62,6 +64,12 @@ public class JiMiSDK {
 
     private static ApiAsyncTask RoleinfoTask;
 	public static Context mContext;
+	private static ExitListener mExitlistener;
+
+
+	static{
+		initMarkMap();
+	}
 
     public static ActivityStackManager stackManager = new ActivityStackManager();
 
@@ -135,6 +143,13 @@ public class JiMiSDK {
 		//setStrictMode();
 		try {
 			SdkParams params = Utils.getSdkParams(context);
+
+			//debug模式
+			if (params.isDebugMode == null){
+				params.isDebugMode = "false";
+			}
+			AppConfig.isDebugMode = params.isDebugMode.equals("true") ? true : false;
+			doMark("init");
 			WebApi.init(params.host);
 
 			AppConfig.agent = params.agent;
@@ -156,7 +171,7 @@ public class JiMiSDK {
 			Log.i(TAG, "appId = " + AppConfig.appId);
 			Log.i(TAG, "appKey = " + AppConfig.appKey);
 			Log.i(TAG, "agent = " + AppConfig.agent);
-
+			Log.i(TAG, "isDebugMode = " + AppConfig.isDebugMode);
 			new InitData(context, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
@@ -188,11 +203,12 @@ public class JiMiSDK {
 	 */
 	public static void login(Activity context, int appid, String appkey, final ApiListenerInfo listener) {
 		Log.i(TAG, "---login---");
-
 		if(!init){
 			Log.w(TAG, "sdk not initialized yet");
 			return;
 		}
+		doMark("login");
+
 		try {
 			apiListenerInfo = listener;
 			Logindata.selectLogin(context);
@@ -211,6 +227,10 @@ public class JiMiSDK {
 
 	public static void payment(Activity activity, PaymentInfo payInfo,
 			ApiListenerInfo listener) {
+		doMark("payment");
+		String extData = "金额="+payInfo.getAmount()+",\n剩余元宝="+ payInfo.getBalance()+",\nCP订单号="+ payInfo.getCporderid()+",\n额外参数="+ payInfo.getExt()+",\ngender="+ payInfo.getGender()+",\n角色等级="+ payInfo.getLevel()+",\n商品订单名="+ payInfo.getOrdername()+",\n服务器ID="+ payInfo.getServerno()+",\n服务器名称="+payInfo.getZoneName()+
+				"\n角色战力="+ payInfo.getPower()+",\nVIP等级=" +payInfo.getViplevel()+",\n角色ID="+payInfo.getRoleid() +",\n角色名="+payInfo.getRolename();
+		Utils.showMsgToast(activity, extData);
 		try {
 			apiListenerInfo = listener;
 			PayDataRequest.getInstatnce(activity, payInfo, listener);
@@ -231,6 +251,7 @@ public class JiMiSDK {
 
 	public static void onCreate(Activity activity) {
 		Log.i(TAG, "onCreate");
+		doMark("onCreate");
 		Log.i(TAG, "activity = " + activity.toString());
 		JiMiSDK.mContext = (Context)activity;
 		stackManager.pushActivity(activity);
@@ -239,6 +260,7 @@ public class JiMiSDK {
 
 	public static void onStop(Activity activity) {
 		Log.i(TAG, "onStop");
+		doMark("onStop");
 		statisticsSDK.onStop(activity);
 	}
 
@@ -252,17 +274,20 @@ public class JiMiSDK {
 
 	public static void onResume(Activity activity) {
 		Log.i(TAG, "onResume");
+		doMark("onResume");
 		statisticsSDK.onResume(activity);
 		PushService.onResume();
 	}
 
 	public static void onPause(Activity activity) {
 		Log.i(TAG, "onPause");
+		doMark("onPause");
 		statisticsSDK.onPause(activity);
 		PushService.onPause();
 	}
 
 	public static void showFloat(){
+		doMark("showFloat");
 
 		if(!TextUtils.equals(AppConfig.is_sdk_float_on, "1")){
 			return;
@@ -276,19 +301,21 @@ public class JiMiSDK {
 	}
 
 	private static void showFloatDelayed(){
-        final Activity activity = stackManager.getTopActivity();
+/*        final Activity activity = stackManager.getTopActivity();
         if(activity == null){
             Log.i(TAG, "showFloat top activity is null");
             return;
         }
-        PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
+		Log.i(TAG, "showFloat top activity  == " + activity.toString());*/
+
+		PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
             @Override
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
                 if(grant){
 					FloatUtils.showFloat((Activity)mContext);
                 }else{
-                    permissionTip(activity, "jm_permission_tip_float");
+                    permissionTip((Activity)mContext, "jm_permission_tip_float");
                 }
             }
         });
@@ -323,6 +350,7 @@ public class JiMiSDK {
 	 * 切换账号回调
 	 */
 	public static void setUserListener(UserApiListenerInfo listener) {
+		doMark("setUserListener");
 		userlistenerinfo = listener;
 	}
 /***
@@ -346,10 +374,24 @@ public class JiMiSDK {
 			String rolename,String level,String gender,String serverno,String zoneName,
 			String balance,String power,String viplevel,String roleCTime, String roleLevelMTime,String ext) {
 		JiMiSDK.mContext = context;
-		Log.i(TAG,"type="+type+",roleid="+ roleid+",rolename="+ rolename+",level="+
-				level+",gender="+ gender+",serverno="+ serverno+",zoneName="+zoneName+
-				",balance="+ balance+",power="+ power+",viplevel=" +viplevel+",ext="+
-				ext+",roleCTime="+roleCTime +",roleLevelMTime="+roleLevelMTime);
+		doMark("setExtData");
+		String extData = "type="+type+",\nroleid="+ roleid+",\nrolename="+ rolename+",\nlevel="+ level+",\ngender="+ gender+",\nserverno="+ serverno+",\nzoneName="+zoneName+
+				",\nbalance="+ balance+",\npower="+ power+",\nviplevel=" +viplevel+",\next="+
+				ext+",\nroleCTime="+roleCTime +",\nroleLevelMTime="+roleLevelMTime;
+		switch (type) {
+			case "1":
+				extData = "调用创角接口\n" + extData;
+				break;
+			case "2":
+				extData = "调用入服接口\n" + extData;
+				break;
+			case "3":
+				extData = "调用升级接口\n" + extData;
+				break;
+			default:
+				break;
+		}
+		Utils.showMsgToast(context, extData);
 		if(TextUtils.isEmpty(roleid) || "0".equals(roleid)){
 			return;
 		}
@@ -364,30 +406,35 @@ public class JiMiSDK {
 	 */
 	public static void exit(final Activity activity,
 			final ExitListener exitlistener) {
-
+		mExitlistener = exitlistener;
 		Log.i(TAG, "---exit--");
+		doMark("exit");
+		if (AppConfig.isDebugMode) {
+			markTip(activity);
+		} else {
 
-		Exitdialog exitdialog = new Exitdialog(activity, AppConfig.resourceId(activity,
-				"jm_MyDialog", "style"), new ExitDialogListener() {
-			@Override
-			public void onExit() {
-				PushService.closeSchedule();
-				Intent intentFour = new Intent(activity, PushService.class);
-				activity.stopService(intentFour);
+			Exitdialog exitdialog = new Exitdialog(activity, AppConfig.resourceId(activity,
+					"jm_MyDialog", "style"), new Exitdialog.ExitDialogListener() {
+				@Override
+				public void onExit() {
+					PushService.closeSchedule();
+					Intent intentFour = new Intent(activity, PushService.class);
+					activity.stopService(intentFour);
 
-				FloatUtils.destroyFloat();
-				WebApi.shutdown();
-				statisticsSDK.onExit();
-				exitlistener.ExitSuccess("success");
-			}
+					FloatUtils.destroyFloat();
+					WebApi.shutdown();
+					statisticsSDK.onExit();
+					exitlistener.ExitSuccess("success");
+				}
 
-			@Override
-			public void onCancel() {
-				exitlistener.fail("fail");
-			}
-		});
-		// exitdialog.setCancelable(false);
-		exitdialog.show();
+				@Override
+				public void onCancel() {
+					exitlistener.fail("fail");
+				}
+			});
+			// exitdialog.setCancelable(false);
+			exitdialog.show();
+		}
 	}
 
 	/**
@@ -395,6 +442,7 @@ public class JiMiSDK {
 	 */
 	public static void switchAccount(Context context){
 		Log.i(TAG,"触发切换账号");
+		doMark("switchAccount");
 		FloatUtils.destroyFloat();
 		if(userlistenerinfo == null) {
 			return;
@@ -461,5 +509,58 @@ public class JiMiSDK {
 			return deviceInfo.getUuid();
 		}
 		return JmhyApi.get().getDeviceInfo().getUuid();
+	}
+
+
+
+	private static void initMarkMap() {
+		AppConfig.markMap.put("init","调用  初始化: no, 主线程: null ");
+		AppConfig.markMap.put("login","调用登录接口 : no, 主线程: null ");
+		AppConfig.markMap.put("showFloat","调用显示浮点 : no, 主线程: null ");
+		AppConfig.markMap.put("payment","调用充值接口 : no, 主线程: null ");
+		AppConfig.markMap.put("setExtData","调用上报接口 : no, 主线程: null ");
+		AppConfig.markMap.put("setUserListener","设置登出监听 : no, 主线程: null ");
+		AppConfig.markMap.put("switchAccount","调用切换账号 : no, 主线程: null ");
+		AppConfig.markMap.put("exit","调用退出接口 : no, 主线程: null ");
+		AppConfig.markMap.put("onCreate","调用onCreate :  no");
+		AppConfig.markMap.put("onResume","调用onResume :  no");
+		AppConfig.markMap.put("onPause","调用onPause :  no");
+		AppConfig.markMap.put("onStop","调用onStop :  no");
+
+	}
+
+
+	private static void doMark(String methodName) {
+
+		if (AppConfig.isDebugMode){
+			String value = AppConfig.markMap.get(methodName);
+			value = value.replace("no", "yes");
+			value = value.replace("null",Utils.isInMainThread()+ "");
+			Log.e(TAG, value);
+			AppConfig.markMap.put(methodName,value);
+		}
+
+	}
+
+	public static void markTip(final Activity activity){
+		StringBuilder sb = new StringBuilder();
+		sb.append("接口及生命周期调用:\n");
+		for (Map.Entry<String, String> entry : AppConfig.markMap.entrySet()) {
+			sb.append(entry.getValue());
+			sb.append("\n");
+		}
+
+		String button = AppConfig.getString(activity, "jm_confirm");
+		Dialog dialog = new AlertDialog.Builder(activity, AlertDialog.THEME_HOLO_LIGHT)
+				.setMessage(sb.toString())
+				.setPositiveButton(button, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						exit(activity,mExitlistener);
+					}
+				})
+				.create();
+		dialog.show();
+		AppConfig.isDebugMode = false;
 	}
 }

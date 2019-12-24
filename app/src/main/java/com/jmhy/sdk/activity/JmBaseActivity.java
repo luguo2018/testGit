@@ -213,6 +213,8 @@ public class JmBaseActivity extends Activity {
 		JiMiSDK.handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				Log.i("jimisdk", "turnToNotice-------------------------");
+
 				Intent intent = new Intent();
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);

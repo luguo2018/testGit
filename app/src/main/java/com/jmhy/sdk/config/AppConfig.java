@@ -9,10 +9,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class AppConfig {
+
+	public static boolean isDebugMode = true;
 
 	public final static int INIT = 101;
 	public final static int INIT_SUCCESS = 102;
@@ -38,7 +41,7 @@ public class AppConfig {
 	public static String appKey = "";
 	public static String agent = "";
 	public static String version = "";
-    public static String sdk_version ="1.3.2";
+    public static String sdk_version ="1.3.3";
 	public static String supportEnglish ="0";
 	public static int skin = 1;
 	public static int userType = 0;
@@ -77,7 +80,7 @@ public class AppConfig {
 	public static Map<String, String> tempMap = new HashMap<>();// 临时保存未激活的注册账号和修改密码页面的用户信息
 	public static Map<String, String> loginMap = new HashMap<>();// 临时保存文件系统中的user0信息
 	public static Map<String, String> initMap = new HashMap<>();// 临时保存初始化信�?
-
+	public static Map<String, String> markMap = new LinkedHashMap<>();// 临时保存已调用接口
 	public static List<String> iphoneidList = new ArrayList<>();
 
 	public static void saveMap(String user, String pwd, String uid) {

@@ -8,8 +8,8 @@
 
     <com.jmhy.sdk.view.CornerCompatView
         android:id="@+id/content"
-        android:layout_width="@dimen/jm_notice_width"
-        android:layout_height="@dimen/jm_notice_height"
+        android:layout_width="@dimen/jm_pay_width"
+        android:layout_height="@dimen/jm_pay_height"
         app:jm_radius="@dimen/jm_notice_radius"
         android:background="@color/jmfont_white">
 

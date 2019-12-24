@@ -24,8 +24,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 public class Utils {
 
@@ -231,11 +234,15 @@ public class Utils {
 			params.host = extraInfo.get("host");
 			params.agent = extraInfo.get("agent");
 			params.version = extraInfo.get("version");
+			params.isDebugMode = extraInfo.get("isDebugMode");
 			if(extraInfo.containsKey("appid")){
 				params.appid = extraInfo.get("appid");
 			}
 			if(extraInfo.containsKey("appkey")){
 				params.appkey = extraInfo.get("appkey");
+			}
+			if(!extraInfo.containsKey("isDebugMode")){
+				params.isDebugMode = "false";
 			}
 
 			return params;
@@ -257,7 +264,7 @@ public class Utils {
 			params.appid = properties.getProperty("appid", "");
 			params.appkey = properties.getProperty("appkey", "");
 			params.supportEnglish = properties.getProperty("supportEnglish", "0");
-
+			params.isDebugMode = properties.getProperty("isDebugMode", "true");
 			/*if(!TextUtils.isEmpty(params.agent)) {
 				params.agent = params.agent.trim();
 			}
@@ -395,5 +402,22 @@ public class Utils {
 		Locale locale = context.getResources().getConfiguration().locale;
 		String country = locale.getCountry();
 		return TextUtils.equals(AppConfig.supportEnglish, "1") && !TextUtils.equals("CN", country);
+	}
+
+	public static void showMsgToast(Context context,String str){
+		if (AppConfig.isDebugMode){
+			Toast toast = Toast.makeText(context,str,Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.LEFT,0,0);
+			toast.show();
+		}
+
+	}
+
+	//判断是否主线程
+
+	public static boolean isInMainThread() {
+		Thread thread1 = Looper.getMainLooper().getThread();
+		Thread thread2 = Thread.currentThread();
+		return  thread1 == thread2;
 	}
 }

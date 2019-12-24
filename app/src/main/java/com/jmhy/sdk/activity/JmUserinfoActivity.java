@@ -26,6 +26,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.utils.DisplayUtil;
 import com.jmhy.sdk.utils.JsInterface;
@@ -54,6 +55,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 			setContentView(AppConfig.resourceId(this, "jmuserinfo", "layout"));
 		}
 		murl = getIntent().getStringExtra("url");
+		JiMiSDK.stackManager.pushActivity(this);
 		intView();
 	}
 
@@ -97,8 +99,8 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		switch (AppConfig.skin){
 			case 5:
 			case 4:
-				layoutParams.width = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_width_4", "dimen"));
-				layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_height_4", "dimen"));;
+				//layoutParams.width = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_width_4", "dimen"));
+				//layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_height_4", "dimen"));
 				break;
 		}
 

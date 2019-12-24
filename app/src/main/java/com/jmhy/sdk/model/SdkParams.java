@@ -7,4 +7,5 @@ public class SdkParams {
     public String appkey;
     public String supportEnglish;
     public String host;
+    public String isDebugMode;
 }

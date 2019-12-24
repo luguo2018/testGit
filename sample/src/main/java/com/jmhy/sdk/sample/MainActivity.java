@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jmhy.sdk.common.ApiListenerInfo;
@@ -24,6 +25,7 @@ public class MainActivity extends Activity {
     private final static String TAG = MainActivity.class.getSimpleName();
     private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout;
     private View force_exit;
+    private LinearLayout mRoleLayout;
 
     private final int appId = 100001;
     private final String appKey = "69a1f04568822163d335aca0564fd666";
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
         mBtnserver = (Button)findViewById(R.id.server);
         mBtnlevel = (Button)findViewById(R.id.level);
         mBtnloginout = (Button)findViewById(R.id.loginout);
+        mRoleLayout = findViewById(R.id.role_ll);
 
         force_exit = findViewById(R.id.force_exit);
         force_exit.setOnClickListener(new OnClickListener() {
@@ -63,7 +66,7 @@ public class MainActivity extends Activity {
         JiMiSDK.initInterface(MainActivity.this, appId, appKey, new InitListener() {
             @Override
             public void Success(String s) {
-                Toast.makeText(MainActivity.this, "init Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "init success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "init Success");
             }
 
@@ -78,6 +81,7 @@ public class MainActivity extends Activity {
             @Override
             public void onLogout(Object obj) {
                 mBtnpay.setVisibility(View.GONE);
+                mRoleLayout.setVisibility(View.GONE);
                 mBtnloginout.setVisibility(View.GONE);
                 force_exit.setVisibility(View.GONE);
                 mBtnlogin.setVisibility(View.VISIBLE);
@@ -117,6 +121,7 @@ public class MainActivity extends Activity {
                                     LoginMessageinfo login = (LoginMessageinfo)obj;
                                     if(TextUtils.equals(login.getResult(), "success")) {
                                         mBtnpay.setVisibility(View.VISIBLE);
+                                        mRoleLayout.setVisibility(View.VISIBLE);
                                         mBtnloginout.setVisibility(View.VISIBLE);
                                         force_exit.setVisibility(View.VISIBLE);
                                         mBtnlogin.setVisibility(View.GONE);
@@ -130,6 +135,7 @@ public class MainActivity extends Activity {
 
                                     }else{
                                         mBtnpay.setVisibility(View.GONE);
+                                        mRoleLayout.setVisibility(View.GONE);
                                         mBtnloginout.setVisibility(View.GONE);
                                         force_exit.setVisibility(View.GONE);
                                         mBtnlogin.setVisibility(View.VISIBLE);
@@ -138,6 +144,7 @@ public class MainActivity extends Activity {
                                     }
                                 }else{
                                     mBtnpay.setVisibility(View.GONE);
+                                    mRoleLayout.setVisibility(View.GONE);
                                     mBtnloginout.setVisibility(View.GONE);
                                     force_exit.setVisibility(View.GONE);
                                     mBtnlogin.setVisibility(View.VISIBLE);
@@ -228,6 +235,54 @@ public class MainActivity extends Activity {
             }
         });
 
+
+        mBtninfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendData("1");
+
+            }
+        });
+
+        mBtnserver.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendData("2");
+
+
+            }
+        });
+
+        mBtnlevel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendData("3");
+
+            }
+        });
+
+    }
+
+    private void sendData(String type) {
+        /************************
+         *     信息上报接口        *
+         *   type 创建用户角色(1)
+         *         进入服务器(2)
+         *          玩家升级(3)
+         ************************/
+        String roleid = "99";
+        String rolename = "极米";
+        String level = "0";
+        String gender = "男";
+        String serverno = "2000";
+        String zoneName = "极米1区";
+        String balance = "100元宝";
+        String power = "16000";
+        String viplevel = "12";
+        String roleCTime = System.currentTimeMillis() + "";
+        String roleLevelMTime = System.currentTimeMillis() + "";
+        String ext = "";
+        JiMiSDK.setExtData(MainActivity.this,type,roleid,rolename,level,gender,serverno,zoneName,balance,power,viplevel,roleCTime,roleLevelMTime,ext);
     }
 
     @Override

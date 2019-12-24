@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.jmhy.sdk.activity.JmRealNameActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
@@ -214,8 +213,8 @@ public class PushService extends Service {
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
 						Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				intent.putExtra("url", url);
-				intent.setClass(JiMiSDK.mContext, JmRealNameActivity.class);
-				//intent.setClass(JiMiSDK.context, JmUserinfoActivity.class);
+				intent.putExtra("notice", true);
+				intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
 				JiMiSDK.mContext.startActivity(intent);
 			}
 		}, 1000);
