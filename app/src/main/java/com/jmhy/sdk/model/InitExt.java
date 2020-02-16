@@ -7,4 +7,5 @@ public class InitExt {
     public boolean qq;
     public boolean wechat;
     public boolean alipay;
+    public boolean isEmu;
 }

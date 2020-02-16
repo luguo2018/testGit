@@ -81,8 +81,9 @@ public class JmhyApi {
 
 		String ext_data = "q=" + (ext.qq ? 1 : 0) +
 				"&wc=" + (ext.wechat ? 1 : 0) +
-				"&ali=" + (ext.alipay ? 1 : 0);
-		Log.i("JiMiSDK", ext_data);
+				"&ali=" + (ext.alipay ? 1 : 0) +
+				"&mn=" + (ext.isEmu ? 1 : 0);
+		Log.i("JiMiSDK", "ext_data  -->  " + ext_data);
 
 		paramsdata.put("ext_data", ext_data);
 		HashmapToJson toJson = new HashmapToJson();

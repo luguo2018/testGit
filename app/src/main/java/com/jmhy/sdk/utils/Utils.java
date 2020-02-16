@@ -1,8 +1,10 @@
 package com.jmhy.sdk.utils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +24,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Looper;
@@ -29,6 +33,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import static android.content.Context.SENSOR_SERVICE;
 
 public class Utils {
 
@@ -420,4 +426,70 @@ public class Utils {
 		Thread thread2 = Thread.currentThread();
 		return  thread1 == thread2;
 	}
+
+
+	public static boolean isEmulator(Context context) {
+		//return notHasLightSensorManager(context) ;
+		if(Android_ID_Utils.notHasBlueTooth()
+				||Android_ID_Utils.notHasLightSensorManager(context)
+				||Android_ID_Utils.isFeatures()
+				||Android_ID_Utils.checkIsNotRealPhone()
+				||Android_ID_Utils.checkPipes()){
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * 判断是否存在光传感器来判断是否为模拟器
+	 * 部分真机也不存在温度和压力传感器。其余传感器模拟器也存在。
+	 * @return true 为模拟器
+	 */
+	public static Boolean notHasLightSensorManager(Context context) {
+		SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
+		Sensor sensor8 = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT); //光
+		if (null == sensor8) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	public static String readCpuInfo() {
+		String result = "";
+		try {
+			String[] args = {"/system/bin/cat", "/proc/cpuinfo"};
+			ProcessBuilder cmd = new ProcessBuilder(args);
+
+			Process process = cmd.start();
+			StringBuffer sb = new StringBuffer();
+			String readLine = "";
+			BufferedReader responseReader = new BufferedReader(new InputStreamReader(process.getInputStream(), "utf-8"));
+			while ((readLine = responseReader.readLine()) != null) {
+				sb.append(readLine);
+			}
+			responseReader.close();
+			result = sb.toString().toLowerCase();
+		} catch (IOException ex) {
+		}
+		return result;
+	}
+
+	/**
+	 * 判断cpu是否为电脑来判断 模拟器
+	 *
+	 * @return true 为模拟器
+	 */
+	public static boolean checkIsNotRealPhone(Context context) {
+		String cpuInfo = readCpuInfo();
+		Log.i(LOGTAG, "get cpuInfo = " + cpuInfo);
+		Toast.makeText(context, "cpuInfo -->  " + cpuInfo, Toast.LENGTH_SHORT).show();
+		if ((cpuInfo.contains("intel") || cpuInfo.contains("amd"))) {
+			return true;
+		}
+		return false;
+	}
+
 }

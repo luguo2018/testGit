@@ -54,6 +54,9 @@ public class InitData {
 		ext.qq = PackageUtils.isInstall(context, "com.tencent.mobileqq");
 		ext.alipay = PackageUtils.isInstall(context, "com.eg.android.AlipayGphone");
 
+		//判断是否模拟器
+		ext.isEmu = Utils.isEmulator(context);
+
 		iniTask = JmhyApi.get().startInit(context, AppConfig.appId,
 				AppConfig.appKey, ver_id, ext, new ApiRequestListener() {
 					@Override
