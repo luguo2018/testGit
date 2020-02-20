@@ -56,7 +56,8 @@ public class InitData {
 
 		//判断是否模拟器
 		ext.isEmu = Utils.isEmulator(context);
-
+		ext.isEmu2 = Utils.checkIsRunningInEmulator(context);
+		ext.isHasSimCard = Utils.ishasSimCard(context);
 		iniTask = JmhyApi.get().startInit(context, AppConfig.appId,
 				AppConfig.appKey, ver_id, ext, new ApiRequestListener() {
 					@Override

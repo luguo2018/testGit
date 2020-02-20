@@ -5,7 +5,9 @@ package com.jmhy.sdk.model;
  */
 public class InitExt {
     public boolean qq;
-    public boolean wechat;
-    public boolean alipay;
-    public boolean isEmu;
+    public boolean wechat;//是否安装微信
+    public boolean alipay;//是否安装支付宝
+    public boolean isEmu;//类库1判断
+    public boolean isEmu2;//类库2判断
+    public boolean isHasSimCard;//是否有sim卡
 }

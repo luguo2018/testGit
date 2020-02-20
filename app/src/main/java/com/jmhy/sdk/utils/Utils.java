@@ -17,6 +17,7 @@ import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.SdkParams;
+import com.jmhy.sdk.utils.checkEmulator.EasyProtectorLib;
 import com.meituan.android.walle.ChannelInfo;
 import com.meituan.android.walle.WalleChannelReader;
 
@@ -29,6 +30,7 @@ import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Looper;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -427,18 +429,32 @@ public class Utils {
 		return  thread1 == thread2;
 	}
 
+    /**
+     * 判断方法1
+     * @param context
+     * @return
+     */
+    public static boolean isEmulator(Context context) {
+        //return notHasLightSensorManager(context) ;
+        if(Android_ID_Utils.notHasBlueTooth()
+                ||Android_ID_Utils.notHasLightSensorManager(context)
+                ||Android_ID_Utils.isFeatures()
+                ||Android_ID_Utils.checkIsNotRealPhone()
+                ||Android_ID_Utils.checkPipes()){
+            return true;
+        }
+        return false;
+    }
 
-	public static boolean isEmulator(Context context) {
-		//return notHasLightSensorManager(context) ;
-		if(Android_ID_Utils.notHasBlueTooth()
-				||Android_ID_Utils.notHasLightSensorManager(context)
-				||Android_ID_Utils.isFeatures()
-				||Android_ID_Utils.checkIsNotRealPhone()
-				||Android_ID_Utils.checkPipes()){
-			return true;
-		}
-		return false;
-	}
+    /**
+     * 判断方法2
+     * @param context
+     * @return
+     */
+    public static boolean checkIsRunningInEmulator(Context context) {
+
+        return EasyProtectorLib.checkIsRunningInEmulator(context, null);
+    }
 
 
 	/**
@@ -491,5 +507,27 @@ public class Utils {
 		}
 		return false;
 	}
+
+    /**
+     * 判断是否包含SIM卡
+     *
+     * @return 状态
+     */
+    public static boolean ishasSimCard(Context context) {
+        TelephonyManager telMgr = (TelephonyManager)
+                context.getSystemService(Context.TELEPHONY_SERVICE);
+        int simState = telMgr.getSimState();
+        boolean result = true;
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_ABSENT:
+                result = false; // 没有SIM卡
+                break;
+            case TelephonyManager.SIM_STATE_UNKNOWN:
+                result = false;
+                break;
+        }
+        Log.d("emuTest", result ? "有SIM卡" : "无SIM卡");
+        return result;
+    }
 
 }
