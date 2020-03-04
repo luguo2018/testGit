@@ -137,7 +137,7 @@ public class JiMiSDK {
 	}
 
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
-		Log.i(TAG, "---init---");
+		Log.i(TAG, "---init start---");
 		JiMiSDK.mContext = context;
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
