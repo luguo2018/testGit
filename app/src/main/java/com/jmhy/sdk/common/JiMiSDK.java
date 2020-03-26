@@ -67,6 +67,9 @@ public class JiMiSDK {
 
     private static ApiAsyncTask RoleinfoTask;
 	public static Context mContext;
+	private static int mAppid;
+	private static String mAppkey;
+	private static InitListener mInitListener;
 	private static ExitListener mExitlistener;
 
 
@@ -148,9 +151,12 @@ public class JiMiSDK {
 			Log.e(TAG,"++++++oaid: " + ids);
 			mOaid = ids;
 			//存储oaid
-			Seference seference = new Seference(mContext);
-			seference.savePreferenceData("game", "oaid_unique", mOaid);
+			if (!TextUtils.isEmpty(ids)){
+				Seference seference = new Seference(mContext);
+				seference.savePreferenceData("game", "oaid_unique", mOaid);
+			}
 
+			init(mAppid, mAppkey, mInitListener);
 
 		}
 	};
@@ -158,6 +164,11 @@ public class JiMiSDK {
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
 		Log.i(TAG, "---init start---");
 		JiMiSDK.mContext = context;
+		JiMiSDK.mAppid = appid;
+		JiMiSDK.mAppkey = appkey;
+		JiMiSDK.mInitListener = listener;
+
+
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
 
@@ -178,12 +189,18 @@ public class JiMiSDK {
 
 			}else{
 				Log.i(TAG, "mOaid---" + mOaid);
+				init(appid, appkey, listener);
+
 
 			}
 
+	}
+
+
+	private static void init(int appid, String appkey, final InitListener listener) {
 
 		try {
-			SdkParams params = Utils.getSdkParams(context);
+			SdkParams params = Utils.getSdkParams(mContext);
 
 			//debug模式
 			if (params.isDebugMode == null){
@@ -213,7 +230,7 @@ public class JiMiSDK {
 			Log.i(TAG, "appKey = " + AppConfig.appKey);
 			Log.i(TAG, "agent = " + AppConfig.agent);
 			Log.i(TAG, "isDebugMode = " + AppConfig.isDebugMode);
-			new InitData(context, AppConfig.agent, new InitListener() {
+			new InitData(mContext, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
 					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
@@ -221,7 +238,7 @@ public class JiMiSDK {
 					init = true;
 					listener.Success(msg);
 
-					statisticsSDK.initInterface(context, AppConfig.sdkList);
+					statisticsSDK.initInterface(mContext, AppConfig.sdkList);
 				}
 
 				@Override
