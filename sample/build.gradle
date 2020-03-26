@@ -4,10 +4,11 @@ android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
 
+
     defaultConfig {
         applicationId "com.jmhy.sdk.landscape"
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -63,7 +64,7 @@ def static releaseTime() {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar','*.so'], dir: 'libs')
     implementation project(':app')
 
     testImplementation 'junit:junit:4.12'

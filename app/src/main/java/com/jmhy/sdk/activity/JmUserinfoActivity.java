@@ -257,6 +257,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 
 	@Override
 	protected void onDestroy() {
+
 		if(mGifImageView != null){
 			mGifImageView.pause();
 		}
@@ -266,6 +267,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 			mWebview.destroy();
 			mWebview = null;
 		}
+		JiMiSDK.stackManager.removeActivity(this);
 
 		super.onDestroy();
 

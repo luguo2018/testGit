@@ -13,15 +13,20 @@ import android.provider.Settings.Secure;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 
+import com.bun.miitmdid.core.MdidSdkHelper;
+import com.bun.supplier.IIdentifierListener;
+import com.bun.supplier.IdSupplier;
 import com.jmhy.sdk.config.AppConfig;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.LongBuffer;
 import java.util.UUID;
 
-public class DeviceInfo {
+public class DeviceInfo{
 
 	protected static final String PREFS_FILE = "device_id.xml";
 	protected static final String PREFS_DEVICE_ID = "device_id";
@@ -54,6 +59,7 @@ public class DeviceInfo {
 
 	}
 
+
 	private void getData(Context context) {
 		TelephonyManager telephonyManager = (TelephonyManager) context
 				.getSystemService(Context.TELEPHONY_SERVICE);
@@ -69,7 +75,7 @@ public class DeviceInfo {
 			operator = IntenetUtil.getOperator(context);
 		}
 
-		// systemInfo
+
 		systemVer = VERSION.RELEASE;
 		model = "";
 		try {
@@ -268,6 +274,7 @@ public class DeviceInfo {
 
 	public String getDevicebrand() {
 		return  android.os.Build.MANUFACTURER;
-	}  
-	  
+	}
+
+
 }

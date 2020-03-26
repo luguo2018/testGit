@@ -16,6 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bun.miitmdid.core.JLibrary;
 import com.jmhy.sdk.activity.ForceActivity;
 import com.jmhy.sdk.activity.PermissionActivity;
 import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
@@ -37,6 +38,8 @@ import com.jmhy.sdk.utils.ActivityStackManager;
 import com.jmhy.sdk.utils.DealCrash;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.FloatUtils;
+import com.jmhy.sdk.utils.MiitHelper;
+import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.StatisticsSDKUtils;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.view.Exitdialog;
@@ -136,11 +139,49 @@ public class JiMiSDK {
 		}
 	}
 
+	public static String mOaid = "";
+
+
+	private static MiitHelper.AppIdsUpdater appIdsUpdater = new MiitHelper.AppIdsUpdater() {
+		@Override
+		public void OnIdsAvalid(String ids) {
+			Log.e(TAG,"++++++oaid: " + ids);
+			mOaid = ids;
+			//存储oaid
+			Seference seference = new Seference(mContext);
+			seference.savePreferenceData("game", "oaid_unique", mOaid);
+
+
+		}
+	};
+
 	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
 		Log.i(TAG, "---init start---");
 		JiMiSDK.mContext = context;
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
+
+		//获取OAID等设备标识符
+			Seference seference = new Seference(mContext);
+			mOaid = seference.getPreferenceData("game", "oaid_unique");
+			if (TextUtils.isEmpty(mOaid)){
+				Log.i(TAG, "mOaid---null");
+
+				try {
+					JLibrary.InitEntry(context.getApplicationContext());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				MiitHelper miitHelper = new MiitHelper(appIdsUpdater);
+				miitHelper.getDeviceIds(context.getApplicationContext());
+
+			}else{
+				Log.i(TAG, "mOaid---" + mOaid);
+
+			}
+
+
 		try {
 			SdkParams params = Utils.getSdkParams(context);
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.util.Log;
 
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
@@ -78,6 +79,7 @@ public class JmhyApi {
 		paramsdata.put("operator", deviceInfo.getOperator() + "");
 		paramsdata.put("time", System.currentTimeMillis() / 1000 + "");
 		paramsdata.put("is_charged", deviceInfo.getIs_charged() + "");
+		paramsdata.put("oaid", JiMiSDK.mOaid);
 
 		String ext_data = "q=" + (ext.qq ? 1 : 0) +
 				"&wc=" + (ext.wechat ? 1 : 0) +
