@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
@@ -155,19 +156,16 @@ public class JiMiSDK {
 				Seference seference = new Seference(mContext);
 				seference.savePreferenceData("game", "oaid_unique", mOaid);
 			}
-
-			init(mAppid, mAppkey, mInitListener);
-
+			//init(mAppid, mAppkey, mInitListener);
 		}
 	};
 
-	private static void init(final Context context, int appid, String appkey, final InitListener listener) {
+	private static void init(final Context context, final int appid, final String appkey, final InitListener listener) {
 		Log.i(TAG, "---init start---");
 		JiMiSDK.mContext = context;
 		JiMiSDK.mAppid = appid;
 		JiMiSDK.mAppkey = appkey;
 		JiMiSDK.mInitListener = listener;
-
 
 		//DealCrash.getInstance().init(JiMiSDK.context);
 		//setStrictMode();
@@ -189,10 +187,17 @@ public class JiMiSDK {
 
 			}else{
 				Log.i(TAG, "mOaid---" + mOaid);
-				init(appid, appkey, listener);
-
-
+				//init(appid, appkey, listener);
 			}
+
+			//延迟一秒获取oaid
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				init(appid, appkey, listener);
+			}
+		},1000);
+
 
 	}
 
