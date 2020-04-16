@@ -246,6 +246,7 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 	public void finish() {
 		if(jspayInterface != null && jspayInterface.isPayResult() == null){
 			Log.i(JspayInterface.TAG, "pay cancel");
+			Log.i("JrttStatistics", "------> pay cancel");
 			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
 
 			if(JiMiSDK.apiListenerInfo != null){

@@ -16,9 +16,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 
-import com.bun.miitmdid.core.MdidSdkHelper;
-import com.bun.supplier.IIdentifierListener;
-import com.bun.supplier.IdSupplier;
 import com.jmhy.sdk.config.AppConfig;
 
 import java.io.UnsupportedEncodingException;

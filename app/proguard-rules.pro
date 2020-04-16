@@ -73,4 +73,7 @@
 -dontwarn android.net.http.SslError
 -dontwarn android.webkit.WebViewClient
 
--keep class com.bun.miitmdid.core.** {*;}
+
+
+
+

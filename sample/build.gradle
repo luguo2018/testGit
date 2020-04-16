@@ -9,10 +9,17 @@ android {
         applicationId "com.jmhy.sdk.landscape"
         minSdkVersion 15
         targetSdkVersion 26
+
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+
     }
+
+
+
+
 
     lintOptions {
         disable 'GoogleAppIndexingWarning'
@@ -31,13 +38,16 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            minifyEnabled false
+
         }
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
         }
     }
+
 
     productFlavors {
         flavorDimensions("develop")

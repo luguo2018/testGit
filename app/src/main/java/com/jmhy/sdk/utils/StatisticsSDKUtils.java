@@ -52,6 +52,7 @@ public class StatisticsSDKUtils implements StatisticsSDK{
 
         for(String className : logClass) {
             try {
+
                 Class<?> clazz = Class.forName(className);
                 Log.i(TAG, "class = " + clazz);
                 StatisticsSDK statisticsSDK = (StatisticsSDK) clazz.newInstance();

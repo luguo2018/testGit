@@ -41,7 +41,7 @@ public class AppConfig {
 	public static String appKey = "";
 	public static String agent = "";
 	public static String version = "";
-    public static String sdk_version ="1.3.5";
+    public static String sdk_version ="1.3.6";
 	public static String supportEnglish ="0";
 	public static int skin = 1;
 	public static int userType = 0;
@@ -82,6 +82,7 @@ public class AppConfig {
 	public static Map<String, String> initMap = new HashMap<>();// 临时保存初始化信�?
 	public static Map<String, String> markMap = new LinkedHashMap<>();// 临时保存已调用接口
 	public static List<String> iphoneidList = new ArrayList<>();
+	public static String oridId;
 
 	public static void saveMap(String user, String pwd, String uid) {
 		loginMap.put("user", user);

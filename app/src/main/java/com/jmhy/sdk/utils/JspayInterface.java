@@ -87,7 +87,10 @@ public class JspayInterface {
 
 			payResult = true;
 			Log.i(TAG, "pay success");
+			Log.i("JrttStatistics", "------> pay success");
 			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
+
+
 		}else{
 			if(JiMiSDK.apiListenerInfo!=null){
 				JiMiSDK.apiListenerInfo.onSuccess("close");
@@ -95,6 +98,7 @@ public class JspayInterface {
 
 			payResult = false;
 			Log.i(TAG, "pay failure");
+			Log.i("JrttStatistics", "------> pay failure");
 			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, false);
 		}
 		if(activity!=null){
