@@ -62,14 +62,33 @@ public class StatisticsSDKUtils implements StatisticsSDK{
                     JSONObject sdkConfig = config.optJSONObject(statisticsSDK.getName());
                     statisticsSDK.initInterface(context, sdkConfig);
 
-                    list.add(statisticsSDK);
-                }else{
+                    if (!isHasSDK(statisticsSDK))
+                    {
+                        list.add(statisticsSDK);
+
+                    }else {
+                        Log.e(TAG,"已经添加过该log sdk");
+                    }
+
+                    }else{
                     Log.i(TAG, "class = " + clazz + " is not support");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean isHasSDK(StatisticsSDK statisticsSDK) {
+        boolean hasSDK = false;
+        for(StatisticsSDK sdk : list) {
+            hasSDK = sdk.getName() == statisticsSDK.getName();
+            if (hasSDK){
+                return true;
+            }
+
+        }
+        return hasSDK;
     }
 
     @Override

@@ -1,1 +1,8 @@
-{"jm_log_sdk": ["com.jmhy.sdk.statistics.JrttStatistics"]}
+{"jm_log_sdk": ["com.jmhy.sdk.statistics.GdtStatistics"],
+  "channel_sdk_list": {
+    "gdt": {
+      "trackId": "1110192641",
+      "trackKey": "e81f4841ab6b1babe337d71b1799ba43"
+    }
+  }
+}

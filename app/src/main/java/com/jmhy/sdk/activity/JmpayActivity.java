@@ -61,7 +61,11 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 				"gif", "id"));
 
 		switch (AppConfig.skin) {
-			case 6:
+			case 7:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_red",
+						"drawable"));
+				break;
+				case 6:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_new",
 						"drawable"));
 				break;

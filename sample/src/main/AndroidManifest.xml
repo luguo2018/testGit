@@ -2,6 +2,7 @@
     package="com.jmhy.sdk.sample">
 
     <application
+        android:name="com.jmhy.sdk.common.JMApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${APP_NAME}"

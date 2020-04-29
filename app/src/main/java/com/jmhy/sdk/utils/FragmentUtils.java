@@ -32,7 +32,9 @@ import com.jmhy.sdk.fragment.JmUserRegisterFragment;
 public class FragmentUtils {
     public static Fragment getJmPhonerLoginFragment(Context context){
         switch (AppConfig.skin){
-            case 6:
+            case 7:
+                return Fragment.instantiate(context, JmPhonerLogin2Fragment.class.getName());
+             case 6:
                 return Fragment.instantiate(context, JmPhonerLogin6Fragment.class.getName());
             case 5:
                 return Fragment.instantiate(context, JmPhonerLogin5Fragment.class.getName());
@@ -49,7 +51,9 @@ public class FragmentUtils {
 
     public static Fragment getJmUserLoginFragment(Context context){
         switch (AppConfig.skin){
-            case 6:
+            case 7:
+                return Fragment.instantiate(context, JmUserLogin2Fragment.class.getName());
+             case 6:
                 return Fragment.instantiate(context, JmPhonerLogin6Fragment.class.getName());
             case 5:
             case 4:
@@ -65,6 +69,9 @@ public class FragmentUtils {
 
     public static Fragment getJmSetpwdFragment(Context context, Bundle args){
         switch (AppConfig.skin){
+            case 7:
+                return Fragment.instantiate(context, JmSetpwd2Fragment.class.getName(), args);
+            case 6:
             case 5:
             case 4:
                 return Fragment.instantiate(context, JmSetpwd4Fragment.class.getName(), args);
@@ -79,6 +86,9 @@ public class FragmentUtils {
 
     public static Fragment getJmSetUserFragment(Context context, Bundle args){
         switch (AppConfig.skin){
+            case 7:
+                return Fragment.instantiate(context, JmSetUser2Fragment.class.getName(), args);
+
             case 3:
                 return Fragment.instantiate(context, JmSetUser3Fragment.class.getName(), args);
             case 2:
@@ -90,6 +100,8 @@ public class FragmentUtils {
 
     public static Fragment getJmUserRegisterFragment(Context context){
         switch (AppConfig.skin){
+            case 7:
+                return Fragment.instantiate(context, JmUserRegister2Fragment.class.getName());
             case 5:
                 return Fragment.instantiate(context, JmPhonerLogin5Fragment.class.getName());
             case 4:

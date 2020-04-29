@@ -15,6 +15,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.jmhy.sdk.common.JiMiSDK;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,10 +115,11 @@ public class PermissionActivity extends Activity {
             listener.onPermissionResult(true);
             return;
         }*/
-
+        if (context == null){
+            context = JiMiSDK.mContext;
+        }
         PermissionActivity.listener = listener;
         PermissionActivity.permissionList = permissionList;
-
         Intent intent = new Intent(context, PermissionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -140,7 +143,9 @@ public class PermissionActivity extends Activity {
         }
 
         PermissionActivity.listener = listener;
-
+        if (context == null){
+            context = JiMiSDK.mContext;
+        }
         Intent intent = new Intent(context, PermissionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

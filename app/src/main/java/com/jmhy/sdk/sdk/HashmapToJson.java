@@ -16,10 +16,11 @@ public class HashmapToJson {
         for (Iterator it = map.entrySet().iterator(); it.hasNext();) {
             Entry e = (Entry) it.next();
             string += "\"" + e.getKey() + "\":";
+            String value = e.getValue() == null ? "" : e.getValue().toString();
             try {
             	
             	
-				string += "\"" + URLEncoder.encode(e.getValue().toString(), "UTF-8") + "\",";
+				string += "\"" + URLEncoder.encode(value, "UTF-8") + "\",";
 				
 			} catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block

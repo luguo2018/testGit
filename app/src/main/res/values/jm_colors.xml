@@ -5,6 +5,7 @@
     <color name="jmfont_black">#000000</color>
     <color name="jmfont_white">#ffffff</color>
     <color name="jmfont_blues">#2abfff</color>
+    <color name="jmfont_reds">#df384a</color>
     <color name="jmfont_gray">#343434</color>
     <color name="jmfont_red">#fe3837</color>
     <color name="jmbtn6_red">#fe3837</color>

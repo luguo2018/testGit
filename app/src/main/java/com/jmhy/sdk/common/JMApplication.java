@@ -9,6 +9,7 @@ public class JMApplication extends Application {
         super.onCreate();
         //DealCrash crashHandler = DealCrash.getInstance();
         //crashHandler.init(this);
+        JiMiSDK.onApplicationOnCreate(this);
 
     }
 

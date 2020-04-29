@@ -23,6 +23,11 @@ public class Exitdialog extends Dialog implements android.view.View.OnClickListe
 		this.mExitdialoglistener = exitListener;
 
 		switch (AppConfig.skin){
+			case 7:
+				this.mView = LayoutInflater.from(context).inflate(
+						AppConfig.resourceId(context, "jmexitdialog_new", "layout"),
+						null);
+				break;
 			case 6:
 				this.mView = LayoutInflater.from(context).inflate(
 						AppConfig.resourceId(context, "jmexitdialog_6", "layout"),

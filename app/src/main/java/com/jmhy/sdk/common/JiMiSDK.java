@@ -3,6 +3,7 @@ package com.jmhy.sdk.common;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +37,7 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.sdk.RoleinfoRequest;
 import com.jmhy.sdk.sdk.StatisticsSDK;
 import com.jmhy.sdk.utils.ActivityStackManager;
+import com.jmhy.sdk.utils.ConfigUtils;
 import com.jmhy.sdk.utils.DealCrash;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.FloatUtils;
@@ -45,6 +47,10 @@ import com.jmhy.sdk.utils.StatisticsSDKUtils;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.view.Exitdialog;
 import com.jmhy.sdk.view.Exitdialog.ExitDialogListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +244,7 @@ public class JiMiSDK {
 			new InitData(mContext, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
+					//AppConfig.skin = 7;
 					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
@@ -625,5 +632,27 @@ public class JiMiSDK {
 				.create();
 		dialog.show();
 		AppConfig.isDebugMode = false;
+	}
+
+	public static void onApplicationOnCreate(
+			Application application) {
+		Log.i(TAG, "==== onApplicationOnCreate =====  ");
+
+		JSONObject logConfig = ConfigUtils.getConfigData(application.getApplicationContext());
+		if(logConfig == null){
+			Log.i(TAG, "no log config in config.json");
+			return;
+		}
+
+		JSONObject obj = logConfig.optJSONObject("channel_sdk_list");
+		if(obj == null){
+			Log.i(TAG, "no gdt params in config.json");
+			return;
+		}
+		Log.i(TAG, "gdt params == " + obj.toString());
+
+		statisticsSDK.initInterface(application.getApplicationContext(), obj);
+
+
 	}
 }

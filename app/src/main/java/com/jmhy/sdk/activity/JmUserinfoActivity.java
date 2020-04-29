@@ -66,6 +66,10 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 		mGifImageView = (GifImageView) findViewById(AppConfig.resourceId(this,
 				"gif", "id"));
 		switch (AppConfig.skin){
+			case 7:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_red",
+						"drawable"));
+				break;
 			case 6:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_new",
 						"drawable"));
