@@ -61,6 +61,8 @@ public class WebApi {
 		THIRD_PLATFORM_LOGIN = HOST + "/user/channel_login";
 		//第三方支付回调
 		RECHARGE_NOTIFY = HOST + "/od/ysdkNotify";
+		//第三方支付签名或者获取其他信息
+		RECHARGE_GETINFO = HOST + "/channel/get_info";
 
 		/*
 		 * 接口请求方式配置
@@ -80,6 +82,7 @@ public class WebApi {
 		HttpTypeMap.put(ACTION_ONLINE, "post");
 		HttpTypeMap.put(THIRD_PLATFORM_LOGIN, "post");
 		HttpTypeMap.put(RECHARGE_NOTIFY, "post");
+		HttpTypeMap.put(RECHARGE_GETINFO, "post");
 	}
 
 	// 初始化接口
@@ -112,7 +115,8 @@ public class WebApi {
 	public static String THIRD_PLATFORM_LOGIN;
 	//第三方支付回调
 	public static String RECHARGE_NOTIFY;
-
+	//第三方支付签名或者获取其他信息
+	public static String RECHARGE_GETINFO;
 
 	/**
 	 * 后台启动http连接，使用Thread实现

@@ -44,7 +44,7 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    //implementation files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
+    implementation files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -75,6 +75,18 @@ task assembleJrttJar(type:Jar, dependsOn: "assembleRelease") {
     exclude "**/R\$*.class"
     //只导入资源路径集下的部分资源
     include "com/jmhy/sdk/statistics/JrttStatistics.class"
+}
+
+task assembleMiitHelperJar(type:Jar, dependsOn: "assembleRelease") {
+    from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
+    destinationDir = file('build/libs')
+    archiveName = 'MiitHelper.jar'
+    exclude "**/BuildConfig.class"
+    exclude "**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+    //只导入资源路径集下的部分资源
+    include "com/jmhy/sdk/utils/MiitHelper.class"
 }
 
 

@@ -52,7 +52,7 @@ public class ApiResponseFactory {
 			e.printStackTrace();
 		}
 
-		Object result = null;
+		Object result = data;
 
 		try {
 			Log.i("kk", "data"+data);

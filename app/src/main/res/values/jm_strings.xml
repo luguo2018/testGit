@@ -30,6 +30,7 @@
     <string name="toast_welcome_msg">Welcome back,</string>
     <string name="float_user_msg">Account</string>
     <string name="float_gift">Gift</string>
+    <string name="float_red_envelopes">Gift</string>
     <string name="float_kefu_msg">Customer service</string>
     <string name="http_rror_msg">Network connection fails,please verify network connectivity!</string>
     <string name="user_hintcode_msg">Please enter security code!</string>

@@ -72,12 +72,12 @@
                 <ImageView
                     android:layout_width="@dimen/jm_float_icon_size"
                     android:layout_height="@dimen/jm_float_icon_size"
-                    android:src="@drawable/jm_float_gift_red" />
+                    android:src="@drawable/jm_float_env_red" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/float_gift"
+                    android:text="@string/float_red_envelopes"
                     android:textColor="@color/jmfont_reds"
                     android:textSize="12sp" />
             </LinearLayout>

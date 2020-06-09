@@ -137,8 +137,8 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 
 			private boolean shouldOverrideUrl(WebView view, String url){
 				Log.i("JiMiSDK","shouldOverrideUrlLoading "+url);
-
-				if (url.startsWith("weixin://wap/pay")) {
+				String lowcaseUrl = url.toLowerCase();
+				if (lowcaseUrl.startsWith("weixin://wap/pay")) {
 					try {
 						Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
 						view.getContext().startActivity(intent);
@@ -157,8 +157,10 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 					}
 
 					return true;
-				} else if (url.startsWith("alipays://platformapi/startApp")){
+				} else if (lowcaseUrl.startsWith("alipays://platformapi/startapp")){
 					try {
+						Log.i("JiMiSDK", "uuuuuuuuuuuuu");
+
 						Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
 						view.getContext().startActivity(intent);
 

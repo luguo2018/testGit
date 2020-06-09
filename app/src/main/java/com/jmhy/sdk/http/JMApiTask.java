@@ -21,6 +21,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.jmhy.sdk.config.WebApi;
@@ -74,9 +75,12 @@ public class JMApiTask extends ApiAsyncTask {
 		// if (!Utils.isNetworkAvailable(mContext)) {
 		// return TIMEOUT_ERROR;
 		// }
-
+		String httpType = "post";
+		if (!TextUtils.isEmpty(WebApi.HttpTypeMap.get("aaa"))){
+			httpType = WebApi.HttpTypeMap.get(webApi);
+		}
 		try {
-			request = ApiRequestFactory.getRequest(webApi, WebApi.HttpTypeMap.get(webApi),
+			request = ApiRequestFactory.getRequest(webApi, httpType,
 					parameter, appKey);
 			response = client.execute(request);
 
@@ -159,7 +163,6 @@ public class JMApiTask extends ApiAsyncTask {
 	/**
 	 * 取消任务，中止http请求，{@link ApiRequestListener}不返回任何结果
 	 * 
-	 * @param boolean true
 	 */
 	public void cancel(boolean b) {
 

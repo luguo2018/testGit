@@ -30,6 +30,7 @@
     <string name="toast_welcome_msg">欢迎回来，</string>
     <string name="float_user_msg">帐号</string>
     <string name="float_gift">福利</string>
+    <string name="float_red_envelopes">红包</string>
     <string name="float_kefu_msg">客服</string>
     <string name="http_rror_msg">网络连接失败，请检查您的网络连接！</string>
     <string name="user_hintcode_msg">请输入验证码！</string>

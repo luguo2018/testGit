@@ -10,6 +10,7 @@ public class PayData {
 	private String realnameneedeed;
 	private String orderid;
 	private String user_reg_date;
+	private String ext;
 	public String getCode() {
 		return code;
 	}
@@ -63,6 +64,14 @@ public class PayData {
 		this.user_reg_date = user_reg_date;
 	}
 
+	public String getExt() {
+		return ext;
+	}
+
+	public void setExt(String ext) {
+		this.ext = ext;
+	}
+
 	@Override
 	public String toString() {
 		return "PayData{" +
@@ -74,6 +83,7 @@ public class PayData {
 				", realnameneedeed='" + realnameneedeed + '\'' +
 				", orderid='" + orderid + '\'' +
 				", user_reg_date='" + user_reg_date + '\'' +
+				", ext='" + ext + '\'' +
 				'}';
 	}
 }
