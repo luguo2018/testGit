@@ -29,7 +29,6 @@ android {
         }
         release {
             minifyEnabled false
-            //shrinkResources false
             //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -44,7 +43,7 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    implementation files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
+    api files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -58,7 +57,7 @@ task assembleJar(type:Jar, dependsOn: "assembleRelease") {
     exclude "**/BuildConfig\$*.class"
     exclude "**/R.class"
     exclude "**/R\$*.class"
-    include "com/jmhy/sdk/statistics/JrttStatistics.class"
+    //include "com/jmhy/sdk/statistics/JrttStatistics.class"
 
     //只导入资源路径集下的部分资源
     include "com/**/*.class"
@@ -89,4 +88,47 @@ task assembleMiitHelperJar(type:Jar, dependsOn: "assembleRelease") {
     include "com/jmhy/sdk/utils/MiitHelper.class"
 }
 
+/*
 
+
+
+task makeJar(type: proguard.gradle.ProGuardTask) {
+    // 未混淆的jar
+    injars 'build/libs/full.jar'
+    // 混淆后的jar路径
+    outjars 'build/http.jar'
+    // 具体需要keep住的类
+    configuration 'proguard-rules.pro'
+}*/
+
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08:00"))
+}
+
+task clearJar(type: Delete) {//删除原来的jar包
+    delete 'libs/sdk.jar'}
+
+task makeJar(type: Jar) {
+    from file('build/intermediates/javac/release/compileReleaseJavaWithJavac/classes')
+    archiveName = 'temp.jar'
+    destinationDir = file('build/outputs')
+    //过滤不需要的class，防止使用的时候出现dex错误
+     exclude "**/**/BuildConfig.class"
+    exclude "**/**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"    //指定打包的class，前面为包名
+    //只导入资源路径集下的部分资源
+    include "com/**/*.class"}
+   makeJar.dependsOn(build)
+
+//混淆jar
+task proguard(dependsOn: ['makeJar'], type: proguard.gradle.ProGuardTask) {
+    //输入的jar路径
+    injars 'build/outputs/temp.jar'
+    //输出的jar路径
+    def fileName = "build/libs/jm_sdk_${releaseTime()}.jar"
+    outjars fileName
+
+    //混淆配置
+    configuration 'proguard-rules.pro'
+}
