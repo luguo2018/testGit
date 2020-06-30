@@ -48,6 +48,7 @@ public class AppConfig {
 
 	public static boolean isShow = false;
 	public static boolean isgoto = true;
+	public static boolean isRegister = false;
 
 	public static String openid = ""; // 用户id
 	public static String userName = "";// 用户名

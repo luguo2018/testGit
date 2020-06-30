@@ -90,6 +90,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         }*/
 
                         switch (AppConfig.skin){
+                            case 8:
+                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
+                                        "jm_float_on_new", "drawable"));
+                                break;
                             case 7:
                                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
                                         "jm_float_on_red", "drawable"));
@@ -350,6 +354,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             }
         }
         switch (AppConfig.skin){
+            case 8:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_new", "drawable"));
+                break;
             case 7:
                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_red", "drawable"));
                 break;
@@ -399,6 +406,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 mTouchStartY = event.getY();
 
                 switch (AppConfig.skin){
+                    case 8:
+                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
+                        break;
                     case 7:
                         mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
                         break;
@@ -435,6 +445,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWmParams.y = (int) (y - mTouchStartY);
 
                     switch (AppConfig.skin){
+                        case 8:
+                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
+                            break;
                         case 7:
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
                             break;
@@ -474,6 +487,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 }
 
                 switch (AppConfig.skin){
+                    case 8:
+                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
+                        break;
                     case 7:
                         mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
                         break;
@@ -553,6 +569,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     Log.i(TAG, "show");
 
                     switch (AppConfig.skin){
+                        case 8:
+                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
+                            break;
                         case 7:
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
                             break;

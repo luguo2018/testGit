@@ -7,11 +7,15 @@
     <string name="moblie_bt_code">Get security code</string>
     <string name="moblie_bt_user">Switch an account</string>
     <string name="moblie_bt_login">Login</string>
+    <string name="moblie_bt_register">Register</string>
     <string name="moblie_text_visitor">Visitor login</string>
     <string name="moblie_text_register">Register an account</string>
+    <string name="moblie_text_register2">Register an account</string>
     <string name="user_text_title">Register an JM account</string>
     <string name="user_text_msg">Account</string>
+    <string name="user_edit_phone_hint">Enter phone number</string>
     <string name="user_edit_hint">Enter account with numbers and letters</string>
+    <string name="user_phone_account_edit_hint">Enter account or phone numbers</string>
     <string name="user_text_pwd">Password</string>
     <string name="user_edit_pwdhint">Enter password with 6 to 22 digits</string>
     <string name="user_text_my">I have read and agreed to《</string>

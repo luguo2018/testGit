@@ -3,6 +3,7 @@ package com.jmhy.sdk.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -41,6 +42,8 @@ public class JmLoginActivity extends JmBaseActivity {
 				addFragmentToActivity(getFragmentManager(), mUserLoginFragment,
 						AppConfig.resourceId(this, "content", "id"));
 			} else {
+				Log.e("jimisdk","8888 AppConfig.ismobillg=false");
+
 				AppConfig.ismobillg=true;
 				Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(this);
 				addFragmentToActivity(getFragmentManager(), mJmUserLoginFragment,

@@ -24,6 +24,7 @@
     <dimen name="jm_login_kefu_width">26dp</dimen>
     <dimen name="jm_login_kefu_height">30dp</dimen>
     <dimen name="jm_login_switch_width">60dp</dimen>
+    <dimen name="jm_login_8_width">120dp</dimen>
     <dimen name="jm_login_switch_height">30dp</dimen>
     <dimen name="jm_input_icon">30dp</dimen>
     <dimen name="jm_input_icon_margin_right">8dp</dimen>

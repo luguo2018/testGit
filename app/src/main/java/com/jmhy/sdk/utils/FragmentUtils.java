@@ -3,6 +3,7 @@ package com.jmhy.sdk.utils;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.fragment.JmPhonerLogin2Fragment;
@@ -10,9 +11,11 @@ import com.jmhy.sdk.fragment.JmPhonerLogin3Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin4Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin5Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLogin6Fragment;
+import com.jmhy.sdk.fragment.JmPhonerLogin8Fragment;
 import com.jmhy.sdk.fragment.JmPhonerLoginFragment;
 import com.jmhy.sdk.fragment.JmSetUser2Fragment;
 import com.jmhy.sdk.fragment.JmSetUser3Fragment;
+import com.jmhy.sdk.fragment.JmSetUser8Fragment;
 import com.jmhy.sdk.fragment.JmSetUserFragment;
 import com.jmhy.sdk.fragment.JmSetpwd2Fragment;
 import com.jmhy.sdk.fragment.JmSetpwd3Fragment;
@@ -21,9 +24,11 @@ import com.jmhy.sdk.fragment.JmSetpwdFragment;
 import com.jmhy.sdk.fragment.JmUserLogin2Fragment;
 import com.jmhy.sdk.fragment.JmUserLogin3Fragment;
 import com.jmhy.sdk.fragment.JmUserLogin4Fragment;
+import com.jmhy.sdk.fragment.JmUserLogin8Fragment;
 import com.jmhy.sdk.fragment.JmUserLoginFragment;
 import com.jmhy.sdk.fragment.JmUserRegister2Fragment;
 import com.jmhy.sdk.fragment.JmUserRegister3Fragment;
+import com.jmhy.sdk.fragment.JmUserRegister8Fragment;
 import com.jmhy.sdk.fragment.JmUserRegisterFragment;
 
 /**
@@ -32,6 +37,9 @@ import com.jmhy.sdk.fragment.JmUserRegisterFragment;
 public class FragmentUtils {
     public static Fragment getJmPhonerLoginFragment(Context context){
         switch (AppConfig.skin){
+            case 8:
+                Log.e("jimisdk","8888 JmPhonerLogin8Fragment");
+                return Fragment.instantiate(context, JmPhonerLogin8Fragment.class.getName());
             case 7:
                 return Fragment.instantiate(context, JmPhonerLogin2Fragment.class.getName());
              case 6:
@@ -51,6 +59,9 @@ public class FragmentUtils {
 
     public static Fragment getJmUserLoginFragment(Context context){
         switch (AppConfig.skin){
+            case 8:
+                Log.e("jimisdk","8888 JmUserLogin8Fragment");
+                return Fragment.instantiate(context, JmUserLogin8Fragment.class.getName());
             case 7:
                 return Fragment.instantiate(context, JmUserLogin2Fragment.class.getName());
              case 6:
@@ -69,6 +80,8 @@ public class FragmentUtils {
 
     public static Fragment getJmSetpwdFragment(Context context, Bundle args){
         switch (AppConfig.skin){
+            case 8:
+                return Fragment.instantiate(context, JmSetpwd2Fragment.class.getName(), args);
             case 7:
                 return Fragment.instantiate(context, JmSetpwd2Fragment.class.getName(), args);
             case 6:
@@ -86,6 +99,9 @@ public class FragmentUtils {
 
     public static Fragment getJmSetUserFragment(Context context, Bundle args){
         switch (AppConfig.skin){
+            case 8:
+                Log.e("jimisdk","8888 getJmSetUserFragment");
+                return Fragment.instantiate(context, JmSetUser8Fragment.class.getName(), args);
             case 7:
                 return Fragment.instantiate(context, JmSetUser2Fragment.class.getName(), args);
 
@@ -100,6 +116,9 @@ public class FragmentUtils {
 
     public static Fragment getJmUserRegisterFragment(Context context){
         switch (AppConfig.skin){
+            case 8:
+                Log.e("jimisdk","8888 getJmUserRegisterFragment");
+                return Fragment.instantiate(context, JmUserRegister8Fragment.class.getName());
             case 7:
                 return Fragment.instantiate(context, JmUserRegister2Fragment.class.getName());
             case 5:
