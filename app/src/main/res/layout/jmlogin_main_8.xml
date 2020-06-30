@@ -162,11 +162,53 @@
                 android:textSize="11sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/jm_forget_text_margin_top"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/remembpwcb"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:button="@drawable/jmagreeradio"
+                android:background="@null"
+                android:checked="true"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/user_text_my"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvurl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/user_text_deal"
+                android:textColor="@color/jmfont_blues"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/user_text_end"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/mobilebt"
             android:layout_width="match_parent"
             android:layout_height="@dimen/jm_input_height"
-            android:layout_marginTop="@dimen/jm_login_submit_margin_top"
+            android:layout_marginTop="@dimen/jm_register_submit_margin_top"
             android:gravity="center"
             android:background="@drawable/jm_blues_codebtn_style_new"
             android:text="@string/moblie_bt_login"

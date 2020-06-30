@@ -18,6 +18,7 @@
     <dimen name="jm_login_top_height_4">56dp</dimen>
     <dimen name="jm_login_top_height_6">38dp</dimen>
     <dimen name="jm_login_submit_margin_top">45dp</dimen>
+    <dimen name="jm_register_submit_margin_top">8dp</dimen>
     <dimen name="jm_forget_text_margin_top">12dp</dimen>
     <dimen name="jm_login_logo_width">30dp</dimen>
     <dimen name="jm_login_logo_height">40dp</dimen>

@@ -49,6 +49,7 @@ public class JmPhonerLogin8Fragment extends JmBaseFragment implements
 	private LinearLayout mLinearUl;
 	private TextView mTvistor;
 	private ImageView mIvkefu;
+	private TextView mTvagreement;
 
 	private boolean flag = true;
 	private int j = 0;
@@ -83,6 +84,11 @@ public class JmPhonerLogin8Fragment extends JmBaseFragment implements
 	}
 
 	private void intView() {
+
+		mTvagreement = (TextView) getView().findViewById(
+				AppConfig.resourceId(getActivity(), "tvurl", "id"));
+		mTvagreement.setOnClickListener(this);
+
 		mTitleTv = (TextView) getView().findViewById(
 				AppConfig.resourceId(getActivity(), "title_tv", "id"));
 		mBtuser = getView().findViewById(
@@ -374,6 +380,10 @@ public class JmPhonerLogin8Fragment extends JmBaseFragment implements
 			intent.setClass(getActivity(), JmUserinfoActivity.class);
 			startActivity(intent);
 
+		}else if (id == AppConfig.resourceId(getActivity(), "tvurl", "id")) {
+			// 用户协议
+			// Log.i("kk","用户协议"+AppConfig.USERAGREEMENTURL);
+			turnToIntent(AppConfig.USERAGREEMENTURL);
 		}
 	}
 
