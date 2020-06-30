@@ -295,9 +295,9 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 			}
 		} else if (id == AppConfig
 				.resourceId(getActivity(), "iphonebtlg", "id")) {
-			Fragment mJmPhonerLoginFragment = FragmentUtils.getJmPhonerLoginFragment(getActivity());
+/*			Fragment mJmPhonerLoginFragment = FragmentUtils.getJmPhonerLoginFragment(getActivity());
 			addFragmentToActivity(getFragmentManager(), mJmPhonerLoginFragment,
-					AppConfig.resourceId(getActivity(), "content", "id"));
+					AppConfig.resourceId(getActivity(), "content", "id"));*/
 
 		} else if (id == AppConfig
 				.resourceId(getActivity(), "ivregister", "id")) {

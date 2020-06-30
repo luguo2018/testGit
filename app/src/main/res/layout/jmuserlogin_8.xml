@@ -33,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:visibility="gone"
                     android:layout_width="@dimen/jm_login_switch_width"
@@ -41,8 +42,8 @@
                     android:gravity="center"
                     android:textColor="@color/jmfont_black"
                     android:text="@string/moblie_bt_user"
-                    android:textSize="12sp"
-                    android:background="@drawable/jm_select_left_checked"/>
+                    android:textSize="15sp"
+                    />
 
                 <TextView
                     android:id="@+id/iphonebtlg"
@@ -50,9 +51,9 @@
                     android:layout_height="@dimen/jm_login_switch_height"
                     android:gravity="center"
                     android:textColor="@color/jmfont_black"
-                    android:text="@string/moblie_login_title"
-                    android:textSize="12sp"
-                    android:background="@drawable/jm_login_top_normal_8"/>
+                    android:text="@string/moblie_bt_login"
+                    android:textSize="15sp"
+                    />
             </LinearLayout>
 
             <FrameLayout
@@ -167,17 +168,44 @@
                 android:textColor="@color/jmfont_white"
                 android:textSize="18sp" />
 
-            <TextView
+ <!--           <TextView
                 android:id="@+id/tvforgot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/jm_forget_text_margin_top"
                 android:text="@string/user_forgot_msg"
                 android:textColor="@color/jmfont_red"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                />-->
         </FrameLayout>
 
-        <TextView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/ivregister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/moblie_text_register2"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:id="@+id/tvforgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/user_forgot_msg"
+                android:textColor="@color/jmfont_red"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+<!--        <TextView
             android:id="@+id/ivregister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -187,5 +215,15 @@
             android:textColor="@color/jmfont_gray"
             android:textSize="16sp"
             />
+
+        <TextView
+            android:id="@+id/tvforgot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/user_forgot_msg"
+            android:textColor="@color/jmfont_red"
+            android:textSize="16sp" />-->
     </LinearLayout>
 </LinearLayout>

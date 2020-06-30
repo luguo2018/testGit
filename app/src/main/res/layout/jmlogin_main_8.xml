@@ -32,7 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
                 <TextView
                     android:visibility="gone"
                     android:id="@+id/userlgbt"
@@ -51,8 +53,8 @@
                     android:gravity="center"
                     android:textColor="@color/jmfont_black"
                     android:text="@string/moblie_login_title"
-                    android:textSize="12sp"
-                    android:background="@drawable/jm_login_top_normal_8"/>
+                    android:textSize="15sp"
+                    />
             </LinearLayout>
 
             <FrameLayout

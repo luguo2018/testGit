@@ -114,7 +114,7 @@ public class JmPhonerLogin8Fragment extends JmBaseFragment implements
 			Log.e("jimisdk","isRegister = true");
 
 			//手机注册
-			mTitleTv.setText(AppConfig.getString(getActivity(),"moblie_text_register2"));
+			mTitleTv.setText(AppConfig.getString(getActivity(),"moblie_bt_register"));
 			//手机登录
 			mIvregister.setText(AppConfig.getString(getActivity(),"moblie_login_title"));
 			//注册

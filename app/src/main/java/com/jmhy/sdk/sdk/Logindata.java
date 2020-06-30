@@ -40,6 +40,13 @@ public class Logindata {
                 context.startActivity(intent);
             }
         } else {
+            switch (AppConfig.skin) {
+                case 8:
+                    AppConfig.isRegister = true;
+                    break;
+                default:
+                    break;
+            }
             //登录界面
             Intent intent = new Intent(context, JmLoginActivity.class);
             //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
