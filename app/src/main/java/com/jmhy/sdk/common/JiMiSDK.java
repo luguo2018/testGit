@@ -244,7 +244,7 @@ public class JiMiSDK {
 			new InitData(mContext, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
-					AppConfig.skin = 8;
+					//AppConfig.skin = 8;
 					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
