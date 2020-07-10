@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.adapter.UserAdapter;
 import com.jmhy.sdk.adapter.UserAdapter.InnerItemOnclickListener;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -191,7 +193,6 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 				Guest guest = (Guest) msg.obj;
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
-
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 					Bundle args = new Bundle();
 					// Log.i("kk",mobileUser.getMoblie())
@@ -220,7 +221,7 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 	};
 
 	private void login(final String userName, final String passWord) {
-
+		Log.i("登录---", "login");
 		mLoginTask = JmhyApi.get().starusreLogin(getActivity(),
 				AppConfig.appKey, userName, passWord, new ApiRequestListener() {
 
@@ -229,7 +230,9 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 						// TODO Auto-generated method stub
 						if (obj != null) {
 							LoginMessage loginMessage = (LoginMessage) obj;
-
+//							if(loginMessage.getIs_package_new().equals("1")){
+//								JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+//							}
 							if (loginMessage.getCode().equals("0")) {
 								mSeference.saveAccount(loginMessage.getUname(),
 										"~~test", loginMessage.getLogin_token());
@@ -517,7 +520,9 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 						// TODO Auto-generated method stub
 						if (obj != null) {
 							LoginMessage loginMessage = (LoginMessage) obj;
-
+//							if(loginMessage.getIs_package_new().equals("1")){
+//								JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+//							}
 							if (loginMessage.getCode().equals("0")) {
 								mSeference.saveAccount(loginMessage.getUname(),
 										"~~test", loginMessage.getLogin_token());
@@ -566,6 +571,11 @@ public class JmUserLogin8Fragment extends JmBaseFragment implements
 						// TODO Auto-generated method stub
 						if (obj != null) {
 							Guest guest = (Guest) obj;
+							Log.i("测试日志","guest.getUpass():"+guest.getUpass()+"。end");
+//							if (!guest.getUpass().equals("")||guest.getIs_package_new().equals("1")){
+							if (!guest.getUpass().equals("")){
+								JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+							}
 							if (guest.getCode().equals("0")) {
 								mSeference.saveAccount(guest.getUname(),
 										"~~test", guest.getLogin_token());

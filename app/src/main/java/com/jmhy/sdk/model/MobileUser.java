@@ -1,5 +1,9 @@
 package com.jmhy.sdk.model;
 
+import android.util.Log;
+
+import com.jmhy.sdk.common.JiMiSDK;
+
 public class MobileUser {
     private String code;
     private String code_area;
@@ -8,6 +12,7 @@ public class MobileUser {
     private String phone_register;
     private String message;
     private String moblie;
+    private String is_package_new;
 
     private String openid;
     private String login_token;
@@ -158,5 +163,17 @@ public class MobileUser {
                 ", float_url_gift_center='" + float_url_gift_center + '\'' +
                 ", float_red_recommend=" + float_red_recommend +
                 '}';
+    }
+
+    public String getIs_package_new() {
+        return is_package_new;
+    }
+
+    public void setIs_package_new(String is_package_new) {
+        this.is_package_new = is_package_new;
+        Log.i("测试mobile","is_package_new"+is_package_new);
+        if (is_package_new.equals("1")){
+            JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+        }
     }
 }

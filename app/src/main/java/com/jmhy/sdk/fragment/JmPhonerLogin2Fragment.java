@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -185,13 +187,14 @@ public class JmPhonerLogin2Fragment extends JmBaseFragment implements
 				Guest guest = (Guest) msg.obj;
 				String murl = Utils
 						.toBase64url(guest.getShow_url_after_login());
-
+				Log.i("测试日志","皮肤"+AppConfig.skin+"游客上报");
+				JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 				if (!TextUtils.isEmpty(guest.getUpass())) {
 
 					Bundle args = new Bundle();
 					// Log.i("kk",mobileUser.getMoblie())
 					args.putString("username", guest.getUname());
-					args.putString("upass", guest.getUpass() + 1234546);
+					args.putString("upass", guest.getUpass() );
 					args.putString("msg", guest.getMessage());
 					args.putString("gametoken", guest.getGame_token());
 					args.putString("openid", guest.getOpenid());

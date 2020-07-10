@@ -191,6 +191,11 @@
     <fields>;
     <methods>;
 }
+-keep class com.jmhy.sdk.config.AppConfig{
+    <fields>;
+    <methods>;
+}
+
 
 -keepclasseswithmembers,allowshrinking class * {
     public <init>(android.content.Context,android.util.AttributeSet);

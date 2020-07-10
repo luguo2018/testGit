@@ -1,6 +1,12 @@
 package com.jmhy.sdk.model;
 
+import android.util.Log;
+
+import com.jmhy.sdk.common.JiMiSDK;
+
 public class Guest {
+
+	private String is_package_new;
 	private String code;
 	private String uname;
 	private String login_token;
@@ -99,5 +105,17 @@ public class Guest {
 				", float_url_gift_center='" + float_url_gift_center + '\'' +
 				", float_red_recommend=" + float_red_recommend +
 				'}';
+	}
+
+	public String getIs_package_new() {
+		return is_package_new;
+	}
+
+	public void setIs_package_new(String is_package_new) {
+		this.is_package_new = is_package_new;
+		Log.i("测试guest","is_package_new"+is_package_new);
+		if (is_package_new.equals("1")){
+			JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+		}
 	}
 }

@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="@string/user_forgot_msg"
-                android:textColor="@color/jmfont_red"
+                android:textColor="@color/jmfont_gray"
                 android:textSize="16sp" />
         </RelativeLayout>
 

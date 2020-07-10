@@ -185,7 +185,7 @@ public class EmailLoginFragment extends JmBaseFragment {
                         Bundle args = new Bundle();
                         // Log.i("kk",mobileUser.getMoblie())
                         args.putString("username", guest.getUname());
-                        args.putString("upass", guest.getUpass() + 1234546);
+                        args.putString("upass", guest.getUpass());
                         args.putString("msg", guest.getMessage());
                         args.putString("gametoken", guest.getGame_token());
                         args.putString("openid", guest.getOpenid());

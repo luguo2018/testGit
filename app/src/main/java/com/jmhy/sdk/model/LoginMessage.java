@@ -1,5 +1,9 @@
 package com.jmhy.sdk.model;
 
+import android.util.Log;
+
+import com.jmhy.sdk.common.JiMiSDK;
+
 public class LoginMessage {
 	private String code;
 	private String uname;
@@ -8,6 +12,7 @@ public class LoginMessage {
 	private String show_url_after_login;
 	private String openid;
 	private String message;
+	private String is_package_new ;
     private String float_url_user_center;
 	private String float_url_gift_center;
 	private int float_red_recommend;
@@ -106,5 +111,17 @@ public class LoginMessage {
 				", float_url_gift_center='" + float_url_gift_center + '\'' +
 				", float_red_recommend=" + float_red_recommend +
 				'}';
+	}
+
+	public String getIs_package_new() {
+		return is_package_new;
+	}
+
+	public void setIs_package_new(String is_package_new) {
+		this.is_package_new = is_package_new;
+		Log.i("测试login","is_package_new"+is_package_new);
+		if (is_package_new.equals("1")){
+			JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+		}
 	}
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -191,7 +193,7 @@ public class JmPhonerLogin3Fragment extends JmBaseFragment implements
 					Bundle args = new Bundle();
 					// Log.i("kk",mobileUser.getMoblie())
 					args.putString("username", guest.getUname());
-					args.putString("upass", guest.getUpass() + 1234546);
+					args.putString("upass", guest.getUpass() );
 					args.putString("msg", guest.getMessage());
 					args.putString("gametoken", guest.getGame_token());
 					args.putString("openid", guest.getOpenid());
@@ -477,6 +479,10 @@ public class JmPhonerLogin3Fragment extends JmBaseFragment implements
 						if (obj != null) {
 							Guest guest = (Guest) obj;
 							if (guest.getCode().equals("0")) {
+								Log.i("测试日志","guest.getUpass():"+guest.getUpass()+"。end");
+								if (!guest.getUpass().equals("")){
+									JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+								}
 								mSeference.saveAccount(guest.getUname(),
 										"~~test", guest.getLogin_token());
 								AppConfig.saveMap(guest.getUname(), "~~test",
