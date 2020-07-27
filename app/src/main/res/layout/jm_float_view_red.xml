@@ -98,26 +98,42 @@
             android:layout_height="35dp"
             android:src="@drawable/jm_interval_red" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/tv_kefu"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="2dp">
+
+            <LinearLayout
+
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_float_icon_size"
+                    android:layout_height="@dimen/jm_float_icon_size"
+                    android:src="@drawable/jm_float_service_red" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/float_kefu_msg"
+                    android:textColor="@color/jmfont_reds"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <ImageView
-                android:layout_width="@dimen/jm_float_icon_size"
-                android:layout_height="@dimen/jm_float_icon_size"
-                android:src="@drawable/jm_float_service_red" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/float_kefu_msg"
-                android:textColor="@color/jmfont_reds"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:id="@+id/kefu_tip"
+                android:layout_width="@dimen/jm_float_tip_size"
+                android:layout_height="@dimen/jm_float_tip_size"
+                android:layout_gravity="end"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/jm_message_tip"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <FrameLayout
@@ -126,6 +142,7 @@
         android:layout_height="56dp"
         android:padding="2dp"
         tools:visibility="gone">
+
         <ImageView
             android:id="@+id/float_view_icon_imageView"
             android:layout_width="match_parent"
@@ -142,7 +159,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginRight="2dp"
             android:src="@drawable/jm_message_tip"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </FrameLayout>
 
 </FrameLayout>

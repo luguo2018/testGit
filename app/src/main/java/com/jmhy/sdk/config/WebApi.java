@@ -17,6 +17,9 @@ public class WebApi {
 
 	public static String BASE_HOST;// = "https://apisdk.5tc5.com/v1"
 	public static String HOST;// = "https://apisdk.5tc5.com/v1"
+//	public static String WEBSOCKET_HOST = "http://swim.t52f.top:9501";
+//	public static String WEBSOCKET_HOST = "https://swim.t52f.top";
+	public static String WEBSOCKET_HOST = "https://jmkf.jmhy.com";
 	//private static final String HOST = "https://test.172jm.com/v1";//测试用
 	//private final String HOST = "https://apisdk.wfg3.com/v1";
 
@@ -63,6 +66,12 @@ public class WebApi {
 		RECHARGE_NOTIFY = HOST + "/od/ysdkNotify";
 		//第三方支付签名或者获取其他信息
 		RECHARGE_GETINFO = HOST + "/channel/get_info";
+		//获取websocket的token接口
+		ACTION_GETTOKEN = WEBSOCKET_HOST + "/client/login";
+        //获取悬浮窗红点状态
+        ACTION_FLOATSTATE =WEBSOCKET_HOST+"/client/applicationNotice";
+        //清除悬浮窗红点状态
+        ACTION_FLOATSTATE =WEBSOCKET_HOST+"/client/clearNotice";
 
 		/*
 		 * 接口请求方式配置
@@ -83,6 +92,9 @@ public class WebApi {
 		HttpTypeMap.put(THIRD_PLATFORM_LOGIN, "post");
 		HttpTypeMap.put(RECHARGE_NOTIFY, "post");
 		HttpTypeMap.put(RECHARGE_GETINFO, "post");
+		HttpTypeMap.put(ACTION_GETTOKEN, "post");
+		HttpTypeMap.put(ACTION_FLOATSTATE, "post");
+		HttpTypeMap.put(ACTION_CLEANNOTICE, "post");
 	}
 
 	// 初始化接口
@@ -117,6 +129,12 @@ public class WebApi {
 	public static String RECHARGE_NOTIFY;
 	//第三方支付签名或者获取其他信息
 	public static String RECHARGE_GETINFO;
+	//获取websocket的token接口
+	public static String ACTION_GETTOKEN;
+	//轮询接口，获取是否有新消息，展示悬浮窗小红点
+	public static String ACTION_FLOATSTATE;
+	//点开客服浮标通知服务端接口,轮询不在获得显示浮标状态
+	public static String ACTION_CLEANNOTICE;
 
 	/**
 	 * 后台启动http连接，使用Thread实现

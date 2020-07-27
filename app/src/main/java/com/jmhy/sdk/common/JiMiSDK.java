@@ -25,6 +25,7 @@ import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
+import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
@@ -65,7 +66,7 @@ public class JiMiSDK {
 	public static Timer timer;
 
 	public final static String payChannel = "jm";
-
+    private static final int WebSocketToken = 4;
 	private static boolean init;
 
 
@@ -104,6 +105,9 @@ public class JiMiSDK {
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
+                    break;
+                case WebSocketToken://获取WebSocketToken
+                    FloatUtils.showFloat((Activity) mContext);
 					break;
 				}
 			} catch (Exception e) {
@@ -383,7 +387,32 @@ public class JiMiSDK {
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
                 if(grant){
-					FloatUtils.showFloat((Activity)mContext);
+//					FloatUtils.showFloat((Activity)mContext);
+                    //原本直接显示浮窗，现改动先获取WebSocketToken然后再进去显示浮窗，后续用该token轮询
+                    JmhyApi.get().getWebSocketToken(mContext, AppConfig.Token, AppConfig.appKey, new ApiRequestListener() {
+                        @Override
+                        public void onSuccess(Object obj) {
+                            Log.i("测试日志", "获取token成功" + obj);
+                            try {
+                                JSONObject object = new JSONObject(String.valueOf(obj));
+                                AppConfig.webSocket_token = new JSONObject(object.getString("data")).getString("jm_customer_token");
+                                Log.i("测试日志3", AppConfig.webSocket_token + "");
+
+                                Message message = handler.obtainMessage();
+                                message.what = WebSocketToken;
+                                handler.sendMessage(message);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(int statusCode) {
+                            Log.i("测试日志", "获取token失败" + statusCode);
+                        }
+                    });
                 }else{
                     permissionTip((Activity)mContext, "jm_permission_tip_float");
                 }

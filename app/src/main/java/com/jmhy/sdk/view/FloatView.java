@@ -2,6 +2,7 @@
 
 package com.jmhy.sdk.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,7 +13,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,16 +29,22 @@ import java.util.TimerTask;
 
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
+import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.DisplayUtil;
+import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class FloatView extends FrameLayout implements OnTouchListener {
     private final static String TAG = FloatView.class.getSimpleName();
 
     private final int HANDLER_TYPE_HIDE_LOGO = 150;// 隐藏LOGO
+    private final int SHOW_KEFU_FLOAT = 160;// 显示客服小红点
 
     private WindowManager.LayoutParams mWmParams;
     private WindowManager mWindowManager;
@@ -52,6 +58,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private View accountTip;
     private View giftTip;
     private View iconTip;
+    private View kefuTip;
 
     private FrameLayout mFlFloatLogo;
 
@@ -66,12 +73,13 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     public final static int INDEX_ACCOUNT = 0x01;
     public final static int INDEX_GIFT = 0x02;
+    public final static int INDEX_KEFU = 0x03;
 
     private final static int smallWidth = 30;
     private final static int fullWidth = 56;
 
-    private Timer mTimer;
-    private TimerTask mTimerTask;
+    private Timer mTimer, getStateTimer;
+    private TimerTask mTimerTask, getStateTAsk;
     private static ApiAsyncTask loginouttask;
     Handler mTimerHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -89,7 +97,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on", "drawable"));
                         }*/
 
-                        switch (AppConfig.skin){
+                        switch (AppConfig.skin) {
                             case 8:
                                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
                                         "jm_float_on_new", "drawable"));
@@ -116,7 +124,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
                                         "jm_float_on", "drawable"));
                         }
-                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)mFlFloatLogo.getLayoutParams();
+                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
                         layoutParams.width = DisplayUtil.dip2px(getContext(), smallWidth);
                         Log.i(TAG, "hidden");
 
@@ -125,7 +133,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         mWmParams.alpha = 0.7f;
                         if (mContext == null) {
                             Log.i(TAG, "mContext is null");
-                        }else {
+                        } else {
                             Log.i(TAG, "mContext is not null");
 
                             mWindowManager.updateViewLayout(FloatView.this, mWmParams);
@@ -135,6 +143,11 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
                     }
                     break;
+                case SHOW_KEFU_FLOAT:
+                    //显示客服小红点
+                    iconTip.setVisibility(VISIBLE);
+                    kefuTip.setVisibility(VISIBLE);
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -143,6 +156,42 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     public FloatView(Context context) {
         super(context);
         init(context);
+        getState(context);
+    }
+
+    private void getState(Context context) {
+        getStateTimer = new Timer();
+        getStateTAsk = new TimerTask() {
+            @Override
+            public void run() {
+                //在此添加轮询
+                JmhyApi.get().getFloatState(mContext, AppConfig.webSocket_token, AppConfig.appKey, new ApiRequestListener() {
+                    @Override
+                    public void onSuccess(Object obj) {
+                        try {
+                            JSONObject object = new JSONObject(String.valueOf(obj));
+                            Log.i("测试日志", "轮询结果:" + object.toString());
+                            AppConfig.showKefuTip = object.getBoolean("data");
+                            if (AppConfig.showKefuTip) {
+                                Message message = mTimerHandler.obtainMessage();
+                                message.what = SHOW_KEFU_FLOAT;
+                                mTimerHandler.sendMessage(message);
+                            }
+                            FloatUtils.showFloat((Activity) mContext);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(int statusCode) {
+                        Log.i("测试日志", "获取token失败" + statusCode);
+                    }
+                });
+            }
+        };
+        getStateTimer.schedule(getStateTAsk, 1000, 60*1000);//一分钟轮询1次
     }
 
     private void init(Context context) {
@@ -238,7 +287,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         View rootFloatView;
         Log.i(TAG, "AppConfig.skin == " + AppConfig.skin);
 
-        switch (AppConfig.skin){
+        switch (AppConfig.skin) {
             case 7:
                 rootFloatView = inflater.inflate(
                         AppConfig.resourceId(context, "jm_float_view_red", "layout"), null);
@@ -289,8 +338,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             @Override
             public void onClick(View arg0) {
                 turnToIntent(AppConfig.KEFU);
-
-                mLlFloatMenu.setVisibility(View.GONE);
+                hiddenTip(INDEX_KEFU);
+                clearNotice();
             }
         });
 
@@ -298,6 +347,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 .resourceId(context, "account_tip", "id"));
         giftTip = rootFloatView.findViewById(AppConfig
                 .resourceId(context, "gift_tip", "id"));
+        kefuTip = rootFloatView.findViewById(AppConfig
+                .resourceId(context, "kefu_tip", "id"));
         iconTip = rootFloatView.findViewById(AppConfig
                 .resourceId(context, "icon_tip", "id"));
         mTvkefuLine = rootFloatView.findViewById(AppConfig
@@ -332,28 +383,28 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             mTvkefu.setVisibility(View.INVISIBLE);
         }*/
 
-        if(TextUtils.isEmpty(AppConfig.USERURL)){
+        if (TextUtils.isEmpty(AppConfig.USERURL)) {
             mTvAccount.setVisibility(GONE);
         }
 
-        if(TextUtils.isEmpty(AppConfig.KEFU)){
+        if (TextUtils.isEmpty(AppConfig.KEFU)) {
             mTvkefu.setVisibility(GONE);
             mTvkefuLine.setVisibility(GONE);
-        }else{
-            if(mTvAccount.getVisibility() == GONE){
+        } else {
+            if (mTvAccount.getVisibility() == GONE) {
                 mTvkefuLine.setVisibility(GONE);
             }
         }
 
-        if(TextUtils.isEmpty(AppConfig.GIFT)){
+        if (TextUtils.isEmpty(AppConfig.GIFT)) {
             mTvGift.setVisibility(GONE);
             mTvGiftLine.setVisibility(GONE);
-        }else{
-            if(mTvkefu.getVisibility() == GONE){
+        } else {
+            if (mTvkefu.getVisibility() == GONE) {
                 mTvGiftLine.setVisibility(GONE);
             }
         }
-        switch (AppConfig.skin){
+        switch (AppConfig.skin) {
             case 8:
                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_new", "drawable"));
                 break;
@@ -375,11 +426,14 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on", "drawable"));
         }
 
-        if(AppConfig.showAccountTip){
+        if (AppConfig.showAccountTip) {
             accountTip.setVisibility(VISIBLE);
         }
-        if(AppConfig.showGiftTip){
+        if (AppConfig.showGiftTip) {
             giftTip.setVisibility(VISIBLE);
+        }
+        if (AppConfig.showKefuTip) {
+            kefuTip.setVisibility(VISIBLE);
         }
         refreshIconTip();
 
@@ -388,15 +442,15 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if (mContext == null){
-            Log.e("JiMiSDK","floatview mcontext is null");
+        if (mContext == null) {
+            Log.e("JiMiSDK", "floatview mcontext is null");
         }
         removeTimerTask();
         // 获取相对屏幕的坐标，即以屏幕左上角为原点
         int x = (int) event.getRawX();
         int y = (int) event.getRawY();
 
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)mFlFloatLogo.getLayoutParams();
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
         layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
         Log.i(TAG, "onTouch " + event.getAction());
 
@@ -405,7 +459,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 mTouchStartX = event.getX();
                 mTouchStartY = event.getY();
 
-                switch (AppConfig.skin){
+                switch (AppConfig.skin) {
                     case 8:
                         mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
                         break;
@@ -444,7 +498,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWmParams.x = (int) (x - mTouchStartX);
                     mWmParams.y = (int) (y - mTouchStartY);
 
-                    switch (AppConfig.skin){
+                    switch (AppConfig.skin) {
                         case 8:
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
                             break;
@@ -486,7 +540,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWmParams.x = 0;
                 }
 
-                switch (AppConfig.skin){
+                switch (AppConfig.skin) {
                     case 8:
                         mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
                         break;
@@ -532,7 +586,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         try {
       /*      mWmParams.alpha = 0;
             mWindowManager.updateViewLayout(this, mWmParams);*/
-            Log.e("JiMiSDK","floatview removeFloatView");
+            Log.e("JiMiSDK", "floatview removeFloatView");
 
             mWindowManager.removeView(this);
             mWindowManager = null;
@@ -557,18 +611,18 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * 显示悬浮窗
      */
     public void show() {
-        Log.i(TAG,"显示悬浮窗...");
+        Log.i(TAG, "显示悬浮窗...");
 
         try {
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
 
                 if (mShowLoader) {
-                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)mFlFloatLogo.getLayoutParams();
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
                     layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
                     Log.i(TAG, "show");
 
-                    switch (AppConfig.skin){
+                    switch (AppConfig.skin) {
                         case 8:
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
                             break;
@@ -707,7 +761,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     }
 
     public void destroy() {
-        Log.e("JiMiSDK","floatview destroy");
+        Log.e("JiMiSDK", "floatview destroy");
         mContext = null;
         removeTimerTask();
         mTimer.cancel();
@@ -715,6 +769,27 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler = null;
         removeFloatView();
+    }
+
+    private void clearNotice() {
+        JmhyApi.get().clearNotice(mContext, AppConfig.webSocket_token, AppConfig.appKey, new ApiRequestListener() {
+            @Override
+            public void onSuccess(Object obj) {
+                try {
+                    JSONObject object = new JSONObject(String.valueOf(obj));
+                    Log.i("测试日志4", "clearNotice清理成功"+object.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(int statusCode) {
+                Log.i("测试日志", "clearNotice清理失败" + statusCode);
+            }
+        });
+
+
     }
 
     private void turnToIntent(String url) {
@@ -727,6 +802,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("url", url);
+        intent.putExtra("isKefu", true);
         intent.setClass(mContext, JmUserinfoActivity.class);
         mContext.startActivity(intent);
 
@@ -747,34 +823,40 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     }
 
-    public void hiddenTip(int index){
-        switch (index){
+    public void hiddenTip(int index) {
+        switch (index) {
             case INDEX_ACCOUNT:
                 accountTip.setVisibility(GONE);
                 break;
             case INDEX_GIFT:
                 giftTip.setVisibility(GONE);
                 break;
+            case INDEX_KEFU:
+                kefuTip.setVisibility(GONE);
+                break;
         }
 
         refreshIconTip();
     }
 
-    private void refreshIconTip(){
-        if(accountTip.getVisibility() == View.VISIBLE || giftTip.getVisibility() == View.VISIBLE) {
+    private void refreshIconTip() {
+        if (accountTip.getVisibility() == View.VISIBLE || giftTip.getVisibility() == View.VISIBLE || kefuTip.getVisibility() == View.VISIBLE) {
             iconTip.setVisibility(VISIBLE);
-        }else{
+        } else {
             iconTip.setVisibility(GONE);
         }
     }
 
-    public void showTip(int index){
-        switch (index){
+    public void showTip(int index) {
+        switch (index) {
             case INDEX_ACCOUNT:
                 accountTip.setVisibility(VISIBLE);
                 break;
             case INDEX_GIFT:
                 giftTip.setVisibility(VISIBLE);
+                break;
+            case INDEX_KEFU:
+                kefuTip.setVisibility(VISIBLE);
                 break;
         }
 

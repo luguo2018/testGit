@@ -509,4 +509,42 @@ public class JmhyApi {
 				params, appkey);
 	}
 
+	public ApiAsyncTask getWebSocketToken(Context context, String access_token, String appKey, ApiRequestListener listener) {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", access_token);
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		paramsdata.put("ext_data", "");
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", toJson.toJson(paramsdata));
+		return WebApi.startThreadRequest(WebApi.ACTION_GETTOKEN, listener, params,
+				appKey);
+	}
+
+	public ApiAsyncTask getFloatState(Context context, String jm_customer_token, String appKey, ApiRequestListener listener) {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", AppConfig.Token+"");
+		params.put("jm_customer_token", jm_customer_token);
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		paramsdata.put("ext_data", "");
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", toJson.toJson(paramsdata));
+		return WebApi.startThreadRequest(WebApi.ACTION_FLOATSTATE, listener, params, appKey);
+	}
+
+	public ApiAsyncTask clearNotice(Context context, String jm_customer_token, String appKey, ApiRequestListener listener) {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", AppConfig.Token+"");
+		params.put("jm_customer_token", jm_customer_token);
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		paramsdata.put("ext_data", "");
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", toJson.toJson(paramsdata));
+		return WebApi.startThreadRequest(WebApi.ACTION_FLOATSTATE, listener, params, appKey);
+	}
 }

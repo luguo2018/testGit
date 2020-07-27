@@ -76,6 +76,8 @@ public class AppConfig {
 
 	public static boolean showAccountTip;
 	public static boolean showGiftTip;
+	public static boolean showKefuTip;
+    public static String webSocket_token;
 
 	public static String Token = "";
 	public static Map<String, String> tempMap = new HashMap<>();// 临时保存未激活的注册账号和修改密码页面的用户信息
