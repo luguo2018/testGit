@@ -545,6 +545,6 @@ public class JmhyApi {
 		paramsdata.put("ext_data", "");
 		HashmapToJson toJson = new HashmapToJson();
 		params.put("context", toJson.toJson(paramsdata));
-		return WebApi.startThreadRequest(WebApi.ACTION_FLOATSTATE, listener, params, appKey);
+		return WebApi.startThreadRequest(WebApi.ACTION_CLEANNOTICE, listener, params, appKey);
 	}
 }

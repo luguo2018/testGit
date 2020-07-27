@@ -71,7 +71,7 @@ public class WebApi {
         //获取悬浮窗红点状态
         ACTION_FLOATSTATE =WEBSOCKET_HOST+"/client/applicationNotice";
         //清除悬浮窗红点状态
-        ACTION_FLOATSTATE =WEBSOCKET_HOST+"/client/clearNotice";
+		ACTION_CLEANNOTICE =WEBSOCKET_HOST+"/client/clearNotice";
 
 		/*
 		 * 接口请求方式配置
@@ -138,7 +138,7 @@ public class WebApi {
 
 	/**
 	 * 后台启动http连接，使用Thread实现
-	 * 
+	 *
 	 * @param webApi
 	 * @param listener
 	 * @param params
