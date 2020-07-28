@@ -766,8 +766,18 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         removeTimerTask();
         mTimer.cancel();
         mTimer = null;
+
         mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler = null;
+
+        if (getStateTAsk != null) {
+            getStateTAsk.cancel();
+            getStateTAsk = null;
+        }
+        if (getStateTimer != null) {
+            getStateTimer.cancel();
+            getStateTimer = null;
+        }
         removeFloatView();
     }
 
