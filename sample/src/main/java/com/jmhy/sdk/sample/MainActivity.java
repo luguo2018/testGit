@@ -68,6 +68,52 @@ public class MainActivity extends Activity {
             public void Success(String s) {
                 Toast.makeText(MainActivity.this, "init success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "init Success");
+                JiMiSDK.login(MainActivity.this, appId, appKey, new ApiListenerInfo(){
+                    @Override
+                    public void onSuccess(final Object obj) {
+                        Log.d(TAG, "login Success");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(obj != null){
+                                    LoginMessageinfo login = (LoginMessageinfo)obj;
+                                    if(TextUtils.equals(login.getResult(), "success")) {
+                                        mBtnpay.setVisibility(View.VISIBLE);
+                                        mRoleLayout.setVisibility(View.VISIBLE);
+                                        mBtnloginout.setVisibility(View.VISIBLE);
+                                        force_exit.setVisibility(View.VISIBLE);
+                                        mBtnlogin.setVisibility(View.GONE);
+
+                                        Log.d(TAG, "login Success a");
+                                        /************************
+                                         *         显示浮点         *
+                                         *   接口在主线程调用哦^_^  *
+                                         ************************/
+                                        JiMiSDK.showFloat();
+
+                                    }else{
+                                        mBtnpay.setVisibility(View.GONE);
+                                        mRoleLayout.setVisibility(View.GONE);
+                                        mBtnloginout.setVisibility(View.GONE);
+                                        force_exit.setVisibility(View.GONE);
+                                        mBtnlogin.setVisibility(View.VISIBLE);
+
+                                        Log.d(TAG, "login Success b");
+                                    }
+                                }else{
+                                    mBtnpay.setVisibility(View.GONE);
+                                    mRoleLayout.setVisibility(View.GONE);
+                                    mBtnloginout.setVisibility(View.GONE);
+                                    force_exit.setVisibility(View.GONE);
+                                    mBtnlogin.setVisibility(View.VISIBLE);
+
+                                    Log.d(TAG, "login Success c");
+                                }
+                            }
+                        });
+                    }
+                });
+
             }
 
             @Override

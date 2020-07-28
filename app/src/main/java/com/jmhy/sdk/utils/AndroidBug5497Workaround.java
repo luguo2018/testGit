@@ -12,7 +12,7 @@ public class AndroidBug5497Workaround {
 
     // For more information, see https://code.google.com/p/android/issues/detail?id=5497
     // To use this class, simply invoke assistActivity() on an Activity that already has its content view set.
-    private int downScrollBy = 0;
+    private int downScrollBy = 0,scrollByHight=0;
 
     public static void assistActivity(Activity activity) {
         new AndroidBug5497Workaround(activity);
@@ -43,17 +43,29 @@ public class AndroidBug5497Workaround {
                 // 键盘弹出
 //                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference;
 //                Log.i("测试日志5", "弹出键盘" + usableHeightSansKeyboard + "possiblyResizeChildOfContent: " + frameLayoutParams.height);
-                Log.i("测试日志5", "弹出键盘屏幕高" + usableHeightSansKeyboard + "偏移usableHeightNow: " + usableHeightNow);
+                Log.i("测试日志5", "弹出键盘屏幕高" + usableHeightSansKeyboard + "偏移usableHeightNow: " + usableHeightNow+"计算偏移量：");
                 downScrollBy = usableHeightNow ;//向上偏移 键盘的高度（411）
-                mChildOfContent.scrollBy(0, usableHeightNow);
+                scrollByHight += downScrollBy;  //偏移量
+                if ( scrollByHight < (downScrollBy*2) ){
+                    mChildOfContent.scrollBy(0, downScrollBy);
+                    Log.i("测试偏移量","向上偏移量"+scrollByHight+"---限值"+(downScrollBy*2));
+                }else{
+                    scrollByHight=0;
+                }
             } else {
                 // 隐藏键盘
 //                frameLayoutParams.height = usableHeightSansKeyboard - heightDifference;
                 if (downScrollBy == 0) {//第一次进来走到这回调不做处理  后续如弹出键盘有偏移值  收起键盘时往回偏移
+                    Log.i("测试日志5", "首次收起键盘屏幕高" + usableHeightSansKeyboard + "偏移usableHeightNow: " + (-usableHeightNow));
                 } else {
-                    mChildOfContent.scrollBy(0, -downScrollBy);
+                    scrollByHight -= downScrollBy;
+                    Log.i("测试偏移量","向下偏移量"+scrollByHight+"---限值"+(-downScrollBy));
+                    if ( scrollByHight > (-downScrollBy) ){
+                        mChildOfContent.scrollBy(0, -downScrollBy);
+                    }else{
+                        scrollByHight=0;
+                    }
                 }
-                Log.i("测试日志5", "收起键盘屏幕高" + usableHeightSansKeyboard + "偏移usableHeightNow: " + (-usableHeightNow));
 //                Log.i("测试日志5", "隐藏键盘" + usableHeightSansKeyboard + "possiblyResizeChildOfContent: " + frameLayoutParams.height);
             }
             mChildOfContent.requestLayout();//请求布局 例：点击聊天框 刷新焦点
