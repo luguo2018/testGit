@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.game.qyz.jm.R;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.common.ExitListener;
 import com.jmhy.sdk.common.InitListener;
@@ -236,7 +237,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 PaymentInfo paymentInfo = new PaymentInfo();
                 //单位分
-                paymentInfo.setAmount("100");
+                paymentInfo.setAmount("1");
                 paymentInfo.setBalance("100元宝");
                 paymentInfo.setCporderid(System.currentTimeMillis()+"");
                 paymentInfo.setExt(System.currentTimeMillis()+"");

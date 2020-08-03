@@ -1,8 +1,6 @@
 package com.jmhy.sdk.http;
 
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +86,7 @@ public class JSONParse {
             result.setChannel_sdk_list(sdkList);
 
             result.setAddglobalscripturl(dataObject.optString("add_global_script_url"));
+            result.setMoblie_direct_login(dataObject.optString("moblie_direct_login"));
         }
         return result;
     }
@@ -359,6 +358,8 @@ public class JSONParse {
         //测试用例
         //data = "{\"code\":0,\"data\":[],\"message\":\"成功\"}";
         //data = "{\"code\":0,\"data\":{\"showUrl\":\"aHR0cDovL3Rlc3QuMTcyam0uY29tL2dvL3RvP2FjY2Vzc190b2tlbj0xMDAwMDFfMTU3NjA1MDkyMmViMmIwZmRkYzVhNWM0Y2FmZmI4YjA4NmEzZTk2MjM5ZjUzMTExZDUxMGQ0OGUzMSZyZWRpcmVjdF91cmw9aHR0cHMlM0ElMkYlMkZ0ZXN0LjE3MmptLmNvbSUyRmNvbW11bml0eSUyRmRpc3QlMkZzZXRfYXV0aGVudGljYXRpb24uaHRtbCUzRmZyb21HYW1lJTNEMSUyNmNsb3NlJTNEMTA=\",\"showMsg\":\"哈哈哈哈哈\",\"exit\":5},\"message\":\"成功\"}";
+//        String testData="{\"code\":0,\"data\":{\"showUrl\":\"\",\"showMsg\":\"\",\"exit\":0,\"channel_event\":{\"pay\":\"{\\\"cpOrderId\\\":\\\"201904291829271190a2699c52c8cf3a\\\",\\\"orderId\\\":\\\"201904291829271190a2699c52c8cf3a\\\",\\\"orderName\\\":\\\"5000\\\\u6e38\\\\u620f\\\\u5e01\\\",\\\"amountCNY\\\":50,\\\"serverNo\\\":\\\"9211\\\",\\\"serverName\\\":\\\"9211\\\\u670d\\\",\\\"roleId\\\":\\\"092111000759\\\",\\\"roleName\\\":\\\"\\\\u90a3\\\\u4f31\\\\u5446\\\\u9f4b\\\\u55ce\\\",\\\"level\\\":15,\\\"balance\\\":0,\\\"power\\\":0,\\\"vipLevel\\\":0}\"}},\"message\":\"成功\"}";
+//        data = testData;
         OnlineMessage msg = new OnlineMessage();
         JSONObject jsonObject = new JSONObject(data);
         String code = jsonObject.optString("code");
@@ -372,8 +373,55 @@ public class JSONParse {
             msg.setShowUrl(dataObject.optString("showUrl", ""));
             msg.setShowMsg(dataObject.optString("showMsg", ""));
             msg.setExit(dataObject.optInt("exit"));
+            msg.setChannel_event(dataObject.optString("channel_event",""));
+            msg.setApplication_notice(dataObject.optString("application_notice",""));
         }
         return msg;
 
+    }
+
+    /**
+     * 一键登录
+     *
+     * @param data
+     * @return
+     * @throws JSONException
+     */
+    public static LoginMessage parseOneKeylogin(String data) throws JSONException {
+        LoginMessage loginMessage = new LoginMessage();
+        JSONObject jsonObject = new JSONObject(data);
+        String code = jsonObject.optString("code");
+        loginMessage.setCode(code);
+        loginMessage.setMessage(jsonObject.optString("message"));
+        if (code.equals("0")) {
+            JSONObject dataObject = jsonObject.optJSONObject("data");
+            loginMessage.setGame_token(dataObject.optString("game_token"));
+            loginMessage.setUname(dataObject.optString("uname"));
+            loginMessage.setLogin_token(dataObject.optString("login_token"));
+            loginMessage.setOpenid(dataObject.optString("openid"));
+            loginMessage.setShow_url_after_login(dataObject.optString("show_url_after_login"));
+            loginMessage.setFloat_url_user_center(dataObject.optString("float_url_user_center"));
+            loginMessage.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
+            loginMessage.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
+            loginMessage.setIs_package_new(dataObject.optString("is_package_new"));
+            String url = dataObject.optString("h5_game_url");
+            if (!TextUtils.isEmpty(url)) {
+                AppConfig.loginH5GameUrl = Utils.toBase64url(url);
+            }
+            AppConfig.openid = loginMessage.getOpenid();
+            AppConfig.USERURL = Utils.toBase64url(loginMessage.getFloat_url_user_center());
+            AppConfig.GIFT = Utils.toBase64url(loginMessage.getFloat_url_gift_center());
+            if (loginMessage.getFloat_red_recommend() == 1) {
+                AppConfig.showAccountTip = true;
+                AppConfig.showGiftTip = false;
+            } else if (loginMessage.getFloat_red_recommend() == 2) {
+                AppConfig.showAccountTip = false;
+                AppConfig.showGiftTip = true;
+            } else if (loginMessage.getFloat_red_recommend() == 3) {
+                AppConfig.showAccountTip = true;
+                AppConfig.showGiftTip = true;
+            }
+        }
+        return loginMessage;
     }
 }

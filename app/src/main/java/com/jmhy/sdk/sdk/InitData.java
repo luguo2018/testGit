@@ -23,6 +23,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class InitData {
 
 	private InitListener listener;
@@ -131,6 +134,7 @@ public class InitData {
 	 * 赋值初始化信息
 	 */
 	public void setInit(InitMsg result) {
+
 		try {
 			AppConfig.Token = result.getAccess_token();
 			AppConfig.iphoneidList = result.getCode_area_list();
@@ -151,6 +155,18 @@ public class InitData {
 			AppConfig.skin = result.getSkin();
 			AppConfig.sdkList = result.getChannel_sdk_list();
 			AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
+			if (!result.getMoblie_direct_login().equals("")&&result.getMoblie_direct_login()!=null&& !result.getMoblie_direct_login().isEmpty()){
+
+				JSONObject jsonObject= null;
+				try {
+					jsonObject = new JSONObject(result.getMoblie_direct_login());
+					AppConfig.oneKeyLogin_SecretKey = jsonObject.getString("clientSecret");
+					Log.i("测试jimsdk","一键登录key:"+AppConfig.oneKeyLogin_SecretKey);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+			}
 		    seference.savePreferenceData("game", "token", result.getAccess_token());
 		    seference.savePreferenceData("game", "onlintiem", result.getOnlinereportinterval());
 		    seference.savePreferenceData("game", "userfloat",result.getUser_float());
@@ -159,7 +175,7 @@ public class InitData {
 
 			if (result.getSdk_float().equals("1")) {
 				handler.sendEmptyMessage(AppConfig.FLAG_PUSH);
-			} 
+			}
 			if(!result.getOnlinereportinterval().equals("0")){
 			   AppConfig.ONLIE_TIEM = Long.parseLong(result.getOnlinereportinterval());
 			   Intent pushIntent = new Intent(context, PushService.class);

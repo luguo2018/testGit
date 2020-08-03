@@ -71,6 +71,7 @@ public class AppConfig {
 	public static String is_sdk_float_on = "0";
 	public static JSONObject sdkList;
 	public static String h5GameUrl;
+	public static String oneKeyLogin_SecretKey;
 	public static PayData payData;
 	public static String loginH5GameUrl;
 
@@ -78,8 +79,10 @@ public class AppConfig {
 	public static boolean showGiftTip;
 	public static boolean showKefuTip;
     public static String webSocket_token;
+    public static boolean showOneKeyLogin = false;
 
 	public static String Token = "";
+	public static String oneKey_access_token = "";
 	public static Map<String, String> tempMap = new HashMap<>();// 临时保存未激活的注册账号和修改密码页面的用户信息
 	public static Map<String, String> loginMap = new HashMap<>();// 临时保存文件系统中的user0信息
 	public static Map<String, String> initMap = new HashMap<>();// 临时保存初始化信�?

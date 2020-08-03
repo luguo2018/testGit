@@ -80,6 +80,8 @@ public class ApiResponseFactory {
 				result = JSONParse.parseRechargeNotify(data);
 			}else if(webApi.equals(WebApi.ACTION_ONLINE)){
 				result = JSONParse.parseOnlineNotify(data);
+			}else if(webApi.equals(WebApi.ACTION_ONEKEYLOGIN)){
+				result = JSONParse.parseOneKeylogin(data);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

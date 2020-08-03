@@ -547,4 +547,17 @@ public class JmhyApi {
 		params.put("context", toJson.toJson(paramsdata));
 		return WebApi.startThreadRequest(WebApi.ACTION_CLEANNOTICE, listener, params, appKey);
 	}
+
+	public ApiAsyncTask startOneKeylogin(String oneKeyToken,String appkey, ApiRequestListener listener) {
+
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", AppConfig.Token + "");
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		paramsdata.put("login_token", oneKeyToken + "");
+
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", toJson.toJson(paramsdata));
+		return WebApi.startThreadRequest(WebApi.ACTION_ONEKEYLOGIN, listener, params, appkey);
+	}
 }

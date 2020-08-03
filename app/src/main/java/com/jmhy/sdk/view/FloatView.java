@@ -147,6 +147,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     //显示客服小红点
                     iconTip.setVisibility(VISIBLE);
                     kefuTip.setVisibility(VISIBLE);
+                    Log.i("测试日志", "轮询，显示toast");
+                    Toast.makeText(mContext, "您有新的客服消息，请前往悬浮窗查看", Toast.LENGTH_SHORT).show();
                     break;
             }
             super.handleMessage(msg);
@@ -156,42 +158,12 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     public FloatView(Context context) {
         super(context);
         init(context);
-        getState(context);
     }
 
-    private void getState(Context context) {
-        getStateTimer = new Timer();
-        getStateTAsk = new TimerTask() {
-            @Override
-            public void run() {
-                //在此添加轮询
-                JmhyApi.get().getFloatState(mContext, AppConfig.webSocket_token, AppConfig.appKey, new ApiRequestListener() {
-                    @Override
-                    public void onSuccess(Object obj) {
-                        try {
-                            JSONObject object = new JSONObject(String.valueOf(obj));
-                            Log.i("测试日志", "轮询结果:" + object.toString());
-                            AppConfig.showKefuTip = object.getBoolean("data");
-                            if (AppConfig.showKefuTip) {
-                                Message message = mTimerHandler.obtainMessage();
-                                message.what = SHOW_KEFU_FLOAT;
-                                mTimerHandler.sendMessage(message);
-                            }
-                            FloatUtils.showFloat((Activity) mContext);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(int statusCode) {
-                        Log.i("测试日志", "获取token失败" + statusCode);
-                    }
-                });
-            }
-        };
-        getStateTimer.schedule(getStateTAsk, 1000, 60*1000);//一分钟轮询1次
+    public void setRedDotState() {
+        Message message = mTimerHandler.obtainMessage();
+        message.what = SHOW_KEFU_FLOAT;
+        mTimerHandler.sendMessage(message);
     }
 
     private void init(Context context) {
@@ -339,7 +311,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             public void onClick(View arg0) {
                 turnToIntent(AppConfig.KEFU);
                 hiddenTip(INDEX_KEFU);
-                clearNotice();
             }
         });
 
@@ -582,6 +553,13 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         }
     }
 
+    private void removeSocketTimerTask() {
+        if (getStateTAsk != null) {
+            getStateTAsk.cancel();
+            getStateTAsk = null;
+        }
+    }
+
     private void removeFloatView() {
         try {
       /*      mWmParams.alpha = 0;
@@ -605,6 +583,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         message.what = HANDLER_TYPE_HIDE_LOGO;
         mTimerHandler.sendMessage(message);
         removeTimerTask();
+        removeSocketTimerTask();
     }
 
     /**
@@ -767,6 +746,11 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         mTimer.cancel();
         mTimer = null;
 
+        if (getStateTimer != null) {
+            getStateTimer.cancel();
+            getStateTimer = null;
+        }
+
         mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler = null;
 
@@ -774,32 +758,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             getStateTAsk.cancel();
             getStateTAsk = null;
         }
-        if (getStateTimer != null) {
-            getStateTimer.cancel();
-            getStateTimer = null;
-        }
+
         removeFloatView();
-    }
-
-    private void clearNotice() {
-        JmhyApi.get().clearNotice(mContext, AppConfig.webSocket_token, AppConfig.appKey, new ApiRequestListener() {
-            @Override
-            public void onSuccess(Object obj) {
-                try {
-                    JSONObject object = new JSONObject(String.valueOf(obj));
-                    Log.i("测试日志4", "clearNotice清理成功"+object.toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(int statusCode) {
-                Log.i("测试日志", "clearNotice清理失败" + statusCode);
-            }
-        });
-
-
     }
 
     private void turnToIntent(String url) {

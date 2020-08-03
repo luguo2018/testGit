@@ -9,12 +9,14 @@ import com.jmhy.sdk.utils.Seference;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 public class Logindata {
     private static Seference mSeference;
 
     public static void selectLogin(Activity context) {
         mSeference = new Seference(context);
+        AppConfig.showOneKeyLogin=true;
         if (AppConfig.is_reg_login_on.equals("0")) {
             return;
         }

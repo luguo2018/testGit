@@ -60,6 +60,10 @@ public class Guest {
 	}
 	public void setUpass(String upass) {
 		this.upass = upass;
+		Log.i("setUpass","setUpass"+upass);
+		if (!upass.equals("")){
+			JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
+		}
 	}
 	public String getMessage() {
 		return message;

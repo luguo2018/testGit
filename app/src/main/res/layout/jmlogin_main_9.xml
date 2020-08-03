@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/jm_login_bg"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_login_top_height"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="@dimen/jm_login_logo_width"
+                android:layout_height="@dimen/jm_login_logo_height"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_logo_new" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/userlgbt"
+                    android:layout_width="@dimen/jm_login_8_width"
+                    android:layout_height="@dimen/jm_login_switch_height"
+                    android:gravity="center"
+                    android:textColor="@color/jmfont_black"
+                    android:text="@string/moblie_bt_user"
+                    android:textSize="12sp"
+                    android:background="@drawable/jm_select_left_normal"/>
+
+                <TextView
+                    android:id="@+id/title_tv"
+                    android:layout_width="@dimen/jm_login_8_width"
+                    android:layout_height="@dimen/jm_login_switch_height"
+                    android:gravity="center"
+                    android:textColor="@color/jmfont_black"
+                    android:text="@string/moblie_login_title"
+                    android:textSize="15sp"
+                    />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="@dimen/jm_login_logo_width"
+                android:layout_height="@dimen/jm_login_logo_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/ivkefu"
+                    android:layout_width="26dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_kefu_new" />
+
+                <TextView
+                    android:id="@+id/tvversion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    tools:text="v1.0.1"
+                    android:textColor="#d5dad3"
+                    android:textSize="10sp"/>
+            </FrameLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_input_height"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/jm_input_bg">
+            <ImageView
+                android:layout_width="@dimen/jm_login_icon_width"
+                android:layout_height="@dimen/jm_login_icon_height"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_phone"/>
+
+            <EditText
+                android:id="@+id/edit_iphone"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/moblie_edit_hint"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLength="25"
+                android:textCursorDrawable="@null"
+                android:nextFocusForward="@+id/edit_code"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#d5dad3"
+                android:textSize="18sp" >
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="@dimen/jm_input_height"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/jm_input_bg">
+            <ImageView
+                android:layout_width="@dimen/jm_login_icon_width"
+                android:layout_height="@dimen/jm_login_icon_height"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_code"/>
+
+            <EditText
+                android:id="@+id/edit_code"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/moblie_edit_code_hint"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:textCursorDrawable="@null"
+                android:maxLength="6"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#d5dad3"
+                android:textSize="18sp" >
+            </EditText>
+
+            <TextView
+                android:id="@+id/ibcode"
+                android:layout_width="70dp"
+                android:layout_height="34dp"
+                android:layout_margin="6dp"
+                android:gravity="center"
+                android:background="@drawable/jm_blues_codebtn_style_new"
+                android:padding="5sp"
+                android:text="@string/moblie_bt_code"
+                android:textColor="@color/jmfont_white"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/jm_forget_text_margin_top"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/remembpwcb"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:button="@drawable/jmagreeradio"
+                android:background="@null"
+                android:checked="true"
+                android:enabled="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/user_text_my"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvurl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/user_text_deal"
+                android:textColor="@color/jmfont_blues"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/user_text_end"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mobilebt"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_input_height"
+            android:layout_marginTop="@dimen/jm_register_submit_margin_top"
+            android:gravity="center"
+            android:background="@drawable/jm_blues_codebtn_style_new"
+            android:text="@string/moblie_bt_login"
+            android:textColor="@color/jmfont_white"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/tvvistor"
+                android:text="@string/moblie_text_visitor"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/ivregister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/moblie_text_register2"
+                android:textColor="@color/jmfont_gray"
+                android:textSize="16sp"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

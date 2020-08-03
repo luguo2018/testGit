@@ -1,21 +1,34 @@
 package com.jmhy.sdk.push;
 
+import android.app.Activity;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.OnlineMessage;
+import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.sdk.JmhyApi;
+import com.jmhy.sdk.sdk.PayDataRequest;
+import com.jmhy.sdk.statistics.JrttStatistics;
+import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.SeferenceGame;
 import com.jmhy.sdk.utils.Utils;
+import com.jmhy.sdk.view.FloatView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,20 +38,20 @@ import java.util.TimerTask;
 
 /**
  * 推送服务 使用轮询实现 每隔一段时间发起pull请求， 返回数据后跟本地id匹配，如果是没有接收过的，加载详细数据，显示通知栏消息
- * 
+ *
  * @author
- * 
+ *
  */
 
 public class PushService extends Service {
 	private final static String TAG = PushService.class.getSimpleName();
 
-	public static long startTime = 3000 * 60;// 3分钟之后请求一次
+	public static long startTime = 1000;// 3分钟之后请求一次
 	private static Timer timer;
 	private Task task;
 	private Handler handler;
 	private ApiAsyncTask roletask;
-
+	private Context mContext;
 	private static long lastTime;
 	private static long onLineTime;
 	private static boolean pause;
@@ -135,7 +148,7 @@ public class PushService extends Service {
 		if(seconds == 0){
 			return;
 		}
-
+		mContext =this;
 		roletask = JmhyApi.get().starOnline(
 				this,
 				AppConfig.appKey,
@@ -167,6 +180,8 @@ public class PushService extends Service {
 					@Override
 					public void onSuccess(Object obj) {
 						Log.i(TAG, "onSuccess = " + obj);
+
+						Log.i("jimisdk测试","返回数据:"+obj);
 						if (obj != null) {
 							final OnlineMessage msg = (OnlineMessage)obj;
 							String murl = Utils.toBase64url(msg.getShowUrl());
@@ -186,8 +201,45 @@ public class PushService extends Service {
 								},exit * 1000);
 
 							}
+                            if (!msg.getApplication_notice().equals("") && msg.getApplication_notice() != null && !msg.getApplication_notice().isEmpty()) {
+                                if (msg.getApplication_notice().equals("1")) {
+                                    Log.i("jimisdk测试", "有新消息，即将显示悬浮窗红点tip");
+                                    FloatUtils.showFloatRedDot();
+                                }
+                            }
+                            try {
+                                JSONObject data=new JSONObject(msg.getChannel_event());
+                                if (!msg.getChannel_event().equals("")) {
+									JSONObject pay = new JSONObject(data.getString("pay"));
 
-						}
+									PaymentInfo paymentInfo = new PaymentInfo();
+
+									paymentInfo.setCporderid(pay.getString("cpOrderId"));
+									paymentInfo.setOrdername(pay.getString("orderName"));
+									paymentInfo.setAmount(pay.getString("amountCNY"));
+									paymentInfo.setCporderid(pay.getString("cpOrderId"));
+
+									paymentInfo.setRoleid(pay.getString("roleId"));
+									paymentInfo.setRolename(pay.getString("roleName"));
+									paymentInfo.setLevel(pay.getString("level"));
+									paymentInfo.setServerno(pay.getString("serverNo"));
+									paymentInfo.setZoneName(pay.getString("serverName"));
+									paymentInfo.setBalance(pay.getString("balance"));
+									paymentInfo.setPower(pay.getString("power"));
+									paymentInfo.setViplevel(pay.getString("vipLevel"));
+
+									PayData payData = new PayData();
+									payData.setOrderid(pay.getString("orderId"));
+
+									Log.i("jimsdk测试信息", "支付上报数据1" + paymentInfo);
+									Log.i("jimsdk测试信息", "支付上报数据2" + payData);
+									JiMiSDK.getStatisticsSDK().onPay(paymentInfo, payData, JiMiSDK.payChannel, true);
+								}
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
 
 					}
 

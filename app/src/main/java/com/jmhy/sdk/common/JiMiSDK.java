@@ -387,32 +387,39 @@ public class JiMiSDK {
             public void onPermissionResult(boolean grant) {
 				Log.i(TAG, "showFloat grant = " + grant);
                 if(grant){
-//					FloatUtils.showFloat((Activity)mContext);
+					FloatUtils.showFloat((Activity)mContext);
                     //原本直接显示浮窗，现改动先获取WebSocketToken然后再进去显示浮窗，后续用该token轮询
-                    JmhyApi.get().getWebSocketToken(mContext, AppConfig.Token, AppConfig.appKey, new ApiRequestListener() {
-                        @Override
-                        public void onSuccess(Object obj) {
-                            Log.i("测试日志", "获取token成功" + obj);
-                            try {
-                                JSONObject object = new JSONObject(String.valueOf(obj));
-                                AppConfig.webSocket_token = new JSONObject(object.getString("data")).getString("jm_customer_token");
-                                Log.i("测试日志3", AppConfig.webSocket_token + "");
-
-                                Message message = handler.obtainMessage();
-                                message.what = WebSocketToken;
-                                handler.sendMessage(message);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        @Override
-                        public void onError(int statusCode) {
-                            Log.i("测试日志", "获取token失败" + statusCode);
-                        }
-                    });
+//                    JmhyApi.get().getWebSocketToken(mContext, AppConfig.Token, AppConfig.appKey, new ApiRequestListener() {
+//                        @Override
+//                        public void onSuccess(Object obj) {
+//                            Log.i("测试日志", "获取token成功" + obj);
+//                            try {
+//                                JSONObject object = new JSONObject(String.valueOf(obj));
+//                                if (object.getInt("code")==301){
+//
+//								}else{
+//									AppConfig.webSocket_token = new JSONObject(object.getString("data")).getString("jm_customer_token");
+//									Log.i("测试日志3", AppConfig.webSocket_token + "");
+//								}
+//
+//                                Message message = handler.obtainMessage();
+//                                message.what = WebSocketToken;
+//                                handler.sendMessage(message);
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onError(int statusCode) {
+//                            Log.i("测试日志", "获取token失败" + statusCode);
+//							Message message = handler.obtainMessage();
+//							message.what = WebSocketToken;
+//							handler.sendMessage(message);
+//                        }
+//                    });
                 }else{
                     permissionTip((Activity)mContext, "jm_permission_tip_float");
                 }

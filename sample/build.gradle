@@ -1,83 +1,148 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
-
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "com.jmhy.sdk.landscape"
+        applicationId "com.game.jm.qyz"
         minSdkVersion 15
-        targetSdkVersion 26
-
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-
     }
 
-
-
-
-
-    lintOptions {
-        disable 'GoogleAppIndexingWarning'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     signingConfigs {
         release {
-            keyAlias 'sample'
-            keyPassword '123456'
-            storeFile file('sample.jks')
-            storePassword '123456'
-
+            keyAlias 'susu'
+            keyPassword 'susu123'
+            storeFile file('susu.keystore')
+            storePassword 'susu123'
         }
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-
-        }
-        release {
-            signingConfig signingConfigs.release
             minifyEnabled false
+        }
+
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
         }
     }
 
-
-    productFlavors {
-        flavorDimensions("develop")
-        //约定：开发服develop，测试服perProduce，生产服produce
-        landscape {
-            applicationId "com.jmhy.sdk.landscape"
-            manifestPlaceholders = [ORIENTATION : "sensorLandscape",
-                                    APP_NAME : "@string/app_name_landscape"]
-            dimension "develop"
-            versionName releaseTime()
-        }
-        portrait {
-            applicationId "com.jmhy.sdk.portrait"
-            manifestPlaceholders = [ORIENTATION : "sensorPortrait",
-                                    APP_NAME : "@string/app_name"]
-            dimension "develop"
-            versionName releaseTime()
-        }
+    lintOptions {
+        disable 'GoogleAppIndexingWarning'
     }
-}
-
-def static releaseTime() {
-    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08:00"))
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar','*.so'], dir: 'libs')
-    implementation project(':app')
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation project(':app')
 }
+
+
+
+
+
+//apply plugin: 'com.android.application'
+//
+//android {
+//    compileSdkVersion 29
+//    buildToolsVersion '29.0.2'
+//
+//
+//    defaultConfig {
+//        applicationId "com.game.jm.qyz"
+//        minSdkVersion 15
+//        targetSdkVersion 26
+//
+//        versionCode 1
+//        versionName "1.0"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//
+//
+//    }
+//
+//
+//
+//
+//
+//    lintOptions {
+//        disable 'GoogleAppIndexingWarning'
+//    }
+//
+//    signingConfigs {
+////        release {
+////            keyAlias 'sample'
+////            keyPassword '123456'
+////            storeFile file('sample.jks')
+////            storePassword '123456'
+////        }
+//        release {
+//            keyAlias 'susu'
+//            keyPassword 'susu123'
+//            storeFile file('susu.keystore')
+//            storePassword 'susu123'
+//        }
+//    }
+//
+//    buildTypes {
+//        debug {
+//            signingConfig signingConfigs.release
+//
+//        }
+//        release {
+//            signingConfig signingConfigs.release
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//
+//        }
+//    }
+//
+//
+//    productFlavors {
+//        flavorDimensions("develop")
+//        //约定：开发服develop，测试服perProduce，生产服produce
+//        landscape {
+//            applicationId "com.jmhy.sdk.landscape"
+//            manifestPlaceholders = [ORIENTATION : "sensorLandscape",
+//                                    APP_NAME : "@string/app_name_landscape"]
+//            dimension "develop"
+//            versionName releaseTime()
+//        }
+//        portrait {
+//            applicationId "com.jmhy.sdk.portrait"
+//            manifestPlaceholders = [ORIENTATION : "sensorPortrait",
+//                                    APP_NAME : "@string/app_name"]
+//            dimension "develop"
+//            versionName releaseTime()
+//        }
+//    }
+//}
+//
+//def static releaseTime() {
+//    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("GMT+08:00"))
+//}
+//
+//dependencies {
+//    implementation fileTree(include: ['*.jar','*.so'], dir: 'libs')
+//    implementation project(':app')
+//
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//}

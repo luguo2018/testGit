@@ -18,7 +18,6 @@ public class WebApi {
 	public static String BASE_HOST;// = "https://apisdk.5tc5.com/v1"
 	public static String HOST;// = "https://apisdk.5tc5.com/v1"
 //	public static String WEBSOCKET_HOST = "http://swim.t52f.top:9501";
-//	public static String WEBSOCKET_HOST = "https://swim.t52f.top";
 	public static String WEBSOCKET_HOST = "https://jmkf.jmhy.com";
 	//private static final String HOST = "https://test.172jm.com/v1";//测试用
 	//private final String HOST = "https://apisdk.wfg3.com/v1";
@@ -46,6 +45,8 @@ public class WebApi {
 		ACTION_USRRLOGIN = HOST+"/user/account_login";
 		//自动登录
 		ACTION_AUTOLOGIN = HOST+"/user/auto_login";
+		//一键登录
+		ACTION_ONEKEYLOGIN = HOST+"/user/cmcc_login";
 		//手机注册
 		ACTION_PHONE_REGISTER =HOST+"/user/phone_register";
 		//游客账号
@@ -95,6 +96,7 @@ public class WebApi {
 		HttpTypeMap.put(ACTION_GETTOKEN, "post");
 		HttpTypeMap.put(ACTION_FLOATSTATE, "post");
 		HttpTypeMap.put(ACTION_CLEANNOTICE, "post");
+		HttpTypeMap.put(ACTION_ONEKEYLOGIN, "post");
 	}
 
 	// 初始化接口
@@ -135,6 +137,8 @@ public class WebApi {
 	public static String ACTION_FLOATSTATE;
 	//点开客服浮标通知服务端接口,轮询不在获得显示浮标状态
 	public static String ACTION_CLEANNOTICE;
+	//一键登录
+	public static String ACTION_ONEKEYLOGIN;
 
 	/**
 	 * 后台启动http连接，使用Thread实现

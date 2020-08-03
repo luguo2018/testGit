@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <include layout="@layout/custom_port_dialog_action_bar"/>
+    <RelativeLayout
+        android:id="@+id/container_icon"
+        android:layout_width="200dp"
+        android:layout_height="51dp"
+        android:orientation="horizontal"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentRight="true"
+        >
+<!--        <TextView-->
+<!--            android:id="@+id/mobilebt"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:gravity="center"-->
+<!--            android:textColor="@color/jmfont_white"-->
+<!--            android:background="@drawable/jm_blues_codebtn_style_new"-->
+<!--            android:text="极米登陆"-->
+<!--            android:textSize="18sp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+    </RelativeLayout>
+</RelativeLayout>
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+<!--    <include layout="@layout/custom_port_dialog_action_bar"/>-->
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/container_icon"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="51dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginRight="30dp"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        >-->
+<!--        <ImageView-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:src="@drawable/taobao"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            />-->
+<!--        <ImageView-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:src="@drawable/alipay"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            />-->
+<!--        <ImageView-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:src="@drawable/sina"-->
+<!--            android:layout_alignParentRight="true"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            />-->
+<!--    </RelativeLayout>-->
+<!--</RelativeLayout>-->

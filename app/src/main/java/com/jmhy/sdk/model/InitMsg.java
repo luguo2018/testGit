@@ -56,6 +56,16 @@ public class InitMsg {
 	private String isvisitoronphone;
 	private String forgetpasswordurl;
 	private String addglobalscripturl;
+	private String moblie_direct_login="";
+
+	public String getMoblie_direct_login() {
+		return moblie_direct_login;
+	}
+
+	public void setMoblie_direct_login(String moblie_direct_login) {
+		this.moblie_direct_login = moblie_direct_login;
+	}
+
 	public String getCode() {
 		return code;
 	}
@@ -271,6 +281,7 @@ public class InitMsg {
 				", isvisitoronphone='" + isvisitoronphone + '\'' +
 				", forgetpasswordurl='" + forgetpasswordurl + '\'' +
 				", addglobalscripturl='" + addglobalscripturl + '\'' +
+				", moblie_direct_login='" + moblie_direct_login + '\'' +
 				'}';
 	}
 }

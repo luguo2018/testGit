@@ -1,9 +1,7 @@
 package com.jmhy.sdk.utils;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
+import android.util.Log;
 
 import com.jmhy.sdk.view.FloatView;
 
@@ -17,6 +15,14 @@ public class FloatUtils {
         }
     }
 
+    public static void showFloatRedDot() {
+        if(mFloatView != null){
+            Log.i("jimisdk测试","悬浮窗不为空，展示红点"+mFloatView);
+            mFloatView.setRedDotState();
+        }else{
+            Log.i("jimisdk测试","悬浮窗为空");
+        }
+    }
     /*public static void hideFloat() {
         if (mFloatView != null) {
             mFloatView.hide();
