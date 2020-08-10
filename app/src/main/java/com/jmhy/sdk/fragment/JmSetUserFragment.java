@@ -157,7 +157,7 @@ public class JmSetUserFragment extends JmBaseFragment implements
 		mEtusername.setText(uname);
 		mTvmsg = (TextView) getView().findViewById(
 				AppConfig.resourceId(getActivity(), "tvmsg", "id"));
-		time = new TimeCount(1000, 1000);//控制弹窗显示时间
+		time = new TimeCount(100, 100);//控制弹窗显示时间
 		time.start();
 	
 	}
