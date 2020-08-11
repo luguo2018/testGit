@@ -38,6 +38,7 @@ public class AppConfig {
 	public static boolean isswitch = true;
 
 	public static int appId = 0;
+	public static String cache_orderId = "";
 	public static String appKey = "";
 	public static String agent = "";
 	public static String version = "";

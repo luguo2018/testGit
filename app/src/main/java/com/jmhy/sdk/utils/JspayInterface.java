@@ -15,7 +15,7 @@ public class JspayInterface {
 	public final static String TAG = JspayInterface.class.getSimpleName();
 
 	private JmpayActivity activity;
-	
+
 	private Seference mSeference;
 
 	private Boolean payResult;
@@ -39,7 +39,7 @@ public class JspayInterface {
 		AppConfig.saveMap(user, pwd, uid);
 		Utils.saveUserToSd(activity);
 	}
-	
+
 	@JavascriptInterface
     public  void closeWebView(){
 		if(activity!=null){
@@ -47,7 +47,7 @@ public class JspayInterface {
 			activity.finish();
     	}
 	}
-	
+
 	/**
 	 * 切换账号
 	 */
@@ -76,7 +76,7 @@ public class JspayInterface {
 				Uri.parse(url));
 		activity.startActivity(intent);
 	}
-	
+
 	@JavascriptInterface
 	public void payNotify(String result){
 		//result=0 失败，1 成功
@@ -88,7 +88,12 @@ public class JspayInterface {
 			payResult = true;
 			Log.i(TAG, "pay success");
 			Log.i("JrttStatistics", "------> pay success");
-			JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
+            if (!AppConfig.cache_orderId.equals(PayDataRequest.getPayData().getOrderid())) {//支付成功：缓存订单号  不等于本次上报的订单号  上报
+                AppConfig.cache_orderId = PayDataRequest.getPayData().getOrderid();
+                JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
+            }else{//支付成功：缓存订单号 = 本次上报订单号  订单重复
+                Log.i("jimi测试","************订单重复上报************");
+            }
 
 
 		}else{
