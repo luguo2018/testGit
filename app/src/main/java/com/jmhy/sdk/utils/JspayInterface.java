@@ -88,11 +88,14 @@ public class JspayInterface {
 			payResult = true;
 			Log.i(TAG, "pay success");
 			Log.i("JrttStatistics", "------> pay success");
-            if (!AppConfig.cache_orderId.equals(PayDataRequest.getPayData().getOrderid())) {//支付成功：缓存订单号  不等于本次上报的订单号  上报
-                AppConfig.cache_orderId = PayDataRequest.getPayData().getOrderid();
+			Log.i(TAG, "pay success---PayDataRequest.getmPayInfo()"+PayDataRequest.getmPayInfo().getCporderid());
+			if (!AppConfig.cache_orderId.equals(PayDataRequest.getmPayInfo().getCporderid())) {//支付成功：缓存订单号  不等于本次上报的订单号  上报
+                AppConfig.cache_orderId = PayDataRequest.getmPayInfo().getCporderid();
                 JiMiSDK.getStatisticsSDK().onPay(PayDataRequest.getmPayInfo(), PayDataRequest.getPayData(), JiMiSDK.payChannel, true);
             }else{//支付成功：缓存订单号 = 本次上报订单号  订单重复
                 Log.i("jimi测试","************订单重复上报************");
+                Log.i("jimi测试","************缓存订单************"+AppConfig.cache_orderId);
+                Log.i("jimi测试","************上报订单************"+PayDataRequest.getmPayInfo().getCporderid());
             }
 
 
