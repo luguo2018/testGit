@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.config.AppConfig;
@@ -700,7 +701,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
         removeFloatView();
     }
-
+    FloatUserInfoActivity floatUserInfoActivity;
     private void turnToIntent(String url) {
         if (TextUtils.isEmpty(url)) {
             String tip = AppConfig.getString(mContext, "function_not_open");
@@ -710,14 +711,21 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 //        if (AppConfig.skin==9){
 //            WebviewFloatUtils.showUserCentent(mContext,(Activity) mContext,url);
 //        }else {
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("url", url);
-            intent.putExtra("isKefu", true);
-            intent.setClass(mContext, JmUserinfoActivity.class);
-            mContext.startActivity(intent);
+
+//            Intent intent = new Intent();
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+//                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            intent.putExtra("url", url);
+//            intent.putExtra("isKefu", true);
+//            intent.setClass(mContext, JmUserinfoActivity.class);
+//            mContext.startActivity(intent);
 //        }
+        if(floatUserInfoActivity==null){
+            floatUserInfoActivity = new FloatUserInfoActivity((Activity) mContext);
+            floatUserInfoActivity.setViews(url);
+        }else {
+            floatUserInfoActivity.setViews(url);
+        }
     }
     private PopupWindow popupWindow;
 

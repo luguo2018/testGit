@@ -1,0 +1,315 @@
+package com.jmhy.sdk.activity;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.view.ViewTreeObserver;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
+
+import com.jmhy.sdk.R;
+import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.model.BaseFloatActivity;
+import com.jmhy.sdk.utils.AndroidBug5497Workaround;
+import com.jmhy.sdk.utils.JsInterface;
+import com.jmhy.sdk.utils.MimeType;
+import com.jmhy.sdk.utils.checkEmulator.FloatJsInterface;
+import com.jmhy.sdk.view.CornerCompatView;
+import com.jmhy.sdk.view.GifImageView;
+
+import java.util.ArrayList;
+import java.util.Properties;
+
+public class FloatUserInfoActivity extends BaseFloatActivity {
+    private static final String TAG = "FloatUserInfoActivity";
+    private WebView mWebview;
+    private GifImageView mGifImageView;
+    private View parent;
+    private String mUrl;
+    private ValueCallback<Uri[]> uploadMessageAboveL;
+    private ValueCallback<Uri> uploadMessage;
+    private final static int FILE_CHOOSER_RESULT_CODE = 0x01;
+    private float originalY;
+    private boolean notice;
+    private boolean protocol;
+    private View right_back;
+
+    public FloatUserInfoActivity(Activity activity) {
+        super(activity);
+    }
+
+    @Override
+    public void setViews(String url) {
+        mUrl = url;
+        intView();
+        originalY = mWebview.getY();
+        //防止软键盘覆盖webview
+        mWebview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d(TAG, "onGlobalLayout: 软键盘状态改变");
+                Rect rect = new Rect();
+                mWebview.getWindowVisibleDisplayFrame(rect);
+                int height = mWebview.getHeight() - rect.bottom;
+                if (height > 100) {
+                    if (mWebview.getY() >= 0) {
+                        int[] location = new int[2];
+                        mWebview.getLocationInWindow(location);
+                        int h = location[1] + mWebview.getHeight() - rect.bottom;
+                        float moveY = originalY - h;
+                        mWebview.setY(moveY);
+                    }
+
+                } else {
+                    mWebview.setY(originalY);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void removeContentView() {
+        if (contentView != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "removeContentView: threadName" + Thread.currentThread().getName());
+                    ViewParent parent = contentView.getParent();
+                    ViewGroup viewGroup = (ViewGroup) parent;
+                    ViewGroup viewGroup1 = (ViewGroup) contentView;
+                    int count = viewGroup1.getChildCount();
+                    viewGroup1.removeAllViews();
+                    Log.d(TAG, "removeContentView: childCount=" + count);
+                    viewGroup.removeView(contentView);
+                }
+            });
+
+        }
+    }
+
+    private void intView() {
+        //仅客服页的webview才做外部点击收起软键盘及软键盘弹出收起，其他webview先不干预
+//        boolean isKefu = getIntent().getBooleanExtra("isKefu", false);
+        notice = false;
+        protocol =false;
+        int layout_id = 0;
+        if (protocol) {
+            if (AppConfig.skin == 9) {
+                Log.i("jimi", "加载全屏协议protocol");
+                layout_id=AppConfig.resourceId(activity, "jm_protocol_skin9", "layout");
+            }
+        } else if (notice) {
+            if (AppConfig.skin == 9) {
+                layout_id=AppConfig.resourceId(activity, "jmnotice_skin9", "layout");
+            } else {
+                layout_id=AppConfig.resourceId(activity, "jmnotice", "layout");
+            }
+
+        } else {
+            if (AppConfig.skin == 9) {
+                layout_id=AppConfig.resourceId(activity, "jmuserinfo_skin9", "layout");
+            } else {
+                layout_id=AppConfig.resourceId(activity, "jmuserinfo", "layout");
+            }
+        }
+        setContentView(layout_id);
+        if (true) {
+            AndroidBug5497Workaround.assistActivity(activity);
+        }
+        // TODO Auto-generated method stub
+        parent = contentView.findViewById(R.id.parent);
+        right_back =contentView.findViewById(R.id.right_back);
+        mWebview = (WebView) contentView.findViewById(AppConfig.resourceId(activity,
+                "webview", "id"));
+        mGifImageView = (GifImageView) contentView.findViewById(AppConfig.resourceId(activity,
+                "gif", "id"));
+        switch (AppConfig.skin) {
+            case 8:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
+                        "drawable"));
+                break;
+            case 7:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_red",
+                        "drawable"));
+                break;
+            case 6:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
+                        "drawable"));
+                break;
+            case 5:
+            case 4:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_4",
+                        "drawable"));
+                break;
+            case 3:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_3",
+                        "drawable"));
+                break;
+            case 2:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
+                        "drawable"));
+                break;
+            default:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading",
+                        "drawable"));
+        }
+
+        View view = contentView.findViewById(AppConfig.resourceId(activity,
+                "content", "id"));
+        //测试view是否为空
+        if (view == null) {
+            Log.e("JiMiSDK", "JmuserinfoActivity view == null");
+            return;
+        }
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+        switch (AppConfig.skin) {
+            case 5:
+            case 4:
+                //layoutParams.width = (int)getResources().getDimension(AppConfig.resourceId(activity, "jm_login_width_4", "dimen"));
+                //layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(activity, "jm_login_height_4", "dimen"));
+                break;
+        }
+
+        mWebview.setVerticalScrollBarEnabled(false);
+        mWebview.getSettings().setSupportZoom(false);
+        mWebview.getSettings().setSaveFormData(false);
+        mWebview.getSettings().setSavePassword(false);
+        mWebview.getSettings().setJavaScriptEnabled(true);
+        mWebview.getSettings().setBuiltInZoomControls(false);
+        mWebview.getSettings().setSupportZoom(false);
+        mWebview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);// 默认不使用缓存！
+        mWebview.addJavascriptInterface(new FloatJsInterface(activity, this), "jimiJS");
+        mWebview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        // 修复一些机型webview无法点击****/
+        mWebview.requestFocus(View.FOCUS_DOWN);
+        mWebview.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                Log.i(TAG, "onPageStarted " + url);
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.i(TAG, "onPageFinished " + url);
+                super.onPageFinished(view, url);
+                hiddenLoading();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i(TAG, "shouldOverrideUrlLoading " + url);
+                if (url.startsWith("weixin://wap/pay")) {
+                    Intent intent = null;
+
+                    try {
+                        intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        view.getContext().startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                } else {
+
+                    return super.shouldOverrideUrlLoading(view, url);
+                }
+            }
+        });
+
+        parent.setOnClickListener(this);
+        right_back.setOnClickListener(this);
+        mWebview.setWebChromeClient(new WebChromeClient() {
+            public void openFileChooser(ValueCallback<Uri> valueCallback) {
+                uploadMessage = valueCallback;
+                ArrayList<String> allType = new ArrayList<>();
+                openImageChooserActivity(allType);
+            }
+
+            public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
+                uploadMessage = valueCallback;
+                ArrayList<String> allType = new ArrayList<>();
+                openImageChooserActivity(allType);
+            }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                uploadMessageAboveL = filePathCallback;
+
+                //h5文件选择回调，监听类型传对应格式打开文件选择器
+                ArrayList fileType = new ArrayList();
+                for (int i = 0; i < fileChooserParams.getAcceptTypes().length; i++) {
+                    Log.i(TAG, "查看webview打开文件选择器的文件类型：" + fileChooserParams.getAcceptTypes()[i]);
+                    if (fileChooserParams.getAcceptTypes()[i].equals("image/png")) {
+                        fileType.add(MimeType.IMAGE);
+                    } else if (fileChooserParams.getAcceptTypes()[i].equals("video/mp4")) {
+                        fileType.add(MimeType.VEDIO);
+                    } else if (fileChooserParams.getAcceptTypes()[i].equals("application/msword")) {
+                        fileType.add(MimeType.DOC);
+                        fileType.add(MimeType.DOCX);
+                        fileType.add(MimeType.PDF);
+                        fileType.add(MimeType.PPT);
+                        fileType.add(MimeType.PPTX);
+                        fileType.add(MimeType.XLS);
+                        fileType.add(MimeType.XLSX);
+                    }
+                }
+                Log.i("测试webV文件打开格式", "类型" + fileType);
+
+                openImageChooserActivity(fileType);
+                return true;
+            }
+        });
+        mWebview.loadUrl(mUrl);
+    }
+
+    public void hiddenLoading() {
+        Log.i(TAG, "loadingamimation a");
+        if (mGifImageView == null) {
+            return;
+        }
+        Log.i(TAG, "loadingamimation b");
+        mGifImageView.pause();
+        mGifImageView.setVisibility(View.GONE);
+    }
+
+    private void openImageChooserActivity(ArrayList mimeTypes) {
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        //2020-07-27 本日之前的旧版  固定只打开文件格式文件选择器
+//		i.setType("image/*");
+        if (mimeTypes != null || !mimeTypes.isEmpty()) {
+            i.setType("*/*");
+            i.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        } else {//全部类型
+            i.setType("*/*");
+        }
+        activity.startActivityForResult(Intent.createChooser(i, "选择图片"), FILE_CHOOSER_RESULT_CODE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+        if (v.getId() == AppConfig.resourceId(activity, "iphoneback", "id")) {
+            if (mWebview.canGoBack()) {
+                mWebview.goBack();
+            } else {
+                // TODO Auto-generated method stub
+            }
+        } else if (v.getId() ==R.id.right_back) {
+            removeContentView();
+        } else if (v.getId() == R.id.parent) {
+
+        }
+    }
+}
