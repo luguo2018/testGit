@@ -155,7 +155,7 @@ public class InitData {
 			AppConfig.skin = result.getSkin();
 			AppConfig.sdkList = result.getChannel_sdk_list();
 			AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
-			if (!result.getMoblie_direct_login().equals("")&&result.getMoblie_direct_login()!=null&& !result.getMoblie_direct_login().isEmpty()){
+			if (result.getMoblie_direct_login()!=null&&!result.getMoblie_direct_login().isEmpty()&&!result.getMoblie_direct_login().equals("")){
 
 				JSONObject jsonObject= null;
 				try {

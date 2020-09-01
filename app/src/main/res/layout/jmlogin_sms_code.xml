@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height"
+        android:background="@drawable/jm_base_login_bg_9"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/back"
+                android:paddingLeft="@dimen/jm_skin9_pading_icon"
+                android:paddingRight="@dimen/jm_skin9_pading_icon"
+                android:paddingBottom="@dimen/jm_skin9_pading_icon"
+                android:layout_width="@dimen/jm_skin9_pading_icon_width"
+                android:layout_height="@dimen/jm_skin9_pading_icon_height"
+                android:src="@drawable/jm_black_back">
+
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:textSize="@dimen/jm_rt_help_size" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/jm_auto_logo"
+            android:text="@string/moblie_edit_code_hint_9"
+            android:textColor="#515354"
+            android:textSize="@dimen/jm_skin9_title_size" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/jm_auto_logo"
+                android:text="发送短信至"
+                android:textColor="#848585"
+                android:textSize="@dimen/jm_skin9_edit_size" />
+            <TextView
+                android:id="@+id/gray_phone_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/jm_auto_logo"
+                android:text="12345678910"
+                android:textColor="#848585"
+                android:textSize="@dimen/jm_skin9_edit_size" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/ibcode"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/jm_orange_btn_style"
+                android:gravity="center"
+                android:text="获取验证码"
+                android:textColor="@color/jmfont_white"
+                android:textSize="@dimen/jm_skin9_edit_size" />
+        </LinearLayout>
+
+        <com.jmhy.sdk.view.CustomerCodeView
+            android:id="@+id/sms_code_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
+
+
+        <TextView
+            android:id="@+id/kefu_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="@string/meet_question"
+            android:textColor="@color/jm_orange2"
+            android:textSize="@dimen/jm_switch_text_size_15sp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -82,6 +82,8 @@ public class ApiResponseFactory {
 				result = JSONParse.parseOnlineNotify(data);
 			}else if(webApi.equals(WebApi.ACTION_ONEKEYLOGIN)){
 				result = JSONParse.parseOneKeylogin(data);
+			}else if(webApi.equals(WebApi.ACTION_SET_ACCOUNT)){
+				result = JSONParse.parseSetAccount(data);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

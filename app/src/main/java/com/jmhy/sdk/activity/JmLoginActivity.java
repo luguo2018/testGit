@@ -23,7 +23,12 @@ public class JmLoginActivity extends JmBaseActivity {
 		reference = new WeakReference<Activity>(this);
 		super.onCreate(savedInstanceState);
 		setContentView(AppConfig.resourceId(this, "jmloginbase", "layout"));
-
+		if (AppConfig.skin==9){
+			String message = getIntent().getStringExtra("message");
+			if (message!=null&&!message.equals("")){
+				showMsg(message);
+			}
+		}
 		if(savedInstanceState == null) {
 			initView();
 		}
@@ -41,9 +46,7 @@ public class JmLoginActivity extends JmBaseActivity {
 				Fragment mUserLoginFragment = FragmentUtils.getJmPhonerLoginFragment(this);
 				addFragmentToActivity(getFragmentManager(), mUserLoginFragment,
 						AppConfig.resourceId(this, "content", "id"));
-			} else {
-				Log.e("jimisdk","8888 AppConfig.ismobillg=false");
-
+			} else {//自动登录失败 进入账号登录页
 				AppConfig.ismobillg=true;
 				Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(this);
 				addFragmentToActivity(getFragmentManager(), mJmUserLoginFragment,

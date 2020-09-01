@@ -23,6 +23,7 @@
     <dimen name="jm_login_logo_width">30dp</dimen>
     <dimen name="jm_login_logo_height">40dp</dimen>
     <dimen name="jm_login_kefu_width">26dp</dimen>
+    <dimen name="jm_login_25dp">25dp</dimen>
     <dimen name="jm_login_kefu_height">30dp</dimen>
     <dimen name="jm_login_switch_width">60dp</dimen>
     <dimen name="jm_login_8_width">120dp</dimen>
@@ -39,6 +40,22 @@
     <dimen name="jm_notice_radius">8dp</dimen>
     <dimen name="jm_pay_width">330dp</dimen>
     <dimen name="jm_pay_height">330dp</dimen>
+    <dimen name="jm_auto_login_width">450dp</dimen>
     <dimen name="jm_realname_width">510dp</dimen>
     <dimen name="jm_realname_height">300dp</dimen>
+    <dimen name="jm_rt_help_size">20sp</dimen>
+    <dimen name="jm_skin9_title_size">20sp</dimen>
+    <dimen name="jm_skin9_edit_size">16sp</dimen>
+    <dimen name="jm_switch_text_size_15sp">15sp</dimen>
+    <dimen name="jm_14sp">14sp</dimen>
+    <dimen name="jm_12sp">12sp</dimen>
+    <dimen name="jm_12dp">12dp</dimen>
+    <dimen name="jm_skin9_logo_height">65dp</dimen>
+    <dimen name="jm_skin9_home_icon_w_h">20dp</dimen>
+    <dimen name="jm_skin9_pading_change_account">10dp</dimen>
+    <dimen name="jm_skin9_pading_icon">10dp</dimen>
+    <dimen name="jm_skin9_pading_icon_width">40dp</dimen>
+    <dimen name="jm_skin9_pading_icon_height">30dp</dimen>
+    <dimen name="jm_skin9_pading_icon_width2">50dp</dimen>
+    <dimen name="jm_skin9_pading_icon_height2">40dp</dimen>
 </resources>

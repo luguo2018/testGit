@@ -67,7 +67,40 @@ public class UserInfo {
 		if (!"".equals(dString)) {
 			data = dString;
 		} else {
-			data = username + ":" + pwd + ":" + uid + "#";
+			data = username + ":" + pwd + ":" + uid  + "#";
+		}
+		// 首先判断user的位置和user是否重复格式是user1#user2#user3#
+		// if (isFile() && "".equals(dString)) {
+		// data = verfyInfo(data);
+		// }
+		RandomAccessFile rFile = null;
+		data = Base64.encode(data.getBytes());
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		//FileUtils.saveFile(JiMiSDK.context, file_name, data);
+
+		FileOutputStream fout;
+		try {
+			fout = new FileOutputStream(file_name);
+			byte[] bytes = data.getBytes();
+			fout.write(bytes);
+			fout.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+
+	public void saveTimeAndTypeInfo(String time, String loginType,
+									String dString) {
+		// Log.i("kk","------saveUserInfo-----"+username+"---pwd---"+pwd+"---uid---"+uid+"----dString---"+dString);
+		String data = "";
+		if (!"".equals(dString)) {
+			data = dString;
+		} else {
+			data = time + ":" + loginType + "#";
 		}
 		// 首先判断user的位置和user是否重复格式是user1#user2#user3#
 		// if (isFile() && "".equals(dString)) {

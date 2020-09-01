@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <Button
         android:id="@+id/initbt"
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone">
+
         <Button
             android:id="@+id/info"
             android:layout_width="0dp"
@@ -49,17 +50,17 @@
         android:id="@+id/paybt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/recharge"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:text="@string/recharge" />
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/loginout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/logout"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:text="@string/logout" />
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/exitbt"
@@ -71,7 +72,7 @@
         android:id="@+id/force_exit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:text="强制退出" />
+        android:text="强制退出"
+        tools:visibility="visible" />
+
 </LinearLayout>

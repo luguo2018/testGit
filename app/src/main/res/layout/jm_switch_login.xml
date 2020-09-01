@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height"
+        android:background="@drawable/jm_base_login_bg_9"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_skin9_logo_height"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_skin9_logo_height"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_logo_9" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/jm_login_icon_height"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical">
+
+
+            <TextView
+                android:id="@+id/tvvistor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:text="@string/selete_account"
+                android:textColor="@color/jmfont_black"
+                android:textSize="@dimen/jm_switch_text_size_15sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/changeItem"
+                android:paddingTop="@dimen/jm_skin9_pading_icon"
+                android:paddingBottom="@dimen/jm_skin9_pading_icon"
+                android:paddingLeft="@dimen/jm_skin9_pading_icon_height"
+                android:layout_width="70dp"
+                android:layout_height="@dimen/jm_skin9_pading_icon_height2"
+                android:src="@drawable/jm_orange_selete" />
+            <TextView
+                android:id="@+id/changeItem_tv"
+                android:visibility="gone"
+                android:textColor="@color/jm_orange"
+                android:paddingTop="@dimen/jm_skin9_pading_icon"
+                android:paddingBottom="@dimen/jm_skin9_pading_icon"
+                android:paddingLeft="@dimen/jm_skin9_pading_icon_height"
+                android:layout_width="70dp"
+                android:text="@string/complete"
+                android:layout_height="@dimen/jm_skin9_pading_icon_height2"
+                 />
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ListView
+                android:id="@+id/switch_listView"
+                android:divider="#00000000"
+                android:dividerHeight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ListView>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/to_home_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textSize="@dimen/jm_14sp"
+            android:layout_marginTop="@dimen/jm_12dp"
+            android:layout_marginBottom="@dimen/jm_12dp"
+            android:text="@string/go_home_login"
+            android:textColor="@color/jm_orange" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

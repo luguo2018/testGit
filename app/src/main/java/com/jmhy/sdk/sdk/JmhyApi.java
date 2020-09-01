@@ -299,6 +299,30 @@ public class JmhyApi {
 	}
 
 	/**
+	 * 修改用户账号
+	 */
+	public ApiAsyncTask startSetAccount(Context context, String appkey, String account, String password, String confirm_password, ApiRequestListener listener) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+		params.put("access_token", AppConfig.Token + "");
+		params.put("time", System.currentTimeMillis() / 1000 + "");
+		params.put("uname", account + "");
+		params.put("upass", password + "");
+		params.put("reupass", confirm_password + "");
+//		paramsdata.put("uname", account + "");
+//		paramsdata.put("upass", password + "");
+//		paramsdata.put("reupass", confirm_password + "");
+
+
+		HashmapToJson toJson = new HashmapToJson();
+		params.put("context", "");
+		return WebApi.startThreadRequest(WebApi.ACTION_SET_ACCOUNT, listener,
+				params, appkey);
+	}
+
+
+
+	/**
 	 * 游客登录
 	 * 
 	 * @param context

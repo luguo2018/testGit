@@ -131,6 +131,8 @@ public class JSONParse {
             mobileUser.setMoblie(dataObject.optString("mobile"));
             mobileUser.setFloat_url_user_center(dataObject
                     .optString("float_url_user_center"));
+            mobileUser.setFloat_url_home_center(dataObject
+                    .optString("float_url_home_center"));
             mobileUser.setGame_token(dataObject.optString("game_token"));
             mobileUser.setLogin_token(dataObject.optString("login_token"));
             mobileUser.setOpenid(dataObject.optString("openid"));
@@ -139,6 +141,7 @@ public class JSONParse {
             mobileUser.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
             mobileUser.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
             mobileUser.setIs_package_new(dataObject.optString("is_package_new"));
+
             String url = dataObject.optString("h5_game_url");
             if (!TextUtils.isEmpty(url)) {
                 AppConfig.loginH5GameUrl = Utils.toBase64url(url);
@@ -146,6 +149,7 @@ public class JSONParse {
             AppConfig.openid = mobileUser.getOpenid();
             AppConfig.USERURL = Utils.toBase64url(mobileUser.getFloat_url_user_center());
             AppConfig.GIFT = Utils.toBase64url(mobileUser.getFloat_url_gift_center());
+            AppConfig.float_url_home_center = Utils.toBase64url(mobileUser.getFloat_url_home_center());
             if (mobileUser.getFloat_red_recommend() == 1) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = false;
@@ -155,6 +159,12 @@ public class JSONParse {
             } else if (mobileUser.getFloat_red_recommend() == 3) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = true;
+            }
+            mobileUser.setShow_set_account(dataObject.optInt("show_set_account"));
+            if (mobileUser.getShow_set_account() == 1) {
+                AppConfig.skin9_show_setAccount = true;
+            }else {
+                AppConfig.skin9_show_setAccount = false;
             }
         }
 
@@ -204,7 +214,9 @@ public class JSONParse {
             loginMessage.setOpenid(dataObject.optString("openid"));
             loginMessage.setShow_url_after_login(dataObject.optString("show_url_after_login"));
             loginMessage.setFloat_url_user_center(dataObject.optString("float_url_user_center"));
+            loginMessage.setFloat_url_home_center(dataObject.optString("float_url_home_center"));
             loginMessage.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
+
             loginMessage.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
             loginMessage.setIs_package_new(dataObject.optString("is_package_new"));
             String url = dataObject.optString("h5_game_url");
@@ -214,6 +226,7 @@ public class JSONParse {
             AppConfig.openid = loginMessage.getOpenid();
             AppConfig.USERURL = Utils.toBase64url(loginMessage.getFloat_url_user_center());
             AppConfig.GIFT = Utils.toBase64url(loginMessage.getFloat_url_gift_center());
+            AppConfig.float_url_home_center = Utils.toBase64url(loginMessage.getFloat_url_home_center());
             if (loginMessage.getFloat_red_recommend() == 1) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = false;
@@ -223,6 +236,12 @@ public class JSONParse {
             } else if (loginMessage.getFloat_red_recommend() == 3) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = true;
+            }
+            loginMessage.setShow_set_account(dataObject.optInt("show_set_account"));
+            if (loginMessage.getShow_set_account() == 1) {
+                AppConfig.skin9_show_setAccount = true;
+            }else {
+                AppConfig.skin9_show_setAccount = false;
             }
         }
         return loginMessage;
@@ -243,6 +262,7 @@ public class JSONParse {
             mGuest.setUpass(dataObject.optString("upass"));
             mGuest.setShow_url_after_login(dataObject.optString("show_url_after_login"));
             mGuest.setFloat_url_user_center(dataObject.optString("float_url_user_center"));
+            mGuest.setFloat_url_home_center(dataObject.optString("float_url_home_center"));
             mGuest.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
             mGuest.setIs_package_new(dataObject.optString("is_package_new"));
             mGuest.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
@@ -253,6 +273,7 @@ public class JSONParse {
             AppConfig.openid = mGuest.getOpenid();
             AppConfig.USERURL = Utils.toBase64url(mGuest.getFloat_url_user_center());
             AppConfig.GIFT = Utils.toBase64url(mGuest.getFloat_url_gift_center());
+            AppConfig.float_url_home_center = Utils.toBase64url(mGuest.getFloat_url_home_center());
             if (mGuest.getFloat_red_recommend() == 1) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = false;
@@ -262,6 +283,12 @@ public class JSONParse {
             } else if (mGuest.getFloat_red_recommend() == 3) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = true;
+            }
+            mGuest.setShow_set_account(dataObject.optInt("show_set_account"));
+            if (mGuest.getShow_set_account() == 1) {
+                AppConfig.skin9_show_setAccount = true;
+            }else {
+                AppConfig.skin9_show_setAccount = false;
             }
         }
         return mGuest;
@@ -334,6 +361,12 @@ public class JSONParse {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = true;
             }
+            user.setShow_set_account(dataObject.optInt("show_set_account"));
+            if (user.getShow_set_account() == 1) {
+                AppConfig.skin9_show_setAccount = true;
+            }else {
+                AppConfig.skin9_show_setAccount = false;
+            }
         }
         return user;
     }
@@ -344,6 +377,14 @@ public class JSONParse {
         response.code = jsonObject.optString("code");
         response.message = jsonObject.optString("message");
         return response;
+    }
+
+    public static Msg parseSetAccount(String data) throws JSONException {
+        Msg msg = new Msg();
+        JSONObject jsonObject = new JSONObject(data);
+        msg.setCode(jsonObject.optString("code"));
+        msg.setMessage(jsonObject.optString("message"));
+        return msg;
     }
 
     public static BaseResponse parseBaseResponse(String data) throws JSONException {
@@ -401,6 +442,7 @@ public class JSONParse {
             loginMessage.setOpenid(dataObject.optString("openid"));
             loginMessage.setShow_url_after_login(dataObject.optString("show_url_after_login"));
             loginMessage.setFloat_url_user_center(dataObject.optString("float_url_user_center"));
+            loginMessage.setFloat_url_home_center(dataObject.optString("float_url_home_center"));
             loginMessage.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
             loginMessage.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
             loginMessage.setIs_package_new(dataObject.optString("is_package_new"));
@@ -411,6 +453,7 @@ public class JSONParse {
             AppConfig.openid = loginMessage.getOpenid();
             AppConfig.USERURL = Utils.toBase64url(loginMessage.getFloat_url_user_center());
             AppConfig.GIFT = Utils.toBase64url(loginMessage.getFloat_url_gift_center());
+            AppConfig.float_url_home_center = Utils.toBase64url(loginMessage.getFloat_url_home_center());
             if (loginMessage.getFloat_red_recommend() == 1) {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = false;
@@ -421,6 +464,14 @@ public class JSONParse {
                 AppConfig.showAccountTip = true;
                 AppConfig.showGiftTip = true;
             }
+            loginMessage.setShow_set_account(dataObject.optInt("show_set_account"));
+            if (loginMessage.getShow_set_account() == 1) {
+                AppConfig.skin9_show_setAccount = true;
+            }else {
+                AppConfig.skin9_show_setAccount = false;
+            }
+            loginMessage.setSetPwdCode(dataObject.optString("code"));
+            loginMessage.setMobile(dataObject.optString("mobile"));
         }
         return loginMessage;
     }

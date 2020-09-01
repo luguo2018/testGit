@@ -68,6 +68,7 @@ public class Loginout {
 				case AppConfig.LOGINOUT_SUCCESS:
 					JiMiSDK.userlistenerinfo.onLogout("logout");
 					JiMiSDK.getStatisticsSDK().onSwitchAccount();
+					AppConfig.skin9_is_switch=true;
 					break;
 			}
 		}

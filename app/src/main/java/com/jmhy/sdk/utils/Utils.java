@@ -396,6 +396,29 @@ public class Utils {
 			// Log.i("kk","data"+data);
 		}
 	}
+	/**
+	 *
+	 * 皮肤9！新增保存时间、登录方式
+	 */
+	public static void saveTimeAndTypeToSd(Context context) {
+		List<HashMap<String, String>> timeAndTypeContentList = new ArrayList<HashMap<String, String>>();
+		Seference seference = new Seference(JiMiSDK.mContext);
+		UserInfo creatFile = new UserInfo();
+		timeAndTypeContentList = seference.getTimeAndTypeContentList();
+		String data = "";
+		if (timeAndTypeContentList == null) {
+			creatFile.deletefile();
+			return;
+		} else {
+			for (int i = 0; i < timeAndTypeContentList.size(); i++) {
+				String time = timeAndTypeContentList.get(i).get("time");
+				String loginType = timeAndTypeContentList.get(i).get("loginType");
+				data += time + ":" + loginType+ "#";
+			}
+			creatFile.saveTimeAndTypeInfo("", "",  data);
+			// Log.i("kk","data"+data);
+		}
+	}
 
 	public static String getVersion(Context context){
 		try {

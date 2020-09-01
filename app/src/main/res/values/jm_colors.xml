@@ -7,6 +7,8 @@
     <color name="jmfont_blues">#2abfff</color>
     <color name="jmfont_reds">#df384a</color>
     <color name="jmfont_gray">#343434</color>
+    <color name="jmfont_gray2">#989898</color>
+    <color name="jmfont_gray3">#939192</color>
     <color name="jmfont_red">#fe3837</color>
     <color name="jmbtn6_red">#fe3837</color>
     <color name="jmbtn6_red_light">#f85653</color>
@@ -17,6 +19,7 @@
     <color name="jm_green">#2EBB45</color>
     <color name="jm_green_light">#78D159</color>
     <color name="jm_orange">#F88520</color>
+    <color name="jm_orange2">#F79D35</color>
     <color name="jm_yellow">#FEDD21</color>
     <color name="jm_auto_login_bg_4">#B2140C08</color>
     <color name="jm_login_bg_4">#504A4A</color>

@@ -66,7 +66,6 @@ public class JiMiSDK {
 	public static Timer timer;
 
 	public final static String payChannel = "jm";
-    private static final int WebSocketToken = 4;
 	private static boolean init;
 
 
@@ -106,9 +105,6 @@ public class JiMiSDK {
 						// TODO: handle exception
 					}
                     break;
-                case WebSocketToken://获取WebSocketToken
-                    FloatUtils.showFloat((Activity) mContext);
-					break;
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -248,7 +244,7 @@ public class JiMiSDK {
 			new InitData(mContext, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
-//					AppConfig.skin = 8;
+//					AppConfig.skin = 7;
 					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
@@ -375,56 +371,21 @@ public class JiMiSDK {
 	}
 
 	private static void showFloatDelayed(){
-/*        final Activity activity = stackManager.getTopActivity();
-        if(activity == null){
-            Log.i(TAG, "showFloat top activity is null");
-            return;
-        }
-		Log.i(TAG, "showFloat top activity  == " + activity.toString());*/
-
-		PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
-            @Override
-            public void onPermissionResult(boolean grant) {
-				Log.i(TAG, "showFloat grant = " + grant);
-                if(grant){
-					FloatUtils.showFloat((Activity)mContext);
-                    //原本直接显示浮窗，现改动先获取WebSocketToken然后再进去显示浮窗，后续用该token轮询
-//                    JmhyApi.get().getWebSocketToken(mContext, AppConfig.Token, AppConfig.appKey, new ApiRequestListener() {
-//                        @Override
-//                        public void onSuccess(Object obj) {
-//                            Log.i("测试日志", "获取token成功" + obj);
-//                            try {
-//                                JSONObject object = new JSONObject(String.valueOf(obj));
-//                                if (object.getInt("code")==301){
-//
-//								}else{
-//									AppConfig.webSocket_token = new JSONObject(object.getString("data")).getString("jm_customer_token");
-//									Log.i("测试日志3", AppConfig.webSocket_token + "");
-//								}
-//
-//                                Message message = handler.obtainMessage();
-//                                message.what = WebSocketToken;
-//                                handler.sendMessage(message);
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onError(int statusCode) {
-//                            Log.i("测试日志", "获取token失败" + statusCode);
-//							Message message = handler.obtainMessage();
-//							message.what = WebSocketToken;
-//							handler.sendMessage(message);
-//                        }
-//                    });
-                }else{
-                    permissionTip((Activity)mContext, "jm_permission_tip_float");
-                }
-            }
-        });
+		if (AppConfig.skin==9){//皮肤9不申请权限
+			FloatUtils.showFloat((Activity)mContext);
+		}else {
+			PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
+				@Override
+				public void onPermissionResult(boolean grant) {
+					Log.i(TAG, "showFloat grant = " + grant);
+					if (grant) {
+						FloatUtils.showFloat((Activity) mContext);
+					} else {
+						permissionTip((Activity) mContext, "jm_permission_tip_float");
+					}
+				}
+			});
+		}
     }
 
 	public static void hideFloat(){
@@ -555,8 +516,9 @@ public class JiMiSDK {
 		}
 	    Loginout.getInstatnce(context);
 		AppConfig.isShow = false;
-		AppConfig.ismobillg=false;
+		AppConfig.ismobillg = (AppConfig.skin == 9);//旧逻辑一直为false 现皮肤9为true 进首页  1-8依旧进loginAct
 		AppConfig.isswitch = false;
+		AppConfig.skin9_is_switch=true;
 	}
 
 	public static void clearAllActivity(){

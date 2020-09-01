@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/jm_login_submit_margin_top"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:textColor="@color/jm_orange"
+            android:id="@+id/item_iv6"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/jm_sms_code_item_style_gray"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/sms_code_et"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:imeOptions="flagNoExtractUi"
+        android:background="@android:color/transparent"
+        android:inputType="number" />
+
+</RelativeLayout>

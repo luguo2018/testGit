@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@drawable/jm_base_login_bg_9"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:id="@+id/rt_close"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/jm_close6" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:padding="5sp"
+                android:text="@string/setpwd_text_title"
+                android:textColor="@color/jmfont_black"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_input_height"
+            android:visibility="gone"
+            android:background="@drawable/jm_white_backlogin_btn"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/jm_login_icon_width"
+                android:layout_height="@dimen/jm_login_icon_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_orange_user" />
+
+            <EditText
+                android:id="@+id/tvmobile"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLength="25"
+                android:nextFocusForward="@+id/edit_code"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#d5dad3"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/jm_skin9_edit_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+        <LinearLayout
+            android:layout_marginTop="@dimen/jm_login_icon_height"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_input_height"
+            android:background="@drawable/jm_white_backlogin_btn"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/jm_login_icon_width"
+                android:layout_height="@dimen/jm_login_icon_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_orange_pwd" />
+
+            <EditText
+                android:id="@+id/edit_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/setpwd_text_title"
+                android:imeOptions="actionDone"
+                android:maxLength="25"
+                android:nextFocusForward="@+id/edit_code"
+                android:singleLine="true"
+                android:textColor="#000000"
+                android:textColorHint="#d5dad3"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/jm_skin9_edit_size" />
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="@dimen/jm_login_icon_height"
+            android:id="@+id/iphonebtlg"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/jm_input_height"
+            android:background="@drawable/jm_orange_codebtn_style"
+            android:gravity="center"
+            android:text="@string/moblie_bt_login"
+            android:textColor="@color/jmfont_white"
+            android:textSize="@dimen/jm_skin9_edit_size" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/jm_forget_text_margin_top"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBtn"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@null"
+                android:button="@drawable/jm_orange_radio"
+                android:checked="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/user_text_9"
+                android:textColor="@color/jmfont_gray3"
+                android:textSize="@dimen/jm_12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginBottom= "@dimen/jm_float_icon_size"
+            android:id="@+id/tvurl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/user_text_deal_9"
+            android:textColor="@color/jm_orange"
+            android:textSize="@dimen/jm_14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

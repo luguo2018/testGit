@@ -2,43 +2,44 @@
 
 package com.jmhy.sdk.view;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Toast;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
-import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.DisplayUtil;
-import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.Utils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FloatView extends FrameLayout implements OnTouchListener {
     private final static String TAG = FloatView.class.getSimpleName();
@@ -49,6 +50,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private WindowManager.LayoutParams mWmParams;
     private WindowManager mWindowManager;
     private static Context mContext;
+    private ObjectAnimator animator = null;
 
     private ImageView mIvFloatLogo;
     private LinearLayout mLlFloatMenu;
@@ -59,7 +61,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private View giftTip;
     private View iconTip;
     private View kefuTip;
-
+    private View view;
     private FrameLayout mFlFloatLogo;
 
     private boolean mIsRight = false;// logo是否在右边
@@ -79,7 +81,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private final static int fullWidth = 56;
 
     private Timer mTimer, getStateTimer;
-    private TimerTask mTimerTask, getStateTAsk;
+    private TimerTask mTimerTask;
     private static ApiAsyncTask loginouttask;
     Handler mTimerHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
@@ -97,33 +99,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                             mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on", "drawable"));
                         }*/
 
-                        switch (AppConfig.skin) {
-                            case 8:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on_new", "drawable"));
-                                break;
-                            case 7:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on_red", "drawable"));
-                                break;
-                            case 6:
-                            case 5:
-                            case 4:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on_4", "drawable"));
-                                break;
-                            case 3:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on_3", "drawable"));
-                                break;
-                            case 2:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on_new", "drawable"));
-                                break;
-                            default:
-                                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext,
-                                        "jm_float_on", "drawable"));
-                        }
+                        setFloatLogo("jm_float_on_9","jm_float_on_new", "jm_float_on_red", "jm_float_on_4", "jm_float_on_3", "jm_float_on");
                         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
                         layoutParams.width = DisplayUtil.dip2px(getContext(), smallWidth);
                         Log.i(TAG, "hidden");
@@ -145,19 +121,36 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     break;
                 case SHOW_KEFU_FLOAT:
                     //显示客服小红点
-                    iconTip.setVisibility(VISIBLE);
-                    kefuTip.setVisibility(VISIBLE);
+                    if (AppConfig.skin==9){
+                        iconTip.setVisibility(VISIBLE);
+                    }else{
+                        iconTip.setVisibility(VISIBLE);
+                        kefuTip.setVisibility(VISIBLE);
+                    }
+
+
                     Log.i("测试日志", "轮询，显示toast");
-                    Toast.makeText(mContext, "您有新的客服消息，请前往悬浮窗查看", Toast.LENGTH_SHORT).show();
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
+                    layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
+
+                    setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
+                    mWmParams.alpha = 1f;
+                    mWindowManager.updateViewLayout(view, mWmParams);
+                    mCanHide=false;//有消息设置false不让悬浮窗隐藏到左边
+                    mDraging = false;
+                    ObjectrotationAnim();
+                    removeTimerTask();
                     break;
             }
             super.handleMessage(msg);
         }
+
     };
 
     public FloatView(Context context) {
         super(context);
         init(context);
+        Log.i("jimi","皮肤查看："+AppConfig.skin);
     }
 
     public void setRedDotState() {
@@ -168,7 +161,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private void init(Context context) {
         this.mContext = context;
-
+        view = this;
         //mWindowManager = ((Activity) mContext).getWindowManager();
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         // 更新浮动窗口位置参数 靠边
@@ -178,16 +171,24 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         mScreenWidth = dm.widthPixels;
         mScreenHeight = dm.heightPixels;
         this.mWmParams = new WindowManager.LayoutParams();
+        //刘海屏延伸到刘海里面
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+//            mWmParams.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//        }
         // 设置window type
         //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
         mWmParams.type = WindowManager.LayoutParams.LAST_APPLICATION_WINDOW;
+//        mWmParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+//        mWmParams.type = WindowManager.LayoutParams.TYPE_TOAST;
         //} else {
-        //	mWmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+//        	mWmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
         //}
         // 设置图片格式，效果为背景透明
         mWmParams.format = PixelFormat.RGBA_8888;
         // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
         mWmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+//        mWmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
+
         // 调整悬浮窗显示的停靠位置为左侧置?
         mWmParams.gravity = Gravity.LEFT | Gravity.TOP;
 
@@ -195,7 +196,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
         // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
         mWmParams.x = 0;
-        mWmParams.y = mScreenHeight / 2;
+        mWmParams.y = mScreenHeight / 8;
+        //原本为屏幕左边中间   现改左上
+//        mWmParams.y = mScreenHeight / 2;
 
         // 设置悬浮窗口长宽数据
         mWmParams.width = LayoutParams.WRAP_CONTENT;
@@ -207,7 +210,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             Log.w(TAG, e);
         }
         mTimer = new Timer();
-        // hide();
+//         hide();
 
         timerForHide();
     }
@@ -244,6 +247,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 //}
                 break;
         }
+        view = this;
         mWindowManager.updateViewLayout(this, mWmParams);
     }
 
@@ -260,6 +264,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         Log.i(TAG, "AppConfig.skin == " + AppConfig.skin);
 
         switch (AppConfig.skin) {
+            case 9:
+                rootFloatView = inflater.inflate(AppConfig.resourceId(context, "jm_float_view_9", "layout"), null);
+                break;
             case 7:
                 rootFloatView = inflater.inflate(
                         AppConfig.resourceId(context, "jm_float_view_red", "layout"), null);
@@ -331,13 +338,27 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         rootFloatView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (!mDraging) {
                     Utils.getSeferencegameuser(mContext);
 
-                    if (mLlFloatMenu.getVisibility() == View.VISIBLE) {
-                        mLlFloatMenu.setVisibility(View.GONE);
+                    if (AppConfig.skin == 9) {//点浮窗  允许悬浮窗隐藏到左边  开启计时器隐藏回左边   关闭动画 打开新客服url
+                        mCanHide=true;
+                        timerForHide();
+                        endAnimator();
+//                        turnToIntent(AppConfig.float_url_home_center);
+//                        String url="http://test.172jm.com/go/to?access_token="+AppConfig.Token+"&redirect_url=http://test.172jm.com/sdk_new/dist/#/home?fromGame=1";
+//                        String url="https://apisdk.5tc5.com/go/to?access_token="+AppConfig.Token+"&redirect_url=https%3A%2F%2Fapisdk.5tc5.com%2Fsdk_new%2Fdist%2F%23%2Fhome%3FfromGame%3D1";
+//                        String url="https://apisdk.5tc5.com/go/to?access_token="+AppConfig.Token+"&redirect_url=https%3A%2F%2Fapisdk.5tc5.com%2Fcommunity%2Fdist%2Fhome.html%3FfromGame%3D1%26showSetPre%3D1";
+//                        AppConfig.float_url_home_center=url;
+                        Log.i("jimi测试url：",AppConfig.float_url_home_center);
+                        turnToIntent(AppConfig.float_url_home_center);
                     } else {
-                        mLlFloatMenu.setVisibility(View.VISIBLE);
+                        if (mLlFloatMenu.getVisibility() == View.VISIBLE) {
+                            mLlFloatMenu.setVisibility(View.GONE);
+                        } else {
+                            mLlFloatMenu.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
             }
@@ -375,27 +396,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 mTvGiftLine.setVisibility(GONE);
             }
         }
-        switch (AppConfig.skin) {
-            case 8:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_new", "drawable"));
-                break;
-            case 7:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_red", "drawable"));
-                break;
-            case 6:
-            case 5:
-            case 4:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_4", "drawable"));
-                break;
-            case 3:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_3", "drawable"));
-                break;
-            case 2:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on_new", "drawable"));
-                break;
-            default:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_on", "drawable"));
-        }
+        setFloatLogo("jm_float_on_9","jm_float_on_new", "jm_float_on_red", "jm_float_on_4", "jm_float_on_3", "jm_float_on");
 
         if (AppConfig.showAccountTip) {
             accountTip.setVisibility(VISIBLE);
@@ -430,27 +431,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 mTouchStartX = event.getX();
                 mTouchStartY = event.getY();
 
-                switch (AppConfig.skin) {
-                    case 8:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                        break;
-                    case 7:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
-                        break;
-                    case 6:
-                    case 5:
-                    case 4:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_4", "drawable"));
-                        break;
-                    case 3:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_3", "drawable"));
-                        break;
-                    case 2:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                        break;
-                    default:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float", "drawable"));
-                }
+                setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
 
                 iconTip.setVisibility(GONE);
 
@@ -462,38 +443,21 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 float mMoveStartX = event.getX();
                 float mMoveStartY = event.getY();
                 // 如果移动量大于3才移动
-                if (Math.abs(mTouchStartX - mMoveStartX) > 3
-                        && Math.abs(mTouchStartY - mMoveStartY) > 3) {
+                if (Math.abs(mTouchStartX - mMoveStartX) > 3 || Math.abs(mTouchStartY - mMoveStartY) > 3) {
                     mDraging = true;
                     // 更新浮动窗口位置参数
                     mWmParams.x = (int) (x - mTouchStartX);
                     mWmParams.y = (int) (y - mTouchStartY);
 
-                    switch (AppConfig.skin) {
-                        case 8:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                            break;
-                        case 7:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
-                            break;
-                        case 6:
-                        case 5:
-                        case 4:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_4", "drawable"));
-                            break;
-                        case 3:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_3", "drawable"));
-                            break;
-                        case 2:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                            break;
-                        default:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float", "drawable"));
-                    }
+                    setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
 
                     iconTip.setVisibility(GONE);
+                    if (AppConfig.skin==9){
+                        mWmParams.alpha = 1f;
+                    }else{
+                        mWmParams.alpha = 0.5f;
+                    }
 
-                    mWmParams.alpha = 0.5f;
                     mWindowManager.updateViewLayout(this, mWmParams);
                     mLlFloatMenu.setVisibility(View.GONE);
                     return false;
@@ -501,6 +465,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
                 break;
             case MotionEvent.ACTION_UP:
+//                break;
             case MotionEvent.ACTION_CANCEL:
 
                 if (mWmParams.x >= mScreenWidth / 2) {
@@ -511,39 +476,48 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWmParams.x = 0;
                 }
 
-                switch (AppConfig.skin) {
-                    case 8:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                        break;
-                    case 7:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
-                        break;
-                    case 6:
-                    case 5:
-                    case 4:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_4", "drawable"));
-                        break;
-                    case 3:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_3", "drawable"));
-                        break;
-                    case 2:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                        break;
-                    default:
-                        mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float", "drawable"));
-                }
+                setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
 
                 iconTip.setVisibility(GONE);
 
                 mWmParams.alpha = 1f;
                 refreshFloatMenu(mIsRight);
-                timerForHide();
+                if (mCanHide){
+                    timerForHide();
+                }
                 mWindowManager.updateViewLayout(this, mWmParams);
                 // 初始化
                 mTouchStartX = mTouchStartY = 0;
                 break;
         }
         return false;
+    }
+
+    void setFloatLogo(String jm_float_9,String jm_float_new, String jm_float_red, String jm_float_4, String jm_float_3, String jm_float) {
+        switch (AppConfig.skin) {
+            case 9:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_9, "drawable"));
+                break;
+            case 8:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_new, "drawable"));
+                break;
+            case 7:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_red, "drawable"));
+                break;
+            case 6:
+            case 5:
+            case 4:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_4, "drawable"));
+                break;
+            case 3:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_3, "drawable"));
+                break;
+            case 2:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_new, "drawable"));
+                break;
+            default:
+                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float, "drawable"));
+        }
     }
 
     private void removeTimerTask() {
@@ -553,18 +527,11 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         }
     }
 
-    private void removeSocketTimerTask() {
-        if (getStateTAsk != null) {
-            getStateTAsk.cancel();
-            getStateTAsk = null;
-        }
-    }
-
     private void removeFloatView() {
         try {
       /*      mWmParams.alpha = 0;
             mWindowManager.updateViewLayout(this, mWmParams);*/
-            Log.e("JiMiSDK", "floatview removeFloatView");
+            Log.e("JiMiSDK", "myfloatview removeFloatView");
 
             mWindowManager.removeView(this);
             mWindowManager = null;
@@ -583,7 +550,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         message.what = HANDLER_TYPE_HIDE_LOGO;
         mTimerHandler.sendMessage(message);
         removeTimerTask();
-        removeSocketTimerTask();
     }
 
     /**
@@ -601,27 +567,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
                     Log.i(TAG, "show");
 
-                    switch (AppConfig.skin) {
-                        case 8:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                            break;
-                        case 7:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_red", "drawable"));
-                            break;
-                        case 6:
-                        case 5:
-                        case 4:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_4", "drawable"));
-                            break;
-                        case 3:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_3", "drawable"));
-                            break;
-                        case 2:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float_new", "drawable"));
-                            break;
-                        default:
-                            mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, "jm_float", "drawable"));
-                    }
+                    setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
 
                     iconTip.setVisibility(GONE);
 
@@ -646,12 +592,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private void refreshFloatMenu(boolean right) {
 
         if (right) {
-            FrameLayout.LayoutParams paramsFloatImage = (FrameLayout.LayoutParams) mIvFloatLogo
-                    .getLayoutParams();
+            FrameLayout.LayoutParams paramsFloatImage = (FrameLayout.LayoutParams) mIvFloatLogo.getLayoutParams();
             paramsFloatImage.gravity = Gravity.RIGHT;
-            //mIvFloatLogo.setLayoutParams(paramsFloatImage);
-            FrameLayout.LayoutParams paramsFlFloat = (FrameLayout.LayoutParams) mFlFloatLogo
-                    .getLayoutParams();
+            FrameLayout.LayoutParams paramsFlFloat = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
             paramsFlFloat.gravity = Gravity.RIGHT;
             //mFlFloatLogo.setLayoutParams(paramsFlFloat);
 
@@ -754,10 +697,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         mTimerHandler.removeCallbacksAndMessages(null);
         mTimerHandler = null;
 
-        if (getStateTAsk != null) {
-            getStateTAsk.cancel();
-            getStateTAsk = null;
-        }
 
         removeFloatView();
     }
@@ -768,15 +707,20 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             Toast.makeText(mContext, tip, Toast.LENGTH_SHORT).show();
             return;
         }
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("url", url);
-        intent.putExtra("isKefu", true);
-        intent.setClass(mContext, JmUserinfoActivity.class);
-        mContext.startActivity(intent);
-
+//        if (AppConfig.skin==9){
+//            WebviewFloatUtils.showUserCentent(mContext,(Activity) mContext,url);
+//        }else {
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("url", url);
+            intent.putExtra("isKefu", true);
+            intent.setClass(mContext, JmUserinfoActivity.class);
+            mContext.startActivity(intent);
+//        }
     }
+    private PopupWindow popupWindow;
+
 
     private void turnTouserIntent(String url) {
         if (TextUtils.isEmpty(url)) {
@@ -811,7 +755,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private void refreshIconTip() {
         if (accountTip.getVisibility() == View.VISIBLE || giftTip.getVisibility() == View.VISIBLE || kefuTip.getVisibility() == View.VISIBLE) {
-            iconTip.setVisibility(VISIBLE);
+            if (AppConfig.skin!=9) {
+                iconTip.setVisibility(VISIBLE);
+            }
         } else {
             iconTip.setVisibility(GONE);
         }
@@ -831,6 +777,31 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         }
 
         refreshIconTip();
+    }
+
+
+    //实现先顺时针360度旋转然后逆时针360度旋转动画功能
+    private void ObjectrotationAnim() {
+        if (animator == null) {
+            animator = ObjectAnimator.ofFloat(mIvFloatLogo, "rotation", -30F, 30F, -30F);
+            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.setDuration(700);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.start();
+        }
+
+    }
+
+    private void endAnimator() {
+        if (animator != null) {
+            animator.cancel();
+            animator = ObjectAnimator.ofFloat(mIvFloatLogo, "rotation", 0F, 0F);
+            animator.setDuration(100);
+            animator.start();
+            animator.cancel();
+            animator = null;
+        }
+
     }
 }
 

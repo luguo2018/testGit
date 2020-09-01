@@ -14,8 +14,12 @@ public class LoginMessage {
 	private String message;
 	private String is_package_new ;
     private String float_url_user_center;
+    private String float_url_home_center;
 	private String float_url_gift_center;
 	private int float_red_recommend;
+	private int show_set_account;
+	private String setPwdCode;//一键登录后是否显示设置密码  有code显示  没有不显示
+	private String mobile;
 
 	public String getCode() {
 		return code;
@@ -117,11 +121,43 @@ public class LoginMessage {
 		return is_package_new;
 	}
 
+	public String getFloat_url_home_center() {
+		return float_url_home_center;
+	}
+
+	public void setFloat_url_home_center(String float_url_home_center) {
+		this.float_url_home_center = float_url_home_center;
+	}
+
+	public int getShow_set_account() {
+		return show_set_account;
+	}
+
+	public void setShow_set_account(int show_set_account) {
+		this.show_set_account = show_set_account;
+	}
+
 	public void setIs_package_new(String is_package_new) {
 		this.is_package_new = is_package_new;
 		Log.i("测试login","is_package_new"+is_package_new);
 		if (is_package_new.equals("1")){
 			JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
 		}
+	}
+
+	public String getSetPwdCode() {
+		return setPwdCode;
+	}
+
+	public void setSetPwdCode(String setPwdCode) {
+		this.setPwdCode = setPwdCode;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 }

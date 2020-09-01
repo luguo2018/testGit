@@ -226,4 +226,18 @@ public class JmBaseActivity extends Activity {
 		}, 1000);
 	}
 
+	public void turnToSetAccount() {
+		JiMiSDK.handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				Log.i("jimisdk", "turnToSetAccount-------------------------");
+
+				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+						Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.setClass(JiMiSDK.mContext, JmSetAccountActivity9.class);
+				JiMiSDK.mContext.startActivity(intent);
+			}
+		}, 1000);
+	}
 }

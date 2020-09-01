@@ -6,6 +6,9 @@ public interface OneKeyLoginListener {
 
     void onSuccess(String obj);
 
+    void showAutoLoginSuccess();
 
-    void onError(String statusCode);
+    void onError(String msg );
+
+    void onCancle(String msg );
 }

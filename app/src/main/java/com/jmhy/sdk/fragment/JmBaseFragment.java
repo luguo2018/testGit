@@ -47,16 +47,44 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		// TODO Auto-generated method stub
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
-
+	FragmentTransaction transaction;
 	public void addFragmentToActivity(FragmentManager fragmentManager,
 			Fragment fragment, int frameId) {
 		Utils.checkNotNull(fragmentManager);
 		Utils.checkNotNull(fragment);
-		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction = fragmentManager.beginTransaction();
 		transaction.add(frameId, fragment).addToBackStack(null);
-
 		transaction.commit();
 	}
+
+	public void replaceFragmentToActivity(FragmentManager fragmentManager,
+			Fragment fragment, int frameId) {
+		Utils.checkNotNull(fragmentManager);
+		Utils.checkNotNull(fragment);
+		transaction = fragmentManager.beginTransaction();
+		transaction.replace(frameId, fragment).addToBackStack(null);
+		transaction.commit();
+	}
+
+	public void callKefu() {
+		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		intent.putExtra("url", AppConfig.KEFU);
+		intent.putExtra("notice", true);
+		intent.setClass(getActivity(), JmUserinfoActivity.class);
+
+		startActivity(intent);
+	}
+	public void removeFragmentToActivity(FragmentManager fragmentManager,Fragment fragment) {
+		Utils.checkNotNull(fragmentManager);
+		Utils.checkNotNull(fragment);
+		transaction = fragmentManager.beginTransaction();
+		transaction.remove(fragment);
+		transaction.commit();
+	}
+
+
+
 
 	public void wrapaLoginInfo(String result, String msg, String userName,
 			String openid, String gametoken) {
@@ -118,6 +146,38 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		toast.setGravity(Gravity.TOP, 0, 50);
 		toast.show();
 	}
+
+	/**
+	 * 皮肤9切换提示信息
+	 *
+	 * @param msg
+	 */
+	public void showUserMsg_skin9(String msg) {
+		String s = "";
+		if (msg.length() > 8) {
+			s = msg.substring(0, 8) + "...";
+		}else{
+			s=msg;
+		}
+		Toast toast = Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG);
+		View layout = View.inflate(getActivity(),
+				AppConfig.resourceId(getActivity(), "jmautologin_9", "layout"), null);
+		TextView user = (TextView) layout.findViewById(AppConfig.resourceId(getActivity(), "tvusername", "id"));
+		TextView loginHomePage = (TextView) layout.findViewById(AppConfig.resourceId(getActivity(), "btbacklogin", "id"));
+		loginHomePage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				Intent intent = new Intent(getActivity(), JmSwitchLogin9Fragment.class);
+//				startActivity(intent);
+			}
+		});
+		// 设置toast文本，把设置好的布局传进来
+		user.setText(s+"");
+		toast.setView(layout);
+		toast.setGravity(Gravity.TOP, 0, 50);
+		toast.show();
+	}
+
 	
 	public void showMsg(String msg) {
 		DialogUtils.showTip(getActivity(), msg);
@@ -173,4 +233,5 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		Intent intent = new Intent(getActivity(), JmAutoLoginActivity.class);
 		startActivity(intent);
 	}
+
 }

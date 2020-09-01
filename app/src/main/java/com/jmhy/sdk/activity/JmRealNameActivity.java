@@ -62,6 +62,10 @@ public class JmRealNameActivity extends JmBaseActivity implements OnClickListene
 		mGifImageView = (GifImageView) findViewById(AppConfig.resourceId(this,
 				"gif", "id"));
 		switch (AppConfig.skin){
+			case 9:
+				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_9",
+						"drawable"));
+				break;
 			case 7:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_red",
 						"drawable"));

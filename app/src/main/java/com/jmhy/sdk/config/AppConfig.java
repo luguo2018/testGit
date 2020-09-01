@@ -16,6 +16,7 @@ import java.util.Map;
 public class AppConfig {
 
 	public static boolean isDebugMode = true;
+	public static boolean save_guest_end = true;
 
 	public final static int INIT = 101;
 	public final static int INIT_SUCCESS = 102;
@@ -33,9 +34,15 @@ public class AppConfig {
 	public final static int CODE_SUCCESS = 114;
 	public final static int PAY_SUCCESS = 115;
 	public final static int CODE_FAIL = 116;
+	public final static int ONEKEY_lOGIN_SUCCESS = 117;
 
 	public static boolean ismobillg = true;
 	public static boolean isswitch = true;
+
+	public static boolean isChangeGuestAccount = false;//修改游客号  删除旧帐号  拉登录时登新号
+	public static String change_old_account = "";
+	public static String change_new_account = "";
+	public static String change_new_password = "";
 
 	public static int appId = 0;
 	public static String cache_orderId = "";
@@ -50,13 +57,17 @@ public class AppConfig {
 	public static boolean isShow = false;
 	public static boolean isgoto = true;
 	public static boolean isRegister = false;
+	public static boolean skin9_is_switch = false;
+	public static boolean skin9_switch_showDelete = false;
+	public static boolean skin9_show_setAccount = false;
 
 	public static String openid = ""; // 用户id
 	public static String userName = "";// 用户名
 	public static String time = "";
 	public static String USERURL = "";// 用户信息地址
-    public static String GIFT = "";
+	public static String GIFT = "";
 	public static String KEFU = "";
+	public static String float_url_home_center = "";
 	public static String FPWD = "";// 找回密码
 	public static String USERAGREEMENTURL = "";// 用户协议
 	public static String add_global_script_url = "";
@@ -79,8 +90,8 @@ public class AppConfig {
 	public static boolean showAccountTip;
 	public static boolean showGiftTip;
 	public static boolean showKefuTip;
-    public static String webSocket_token;
-    public static boolean showOneKeyLogin = false;
+	public static String phone_number = "";
+	public static boolean showOneKeyLogin = false;
 
 	public static String Token = "";
 	public static String oneKey_access_token = "";

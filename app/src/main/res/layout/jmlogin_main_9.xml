@@ -1,101 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="@dimen/jm_login_width"
         android:layout_height="@dimen/jm_login_height"
+        android:background="@drawable/jm_base_login_bg_9"
+        android:orientation="vertical"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:background="@drawable/jm_login_bg"
-        android:orientation="vertical" >
+        android:paddingRight="15dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/jm_login_top_height"
-            android:orientation="vertical" >
-
+            android:layout_height="85dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            >
             <ImageView
-                android:layout_width="@dimen/jm_login_logo_width"
-                android:layout_height="@dimen/jm_login_logo_height"
-                android:layout_centerVertical="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/jm_logo_new" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-                <TextView
-                    android:visibility="gone"
-                    android:id="@+id/userlgbt"
-                    android:layout_width="@dimen/jm_login_8_width"
-                    android:layout_height="@dimen/jm_login_switch_height"
-                    android:gravity="center"
-                    android:textColor="@color/jmfont_black"
-                    android:text="@string/moblie_bt_user"
-                    android:textSize="12sp"
-                    android:background="@drawable/jm_select_left_normal"/>
-
-                <TextView
-                    android:id="@+id/title_tv"
-                    android:layout_width="@dimen/jm_login_8_width"
-                    android:layout_height="@dimen/jm_login_switch_height"
-                    android:gravity="center"
-                    android:textColor="@color/jmfont_black"
-                    android:text="@string/moblie_login_title"
-                    android:textSize="15sp"
-                    />
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="@dimen/jm_login_logo_width"
-                android:layout_height="@dimen/jm_login_logo_height"
+                android:visibility="invisible"
+                android:id="@+id/back"
+                android:paddingLeft="@dimen/jm_skin9_pading_icon"
+                android:paddingRight="@dimen/jm_skin9_pading_icon"
+                android:paddingBottom="@dimen/jm_skin9_pading_icon"
+                android:layout_width="@dimen/jm_skin9_pading_icon_width"
+                android:layout_height="@dimen/jm_skin9_pading_icon_height"
+                android:src="@drawable/jm_black_back"
+                android:layout_alignParentLeft="true"
+            />
+            <ImageView
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/ivkefu"
-                    android:layout_width="26dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/jm_kefu_new" />
-
-                <TextView
-                    android:id="@+id/tvversion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center_horizontal"
-                    tools:text="v1.0.1"
-                    android:textColor="#d5dad3"
-                    android:textSize="10sp"/>
-            </FrameLayout>
+                android:id="@+id/kefu_help"
+                android:paddingTop="5dp"
+                android:paddingBottom="@dimen/jm_skin9_pading_icon"
+                android:paddingLeft="@dimen/jm_skin9_pading_icon"
+                android:layout_width="@dimen/jm_skin9_pading_icon_width2"
+                android:layout_height="35dp"
+                android:src="@drawable/jm_kefu_orange_9"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_skin9_logo_height"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/jm_logo_9" />
         </RelativeLayout>
 
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/jm_input_height"
-            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/jm_register_submit_margin_top"
+            android:layout_marginBottom="@dimen/jm_login_icon_height"
+            android:background="@drawable/jm_white_backlogin_btn"
             android:gravity="center_vertical"
-            android:background="@drawable/jm_input_bg">
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="@dimen/jm_login_icon_width"
                 android:layout_height="@dimen/jm_login_icon_height"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/jm_phone"/>
+                android:src="@drawable/jm_orange_phone" />
 
             <EditText
                 android:id="@+id/edit_iphone"
@@ -104,143 +81,136 @@
                 android:background="@null"
                 android:gravity="center_vertical"
                 android:hint="@string/moblie_edit_hint"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="phone"
                 android:maxLength="25"
-                android:textCursorDrawable="@null"
                 android:nextFocusForward="@+id/edit_code"
                 android:singleLine="true"
                 android:textColor="#000000"
                 android:textColorHint="#d5dad3"
-                android:textSize="18sp" >
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/jm_input_height"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/jm_input_bg">
-            <ImageView
-                android:layout_width="@dimen/jm_login_icon_width"
-                android:layout_height="@dimen/jm_login_icon_height"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/jm_code"/>
-
-            <EditText
-                android:id="@+id/edit_code"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="35dp"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="@string/moblie_edit_code_hint"
-                android:imeOptions="actionDone"
-                android:inputType="number"
                 android:textCursorDrawable="@null"
-                android:maxLength="6"
-                android:singleLine="true"
-                android:textColor="#000000"
-                android:textColorHint="#d5dad3"
-                android:textSize="18sp" >
-            </EditText>
-
-            <TextView
-                android:id="@+id/ibcode"
-                android:layout_width="70dp"
-                android:layout_height="34dp"
-                android:layout_margin="6dp"
-                android:gravity="center"
-                android:background="@drawable/jm_blues_codebtn_style_new"
-                android:padding="5sp"
-                android:text="@string/moblie_bt_code"
-                android:textColor="@color/jmfont_white"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:gravity="center_vertical"
-            android:layout_marginTop="@dimen/jm_forget_text_margin_top"
-            android:orientation="horizontal" >
-
-            <CheckBox
-                android:id="@+id/remembpwcb"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:button="@drawable/jmagreeradio"
-                android:background="@null"
-                android:checked="true"
-                android:enabled="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="@string/user_text_my"
-                android:textColor="@color/jmfont_gray"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvurl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/user_text_deal"
-                android:textColor="@color/jmfont_blues"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/user_text_end"
-                android:textColor="@color/jmfont_gray"
-                android:textSize="16sp" />
+                android:textSize="@dimen/jm_skin9_edit_size"></EditText>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/mobilebt"
+            android:id="@+id/jm_skin9_phone_login_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/jm_input_height"
-            android:layout_marginTop="@dimen/jm_register_submit_margin_top"
+            android:background="@drawable/jm_orange_codebtn_style"
             android:gravity="center"
-            android:background="@drawable/jm_blues_codebtn_style_new"
             android:text="@string/moblie_bt_login"
             android:textColor="@color/jmfont_white"
-            android:textSize="18sp" />
-
-        <RelativeLayout
+            android:textSize="@dimen/jm_skin9_edit_size" />
+        </LinearLayout>
+        <!--其他登录方式-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" >
+            android:layout_marginTop="@dimen/jm_login_icon_height"
+            android:layout_marginBottom="5dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@color/jmfont_gray2" />
+
+            <TextView
                 android:id="@+id/tvvistor"
-                android:text="@string/moblie_text_visitor"
-                android:textColor="@color/jmfont_gray"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/ivregister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="@string/moblie_text_register2"
-                android:textColor="@color/jmfont_gray"
-                android:textSize="16sp"
-                />
-        </RelativeLayout>
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:text="@string/other_login"
+                android:textColor="@color/jmfont_gray2"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@color/jmfont_gray2" />
+        </LinearLayout>
+
+
+        <!--底部图文 账号/快捷/游客登录-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="2dp">
+
+            <LinearLayout
+                android:id="@+id/jm_skin9_quick_login"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_float_icon_size"
+                    android:layout_height="@dimen/jm_float_icon_size"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/jm_quick_login" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/moblie_oneKey_title"
+                    android:textColor="@color/jmfont_gray2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/jm_skin9_user_login"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_float_icon_size"
+                    android:layout_height="@dimen/jm_float_icon_size"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/jm_user_logo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/moblie_bt_user"
+                    android:textColor="@color/jmfont_gray2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/jm_skin9_guest_login"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_float_icon_size"
+                    android:layout_height="@dimen/jm_float_icon_size"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/jm_guest" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/moblie_text_visitor"
+                    android:textColor="@color/jmfont_gray2"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

@@ -17,6 +17,7 @@ public class WebApi {
 
 	public static String BASE_HOST;// = "https://apisdk.5tc5.com/v1"
 	public static String HOST;// = "https://apisdk.5tc5.com/v1"
+	public static String HOST2;
 //	public static String WEBSOCKET_HOST = "http://swim.t52f.top:9501";
 	public static String WEBSOCKET_HOST = "https://jmkf.jmhy.com";
 	//private static final String HOST = "https://test.172jm.com/v1";//测试用
@@ -33,6 +34,7 @@ public class WebApi {
 		}
 		BASE_HOST = host;
 		HOST = host + "/v1";
+		HOST2 = host ;//无v1
 		// 初始化接口
 		ACTION_INIT = HOST + "/app/init";
 		// 请求短信
@@ -44,6 +46,8 @@ public class WebApi {
 		//账号登录
 		ACTION_USRRLOGIN = HOST+"/user/account_login";
 		//自动登录
+		ACTION_SET_ACCOUNT = HOST2+"/webconfig/setAccount";
+		//保存账号
 		ACTION_AUTOLOGIN = HOST+"/user/auto_login";
 		//一键登录
 		ACTION_ONEKEYLOGIN = HOST+"/user/cmcc_login";
@@ -82,6 +86,7 @@ public class WebApi {
 		HttpTypeMap.put(ACTION_PHONE_LOGIN, "post");
 		HttpTypeMap.put(ACTION_USERREGISTER, "post");
 		HttpTypeMap.put(ACTION_USRRLOGIN, "post");
+		HttpTypeMap.put(ACTION_SET_ACCOUNT, "post");
 		HttpTypeMap.put(ACTION_AUTOLOGIN, "post");
 		HttpTypeMap.put(ACTION_PHONE_REGISTER, "post");
 		HttpTypeMap.put(ACTION_GUEST, "post");
@@ -109,6 +114,8 @@ public class WebApi {
    public static String ACTION_USERREGISTER;
    //账号登录
    public static String ACTION_USRRLOGIN;
+	//账号登录
+   public static String ACTION_SET_ACCOUNT;
    //自动登录
    public static String ACTION_AUTOLOGIN;
    //手机注册

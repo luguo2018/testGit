@@ -114,7 +114,7 @@ public class JmSetUserFragment extends JmBaseFragment implements
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		initView();
-		// getGuest();
+
 
 		if(savedInstanceState != null){
 			String account = savedInstanceState.getString("account");

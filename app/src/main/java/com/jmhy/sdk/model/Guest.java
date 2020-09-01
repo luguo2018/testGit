@@ -16,8 +16,10 @@ public class Guest {
 	private String upass;
 	private String message;
     private String float_url_user_center;
+    private String float_url_home_center;
 	private String float_url_gift_center;
 	private int float_red_recommend;
+	private int show_set_account;
 
 	public String getCode() {
 		return code;
@@ -74,6 +76,15 @@ public class Guest {
 	public String getFloat_url_user_center() {
 		return float_url_user_center;
 	}
+
+	public String getFloat_url_home_center() {
+		return float_url_home_center;
+	}
+
+	public void setFloat_url_home_center(String float_url_home_center) {
+		this.float_url_home_center = float_url_home_center;
+	}
+
 	public void setFloat_url_user_center(String float_url_user_center) {
 		this.float_url_user_center = float_url_user_center;
 	}
@@ -113,6 +124,14 @@ public class Guest {
 
 	public String getIs_package_new() {
 		return is_package_new;
+	}
+
+	public int getShow_set_account() {
+		return show_set_account;
+	}
+
+	public void setShow_set_account(int show_set_account) {
+		this.show_set_account = show_set_account;
 	}
 
 	public void setIs_package_new(String is_package_new) {

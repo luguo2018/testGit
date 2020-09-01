@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -18,25 +19,59 @@ import android.util.Log;
 
 import com.jmhy.sdk.common.JiMiSDK;
 
+
+
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * create by yhz on 2018/12/6
- */
 public class MediaUtils {
     private final static String TAG = MediaUtils.class.getSimpleName();
+    private static Bitmap bitmap;
+    public Bitmap urlReturnBitMap(final String url){
+        byte[] bitmapArray =android.util.Base64.decode(url.split(",")[1], android.util.Base64.DEFAULT);
+        bitmap = BitmapFactory.decodeByteArray(bitmapArray, 0, bitmapArray.length);
+        return bitmap;
+    }
+
+    public static Bitmap getBitmap(String url) {
+        Bitmap bm = null;
+        try {
+            URL iconUrl = new URL(url);
+            URLConnection conn = iconUrl.openConnection();
+            HttpURLConnection http = (HttpURLConnection) conn;
+
+            int length = http.getContentLength();
+
+            conn.connect();
+            // 获得图像的字符流
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is, length);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();// 关闭流
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bm;
+    }
 
     public static void saveImage(Activity context, Bitmap bitmap){
         File dir;
         if(VERSION.SDK_INT < VERSION_CODES.Q){
             dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
         }else{
+//            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
             dir = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         }
         if (dir != null && !dir.exists()) {

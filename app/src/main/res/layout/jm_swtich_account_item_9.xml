@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:background="@drawable/jm_switch_orange_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/login_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="3dp"
+            android:textColor="@color/jmfont_black"
+            android:textSize="@dimen/jm_12sp"
+            android:text="账号"
+            />
+
+        <TextView
+            android:id="@+id/account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/jm_orange"
+            android:textSize="@dimen/jm_12sp"
+            tools:text="123123" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/login_time"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="2020年8月13日"
+        android:padding="5sp"
+        android:textColor="@color/jmfont_gray2"
+        android:textSize="@dimen/jm_12sp" />
+
+    <RelativeLayout
+        android:gravity="right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/last_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/jm_switch_orange_radius"
+            android:textSize="@dimen/jm_12sp"
+            android:textColor="@color/jm_orange"
+            android:text="@string/last_use"
+            android:padding="10dp"
+            tools:text="上次使用" />
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/jm_switch_red_radius"
+            android:textSize="@dimen/jm_12sp"
+            android:textColor="@color/jmbtn6_red"
+            android:text="@string/delete"
+            android:padding="10dp"
+            android:visibility="gone"
+            tools:text="删除" />
+    </RelativeLayout>
+</LinearLayout>

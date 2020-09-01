@@ -1,21 +1,21 @@
 package com.jmhy.sdk.utils;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+import android.webkit.JavascriptInterface;
+
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-
-import android.util.Log;
-import android.webkit.JavascriptInterface;
+import com.jmhy.sdk.sdk.Loginout;
 
 
 public class JsInterface {
 	private Activity activity;
-	
+
 	private Seference mSeference;
 
 	public JsInterface(Activity activity) {
@@ -42,7 +42,7 @@ public class JsInterface {
 			activity.finish();
     	}
 	}
-	
+
 	@JavascriptInterface
     public  void JavaScriptback(){
     	if(activity!=null){
@@ -56,10 +56,9 @@ public class JsInterface {
 	 */
 	@JavascriptInterface
 	public void JavascriptToDown(String url){
-		
-		Intent viewIntent = new Intent("android.intent.action.VIEW",
-				Uri.parse(url));
-		activity.startActivity(viewIntent);
+		MediaUtils.saveImage(activity, MediaUtils.getBitmap(url));
+		DialogUtils.showTip(activity,AppConfig.getString(activity, "float_snapshot_save"));
+
 	}
 	@JavascriptInterface
 	public void JavaScriptToJumppassword() {
@@ -78,13 +77,45 @@ public class JsInterface {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
+				Loginout.getInstatnce(activity);
 				JiMiSDK.userlistenerinfo.onLogout("logout");
 				activity.finish();
 				AppConfig.isShow = false;
+				AppConfig.skin9_is_switch=true;
+				AppConfig.isswitch=false;
 				FloatUtils.destroyFloat();
 			}
 		});
 	}
+	/**
+	 * 修改游客账密   删除旧帐号  存状态isChangeGuestAccount  调用登录时登新号
+	 */
+	@JavascriptInterface
+	public void JavascriptSetAccount(final String oldAccount, final String newAccount, final String newPassword) {
+
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				changeAccountUtil.changeAccount(activity,true,oldAccount,newAccount,newPassword,"");
+			}
+		});
+	}
+
+	/**
+	 * 修改密码 改完旧的帐号列表中改账号token登录不上  先删除该帐号  存状态isChangeGuestAccount  调用登录时用新设置的账号密码
+	 */
+	@JavascriptInterface
+	public void JavascriptChangePassword(final String account, final String password) {
+
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				changeAccountUtil.changeAccount(activity,true,account,account,password,"");
+			}
+		});
+	}
+
+
 	/**
 	 * 跳转浏览器
 	 */
@@ -94,7 +125,7 @@ public class JsInterface {
 				Uri.parse(url));
 		activity.startActivity(intent);
 	}
-	
+
 	@JavascriptInterface
 	public void payNotify(String result){
 		//result=0 失败，1 成功

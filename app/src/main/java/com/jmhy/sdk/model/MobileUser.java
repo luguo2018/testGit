@@ -1,10 +1,11 @@
 package com.jmhy.sdk.model;
 
+import android.service.autofill.UserData;
 import android.util.Log;
 
 import com.jmhy.sdk.common.JiMiSDK;
 
-public class MobileUser {
+public class MobileUser  {
     private String code;
     private String code_area;
     private String moblie_code;
@@ -19,9 +20,11 @@ public class MobileUser {
     private String game_token;
     private String show_url_after_login;
     private String float_url_user_center;
+    private String float_url_home_center;
     private String channel_user_info;
     private String float_url_gift_center;
     private int float_red_recommend;
+    private int show_set_account;
 
     public String getCode() {
         return code;
@@ -33,6 +36,14 @@ public class MobileUser {
 
     public String getCode_area() {
         return code_area;
+    }
+
+    public String getFloat_url_home_center() {
+        return float_url_home_center;
+    }
+
+    public void setFloat_url_home_center(String float_url_home_center) {
+        this.float_url_home_center = float_url_home_center;
     }
 
     public void setCode_area(String code_area) {
@@ -163,6 +174,14 @@ public class MobileUser {
                 ", float_url_gift_center='" + float_url_gift_center + '\'' +
                 ", float_red_recommend=" + float_red_recommend +
                 '}';
+    }
+
+    public int getShow_set_account() {
+        return show_set_account;
+    }
+
+    public void setShow_set_account(int show_set_account) {
+        this.show_set_account = show_set_account;
     }
 
     public String getIs_package_new() {

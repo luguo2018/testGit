@@ -188,7 +188,9 @@ public class PushService extends Service {
 							int exit = msg.getExit();
 							//exit = 1;
 							if (!TextUtils.isEmpty(murl)){
-								turnToNotice(murl);
+								if (AppConfig.save_guest_end){//游客或者手机号设置帐密结束才跳转实名url
+									turnToNotice(murl);
+								}
 							}
 							//如果不是0，强制关闭
 							if (exit != 0 ){
