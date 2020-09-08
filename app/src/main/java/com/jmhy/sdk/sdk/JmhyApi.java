@@ -1,10 +1,11 @@
 package com.jmhy.sdk.sdk;
 
-import java.util.HashMap;
-
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.jmhy.sdk.BuildConfig;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
@@ -14,13 +15,17 @@ import com.jmhy.sdk.model.InitExt;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.Utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+
 public class JmhyApi {
 	private static JmhyApi instance;
 
 	private final static int DEVICE = 1;// 安卓设备
 
 	private DeviceInfo deviceInfo;
-
+	private String signValidString;
 	private JmhyApi() {
 
 	}
@@ -36,7 +41,28 @@ public class JmhyApi {
 	public DeviceInfo getDeviceInfo(){
 		return deviceInfo;
 	}
+	private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+		MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+		localMessageDigest.update(paramArrayOfByte);
+		return toHexString(localMessageDigest.digest());
+	}
 
+	public String toHexString(byte[] paramArrayOfByte) {
+		if (paramArrayOfByte == null) {
+			return null;
+		}
+		StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+		for (int i = 0; ; i++) {
+			if (i >= paramArrayOfByte.length) {
+				return localStringBuilder.toString();
+			}
+			String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+			if (str.length() == 1) {
+				str = "0" + str;
+			}
+			localStringBuilder.append(str);
+		}
+	}
 	/**
 	 * 初始化接口
 	 * 
@@ -53,10 +79,17 @@ public class JmhyApi {
 		if (deviceInfo == null) {
 			deviceInfo = new DeviceInfo(context);
 		}
-
+		try {   //BuildConfig.APPLICATION_ID   当前应用包名
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+			signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+			Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "---:" + signValidString);
+		} catch (Exception e) {
+			Log.e("获取应用签名", "异常:" + e);
+		}
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		HashMap<String, Object> paramsdata = new HashMap<String, Object>();
 		params.put("access_token", "");
+		params.put("apkSign", signValidString);
 		params.put("time", System.currentTimeMillis() / 1000 + "");
 
 		paramsdata.put("appid", appId + "");

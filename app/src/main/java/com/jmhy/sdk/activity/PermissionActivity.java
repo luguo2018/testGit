@@ -1,5 +1,6 @@
 package com.jmhy.sdk.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.view.PermissionDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +47,7 @@ public class PermissionActivity extends Activity {
             return;
         }
 
-        List<String> list = new ArrayList<>();
+        final List<String> list = new ArrayList<>();
         for(String permission : permissionList){
             if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
                 list.add(permission);
@@ -55,8 +58,15 @@ public class PermissionActivity extends Activity {
             onPermissionRequestResult(true);
             return;
         }
-
-        ActivityCompat.requestPermissions(this, toStringFormat(list), REQUEST_PERMISSION);
+        ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+//        PermissionDialog exitdialog = new PermissionDialog(this, AppConfig.resourceId(this, "jm_MyDialog", "style"), new PermissionDialog.PermissionDialogListener() {
+//            @Override
+//            public void onAllow() {
+//                ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+//            }
+//        });
+//        exitdialog.setCancelable(false);
+//        exitdialog.show();
     }
 
     @Override

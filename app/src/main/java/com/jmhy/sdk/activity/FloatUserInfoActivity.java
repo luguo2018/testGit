@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -18,18 +17,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import com.jmhy.sdk.R;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
-import com.jmhy.sdk.utils.JsInterface;
 import com.jmhy.sdk.utils.MimeType;
 import com.jmhy.sdk.utils.checkEmulator.FloatJsInterface;
-import com.jmhy.sdk.view.CornerCompatView;
 import com.jmhy.sdk.view.GifImageView;
 
 import java.util.ArrayList;
-import java.util.Properties;
 
 public class FloatUserInfoActivity extends BaseFloatActivity {
     private static final String TAG = "FloatUserInfoActivity";
@@ -101,8 +96,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private void intView() {
         //仅客服页的webview才做外部点击收起软键盘及软键盘弹出收起，其他webview先不干预
 //        boolean isKefu = getIntent().getBooleanExtra("isKefu", false);
-        notice = false;
-        protocol =false;
+//        notice = false;
+//        protocol =false;
         int layout_id = 0;
         if (protocol) {
             if (AppConfig.skin == 9) {
@@ -123,13 +118,16 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 layout_id=AppConfig.resourceId(activity, "jmuserinfo", "layout");
             }
         }
+
         setContentView(layout_id);
         if (true) {
             AndroidBug5497Workaround.assistActivity(activity);
         }
         // TODO Auto-generated method stub
-        parent = contentView.findViewById(R.id.parent);
-        right_back =contentView.findViewById(R.id.right_back);
+        parent = contentView.findViewById((AppConfig.resourceId(activity, "parent", "id")));
+        right_back =contentView.findViewById((AppConfig.resourceId(activity, "right_back", "id")));
+        
+        
         mWebview = (WebView) contentView.findViewById(AppConfig.resourceId(activity,
                 "webview", "id"));
         mGifImageView = (GifImageView) contentView.findViewById(AppConfig.resourceId(activity,
@@ -306,9 +304,9 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             } else {
                 // TODO Auto-generated method stub
             }
-        } else if (v.getId() ==R.id.right_back) {
+        } else if (v.getId() ==AppConfig.resourceId(activity, "right_back", "id")) {
             removeContentView();
-        } else if (v.getId() == R.id.parent) {
+        } else if (v.getId() ==AppConfig.resourceId(activity, "parent", "id") ) {
 
         }
     }
