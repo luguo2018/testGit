@@ -65,14 +65,20 @@ public class InitData {
 				AppConfig.appKey, ver_id, ext, new ApiRequestListener() {
 					@Override
 					public void onSuccess(Object obj) {
-						// //("kk",obj+"");
+						Log.i("jimi","参数"+obj);
 						if (obj != null) {
-							InitMsg result = (InitMsg) obj;
-							if (result.getCode().equals("0")) {
-								sendData(AppConfig.INIT_SUCCESS, obj, handler);
-							} else {
-								sendData(AppConfig.FLAG_FAIL,
-										result.getMessage(), handler);
+							try {
+								InitMsg result = (InitMsg) obj;
+								if (result.getCode().equals("0")) {
+									sendData(AppConfig.INIT_SUCCESS, obj, handler);
+								} else {
+									sendData(AppConfig.FLAG_FAIL,
+											result.getMessage(), handler);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								Log.i("jimi", "初始化回调信息异常" + e);
+								sendData(AppConfig.FLAG_FAIL,"初始化回调信息异常"+obj.toString(), handler);
 							}
 						} else {
 							sendData(AppConfig.FLAG_FAIL, AppConfig.getString(context, "http_rror_msg"),
