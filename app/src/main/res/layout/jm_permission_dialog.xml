@@ -34,7 +34,7 @@
                 android:layout_margin="@dimen/jm_login_icon_width"
                 android:gravity="center"
                 android:text="@string/jm_permission_dialog_content"
-                android:textColor="@color/jm_orange2"
+                android:textColor="@color/jm_exit_dialog_bg"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -64,14 +64,23 @@
                     android:src="@drawable/jm_orange_save" />
 
                 <TextView
+                    android:layout_weight="1"
                     android:id="@+id/permission1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:text="存储空间"
-                    android:textColor="@color/jm_orange2"
+                    android:textColor="@color/jm_exit_dialog_bg"
                     android:textSize="@dimen/jm_skin9_edit_size" />
+                <ImageView
+                    android:id="@+id/state1"
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_permission_on2" />
             </LinearLayout>
 
             <LinearLayout
@@ -92,13 +101,22 @@
 
                 <TextView
                     android:id="@+id/permission2"
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="35dp"
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:text="设备信息"
-                    android:textColor="@color/jm_orange2"
+                    android:textColor="@color/jm_exit_dialog_bg"
                     android:textSize="@dimen/jm_skin9_edit_size" />
+                <ImageView
+                    android:id="@+id/state2"
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_permission_on2" />
             </LinearLayout>
         </LinearLayout>
 
@@ -106,7 +124,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/jm_dialog_line" />
+            android:background="@color/jm_exit_dialog_bg" />
 
         <TextView
             android:id="@+id/dialog_delete"

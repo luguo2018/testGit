@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -86,6 +87,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //设置之后可监听到外部点击，收起软键盘
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
@@ -214,8 +216,15 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
                     mWebview.setLayoutParams(linearParams2);
                 }
                 else{
-                    FrameLayout.LayoutParams linearParams2 = (FrameLayout.LayoutParams) mWebview.getLayoutParams();
-                    linearParams2.width = (int) (heightPixels*1.2);
+                    if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
+                        FrameLayout.LayoutParams linearParams2 = (FrameLayout.LayoutParams) mWebview.getLayoutParams();
+                        linearParams2.width = (int) (widthPixels * 0.8);
+                        linearParams2.height = heightPixels;
+                        mWebview.setLayoutParams(linearParams2);
+                    } else {
+
+                        FrameLayout.LayoutParams linearParams2 = (FrameLayout.LayoutParams) mWebview.getLayoutParams();
+                        linearParams2.width = (int) (heightPixels * 1.2);
 //                    linearParams2.height = heightPixels;
 //                    if (utils.hasNotchInScreen(this)){
 //                        int higth=utils.getNotchHigth();
@@ -227,7 +236,8 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
 //                        mWmParams.layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 //                    }
 
-                    mWebview.setLayoutParams(linearParams2);
+                        mWebview.setLayoutParams(linearParams2);
+                    }
                 }
 
 

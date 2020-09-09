@@ -127,7 +127,7 @@ public class JiMiSDK {
 
 
 		final Activity activity = (Activity)context;
-		if(VERSION.SDK_INT < VERSION_CODES.Q){
+		if(VERSION.SDK_INT <= VERSION_CODES.Q){
 			List<String> permission = new ArrayList<>();
 			permission.add(Manifest.permission.READ_PHONE_STATE);
 			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -244,7 +244,7 @@ public class JiMiSDK {
 			new InitData(mContext, AppConfig.agent, new InitListener() {
 				@Override
 				public void Success(String msg) {
-//					AppConfig.skin = 7;
+//					AppConfig.skin = 8;
 					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
@@ -371,21 +371,21 @@ public class JiMiSDK {
 	}
 
 	private static void showFloatDelayed(){
-		if (AppConfig.skin==9){//皮肤9不申请权限
+//		if (AppConfig.skin==9){//皮肤9→全部皮肤都不申请权限
 			FloatUtils.showFloat((Activity)mContext);
-		}else {
-			PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
-				@Override
-				public void onPermissionResult(boolean grant) {
-					Log.i(TAG, "showFloat grant = " + grant);
-					if (grant) {
-						FloatUtils.showFloat((Activity) mContext);
-					} else {
-						permissionTip((Activity) mContext, "jm_permission_tip_float");
-					}
-				}
-			});
-		}
+//		}else {
+//			PermissionActivity.requestFloatPermission(mContext, new PermissionResultListener() {
+//				@Override
+//				public void onPermissionResult(boolean grant) {
+//					Log.i(TAG, "showFloat grant = " + grant);
+//					if (grant) {
+//						FloatUtils.showFloat((Activity) mContext);
+//					} else {
+//						permissionTip((Activity) mContext, "jm_permission_tip_float");
+//					}
+//				}
+//			});
+//		}
     }
 
 	public static void hideFloat(){
