@@ -121,6 +121,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case SHOW_KEFU_FLOAT:
+                    show();
                     //显示客服小红点
                     if (AppConfig.skin==9){
                         iconTip.setVisibility(VISIBLE);
@@ -151,7 +152,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     public FloatView(Context context) {
         super(context);
         init(context);
-        Log.i("jimi","皮肤查看："+AppConfig.skin);
     }
 
     public void setRedDotState() {
@@ -721,11 +721,17 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 //            mContext.startActivity(intent);
 //        }
         if(floatUserInfoActivity==null){
-            floatUserInfoActivity = new FloatUserInfoActivity((Activity) mContext);
+            floatUserInfoActivity = new FloatUserInfoActivity((Activity) mContext, new FloatUserInfoActivity.CloseFloatListener() {
+                @Override
+                public void closeFloat() {
+                    show();
+                }
+            });
             floatUserInfoActivity.setViews(url);
         }else {
             floatUserInfoActivity.setViews(url);
         }
+        hide();
     }
     private PopupWindow popupWindow;
 
