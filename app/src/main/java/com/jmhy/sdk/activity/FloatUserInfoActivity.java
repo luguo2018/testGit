@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.jmhy.sdk.R;
@@ -40,39 +43,55 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private ValueCallback<Uri> uploadMessage;
     private final static int FILE_CHOOSER_RESULT_CODE = 0x01;
-    private float originalY;
-    private boolean notice;
-    private boolean protocol;
+    private int mWbeHeight;
+    public boolean notice;
+    public boolean protocol;
     private View right_back;
-
+    private boolean isShowKeyboard;
+    private int reduceHeight;
     public FloatUserInfoActivity(Activity activity) {
         super(activity);
     }
 
     @Override
+    public void setContentView(@NonNull int layout_id) {
+        super.setContentView(layout_id);
+    }
+
+    @Override
     public void setViews(String url) {
+        if(contentView!=null){
+            return;
+        }
         mUrl = url;
         intView();
-        originalY = mWebview.getY();
+
         //防止软键盘覆盖webview
         mWebview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 Log.d(TAG, "onGlobalLayout: 软键盘状态改变");
-                Rect rect = new Rect();
-                mWebview.getWindowVisibleDisplayFrame(rect);
-                int height = mWebview.getHeight() - rect.bottom;
-                if (height > 100) {
-                    if (mWebview.getY() >= 0) {
-                        int[] location = new int[2];
-                        mWebview.getLocationInWindow(location);
-                        int h = location[1] + mWebview.getHeight() - rect.bottom;
-                        float moveY = originalY - h;
-                        mWebview.setY(moveY);
+                if(mWebview!=null){
+                    mWbeHeight = mWebview.getHeight();
+                    Rect r = new Rect();
+                    //获取当前界面可视部分
+                    activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+                    //获取屏幕的高度
+                    int screenHeight =  activity.getWindow().getDecorView().getRootView().getHeight();
+                    //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
+                    int heightDifference = screenHeight - r.bottom;
+                    Log.d("Keyboard Size", "Size: " + heightDifference);
+                    FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mWebview.getLayoutParams();
+                    if (heightDifference>150&&!isShowKeyboard){
+                        reduceHeight =mWbeHeight-(mWbeHeight-heightDifference) ;
+                        layoutParams.height = mWbeHeight-heightDifference;
+                        mWebview.setLayoutParams(layoutParams);
+                        isShowKeyboard = true;
+                    }else if (heightDifference<150&&isShowKeyboard){
+                        isShowKeyboard =false;
+                        layoutParams.height = mWbeHeight+reduceHeight;
+                        mWebview.setLayoutParams(layoutParams);
                     }
-
-                } else {
-                    mWebview.setY(originalY);
                 }
             }
         });
@@ -92,6 +111,12 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                     viewGroup1.removeAllViews();
                     Log.d(TAG, "removeContentView: childCount=" + count);
                     viewGroup.removeView(contentView);
+                    mWebview=null;
+                    mGifImageView=null;
+                    FloatUserInfoActivity.this.parent=null;
+                    uploadMessage=null;
+                    uploadMessageAboveL=null;
+                    contentView=null;
                 }
             });
 
@@ -172,7 +197,6 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             Log.e("JiMiSDK", "JmuserinfoActivity view == null");
             return;
         }
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
         switch (AppConfig.skin) {
             case 5:
             case 4:

@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical" >
-
+    <LinearLayout
+        android:background="@color/jmbg_float"
+        android:id="@+id/parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <com.jmhy.sdk.view.CornerCompatView
         android:layout_width="@dimen/jm_pay_width"
         android:layout_height="@dimen/jm_pay_height"
@@ -31,5 +37,5 @@
             android:layout_height="240dp"
             android:layout_gravity="center"/>
     </com.jmhy.sdk.view.CornerCompatView>
-
+    </LinearLayout>
 </LinearLayout>

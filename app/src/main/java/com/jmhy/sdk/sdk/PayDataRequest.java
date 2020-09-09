@@ -9,6 +9,7 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.jmhy.sdk.activity.FloatPayActivity;
 import com.jmhy.sdk.activity.JmpayActivity;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.config.AppConfig;
@@ -126,19 +127,25 @@ public class PayDataRequest {
             }
         }
     };
-
+    static FloatPayActivity floatPayActivity;
     public static void turnToIntent(String url) {
         if (TextUtils.isEmpty(url)) {
             // Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("url", url);
-        intent.setClass(mContext, JmpayActivity.class);
-        mContext.startActivity(intent);
+//        Intent intent = new Intent();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+//                Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.putExtra("url", url);
+//        intent.setClass(mContext, JmpayActivity.class);
+//        mContext.startActivity(intent);
+        if(floatPayActivity==null){
+            floatPayActivity = new FloatPayActivity((Activity) mContext);
+            floatPayActivity.setViews(url);
+        }else {
+            floatPayActivity.setViews(url);
+        }
     }
 
     public static void turnToIntent(Context context, String url) {

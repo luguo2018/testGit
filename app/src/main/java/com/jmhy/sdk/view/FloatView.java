@@ -709,14 +709,12 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             return;
         }
 //        if (AppConfig.skin==9){
-//            WebviewFloatUtils.showUserCentent(mContext,(Activity) mContext,url);
 //        }else {
 
 //            Intent intent = new Intent();
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 //                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //            intent.putExtra("url", url);
-//            intent.putExtra("isKefu", true);
 //            intent.setClass(mContext, JmUserinfoActivity.class);
 //            mContext.startActivity(intent);
 //        }
