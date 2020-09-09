@@ -21,31 +21,6 @@ public class AndroidBug5497Workaround {
     private static FrameLayout.LayoutParams frameLayoutParams;
     private static WindowManager.LayoutParams windowParams;
 
-    public static void addOnGlobalLayoutListener(final View view) {
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            public void onGlobalLayout() {
-                int usableHeightNow = computeUsableHeight2(view);//计算键盘高度
-                //当前可见高度和上一次可见高度不一致 布局变动
-                if (usableHeightNow != usableHeightPrevious2) {
-                    Log.i("jimi测试","触发高度变动,计量高度:"+usableHeightNow+"---上次高度"+usableHeightPrevious2);
-                    int usableHeightSansKeyboard = view.getRootView().getHeight(); //屏幕可用高度
-                    int heightDifference = usableHeightSansKeyboard - usableHeightNow;  //高度差=屏幕可用高度-键盘高
-                    Log.i("jimi测试","屏幕可用高（软键盘）:"+usableHeightSansKeyboard+"---高度差"+heightDifference);
-
-
-                    windowParams =(WindowManager.LayoutParams) view.getLayoutParams(); //取控件textView当前的布局参数
-
-//                    frameLayoutParams2.width = ;// 控件的宽强制设成30
-                    windowParams.height =400;// 控件的高强制设成20
-
-                    view.setLayoutParams(windowParams);
-                    view.requestLayout();//请求布局 例：点击聊天框 刷新焦点
-
-                    usableHeightPrevious2 = usableHeightNow;
-                }
-            }
-        });
-    }
     public static void assistActivity(Activity activity) {
         new AndroidBug5497Workaround(activity);
     }
