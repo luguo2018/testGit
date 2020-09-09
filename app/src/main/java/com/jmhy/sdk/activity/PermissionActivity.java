@@ -1,5 +1,6 @@
 package com.jmhy.sdk.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.view.PermissionDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,7 @@ public class PermissionActivity extends Activity {
 
     private final static int REQUEST_PERMISSION = 0x01;
     private final static int REQUEST_FLOAT = 0x02;
-
+    List<String> list;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,19 +47,30 @@ public class PermissionActivity extends Activity {
             return;
         }
 
-        List<String> list = new ArrayList<>();
+        list = new ArrayList<>();
         for(String permission : permissionList){
             if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
                 list.add(permission);
             }
         }
-
+        Log.i("jimi",list+"chakan查看"+list.toString());
         if(list.isEmpty()){
             onPermissionRequestResult(true);
             return;
         }
+//        ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+        ShowDialog(list);
+    }
 
-        ActivityCompat.requestPermissions(this, toStringFormat(list), REQUEST_PERMISSION);
+    private void ShowDialog(final List<String> list) {
+        PermissionDialog exitdialog = new PermissionDialog(this, AppConfig.resourceId(this, "jm_MyDialog", "style"),list, new PermissionDialog.PermissionDialogListener() {
+            @Override
+            public void onAllow() {
+                ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+            }
+        });
+        exitdialog.setCancelable(false);
+        exitdialog.show();
     }
 
     @Override
@@ -66,7 +80,11 @@ public class PermissionActivity extends Activity {
         if (requestCode == REQUEST_PERMISSION) {
             for (int grant : grantResults) {
                 if (grant != PackageManager.PERMISSION_GRANTED) {
-                    onPermissionRequestResult(false);
+//                    onPermissionRequestResult(false);
+//                    ShowDialog(list);
+                    Intent intent = new Intent(this, PermissionActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent);
                     return;
                 }
             }

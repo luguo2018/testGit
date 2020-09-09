@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="#30000000"
+        android:background="@color/jmbg_float"
         >
 
         <com.jmhy.sdk.view.CornerCompatView
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/jmfont_white"
-            app:jm_radius="@dimen/jm_notice_radius">
+            app:jm_radius="@dimen/jm_userinfo_radius">
 
             <WebView
                 android:id="@+id/webview"
@@ -35,8 +35,8 @@
         </com.jmhy.sdk.view.CornerCompatView>
 
         <RelativeLayout
+            android:background="@color/jmfont_white"
             android:focusable="true"
-            android:background="#ffffff"
             android:id="@+id/right_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="@dimen/jm_login_width"
+        android:layout_height="@dimen/jm_login_height"
+        android:layout_gravity="center"
+        android:background="@drawable/jm_base_login_white_bg_9"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/jm_login_icon_width"
+            android:gravity="center"
+            android:text="@string/jm_permission_dialog_title"
+            android:textColor="@color/jm_orange"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/jm_login_icon_width"
+                android:gravity="center"
+                android:text="@string/jm_permission_dialog_content"
+                android:textColor="@color/jm_exit_dialog_bg"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_input_height"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/jm_permission_btn"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_orange_save" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/permission1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:text="存储空间"
+                    android:textColor="@color/jm_exit_dialog_bg"
+                    android:textSize="@dimen/jm_skin9_edit_size" />
+                <ImageView
+                    android:id="@+id/state1"
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_permission_on2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/jm_input_height"
+                android:background="@drawable/jm_permission_btn"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_orange_phone" />
+
+
+                <TextView
+                    android:id="@+id/permission2"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:text="设备信息"
+                    android:textColor="@color/jm_exit_dialog_bg"
+                    android:textSize="@dimen/jm_skin9_edit_size" />
+                <ImageView
+                    android:id="@+id/state2"
+                    android:layout_width="@dimen/jm_login_icon_width"
+                    android:layout_height="@dimen/jm_login_icon_height"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/jm_permission_on2" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/jm_exit_dialog_bg" />
+
+        <TextView
+            android:id="@+id/dialog_delete"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/jm_confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/jmfont_red"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

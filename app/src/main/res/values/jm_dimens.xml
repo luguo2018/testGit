@@ -38,6 +38,7 @@
     <dimen name="jm_notice_width">471dp</dimen>
     <dimen name="jm_notice_height">314dp</dimen>
     <dimen name="jm_notice_radius">8dp</dimen>
+    <dimen name="jm_userinfo_radius">17dp</dimen>
     <dimen name="jm_pay_width">330dp</dimen>
     <dimen name="jm_pay_height">330dp</dimen>
     <dimen name="jm_auto_login_width">450dp</dimen>
