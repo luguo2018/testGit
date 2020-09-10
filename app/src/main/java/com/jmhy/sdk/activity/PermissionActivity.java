@@ -15,10 +15,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.view.PermissionDialog;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,45 +36,77 @@ public class PermissionActivity extends Activity {
 
     private final static int REQUEST_PERMISSION = 0x01;
     private final static int REQUEST_FLOAT = 0x02;
-    List<String> list;
+    private List<String> list;
+    private TextView confirm_tv;
+    private ImageView state1,state2;
+    private View mView;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("JiMiSDK","PermissionActivity oncreate");
-        if(VERSION.SDK_INT < VERSION_CODES.M){
+        this.mView = LayoutInflater.from(this).inflate(AppConfig.resourceId(this, "jm_permission_dialog", "layout"), null);
+        setContentView(mView);
+        Log.e("JiMiSDK", "PermissionActivity oncreate");
+        if (VERSION.SDK_INT < VERSION_CODES.M) {
             onPermissionRequestResult(true);
             return;
         }
 
-        if(permissionList == null){
+        if (permissionList == null) {
             requestFloatPermission();
             return;
         }
 
         list = new ArrayList<>();
-        for(String permission : permissionList){
-            if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+        for (String permission : permissionList) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                 list.add(permission);
             }
         }
-        Log.i("jimi",list+"chakan查看"+list.toString());
-        if(list.isEmpty()){
+        Log.i("jimi", list + "chakan查看" + list.toString());
+        if (list.isEmpty()) {
             onPermissionRequestResult(true);
             return;
         }
-//        ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
-        ShowDialog(list);
+        init(list);
     }
 
-    private void ShowDialog(final List<String> list) {
-        PermissionDialog exitdialog = new PermissionDialog(this, AppConfig.resourceId(this, "jm_MyDialog", "style"),list, new PermissionDialog.PermissionDialogListener() {
+    private void show(final List<String> list) {
+        state1.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
+        state2.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
+        for (int i=0;i<list.size();i++){
+            if (list.get(i).equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                state1.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+            }
+
+            if (list.get(i).equals(Manifest.permission.READ_PHONE_STATE)) {
+                state2.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+            }
+        }
+
+        mView.setVisibility(View.VISIBLE);
+    }
+    private void init(final List<String> list) {
+        state1 = (ImageView) findViewById(AppConfig.resourceId(this, "state1", "id"));
+        state2 = (ImageView) findViewById(AppConfig.resourceId(this, "state2", "id"));
+        confirm_tv = (TextView) findViewById(AppConfig.resourceId(this, "confirm_tv", "id"));
+        confirm_tv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onAllow() {
+            public void onClick(View v) {
                 ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+                mView.setVisibility(View.GONE);
             }
         });
-        exitdialog.setCancelable(false);
-        exitdialog.show();
+        for (int i=0;i<list.size();i++){
+            if (list.get(i).equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                state1.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+            }
+
+            if (list.get(i).equals(Manifest.permission.READ_PHONE_STATE)) {
+                state2.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+            }
+        }
+
     }
 
     @Override
@@ -80,11 +116,15 @@ public class PermissionActivity extends Activity {
         if (requestCode == REQUEST_PERMISSION) {
             for (int grant : grantResults) {
                 if (grant != PackageManager.PERMISSION_GRANTED) {
-//                    onPermissionRequestResult(false);
-//                    ShowDialog(list);
-                    Intent intent = new Intent(this, PermissionActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    this.startActivity(intent);
+
+                    list.clear();
+                    for (String permission : permissionList) {
+                        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                            list.add(permission);
+                        }
+                    }
+                    show(list);
+
                     return;
                 }
             }
@@ -97,7 +137,7 @@ public class PermissionActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_FLOAT){
+        if (requestCode == REQUEST_FLOAT) {
             boolean over = true;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 over = Settings.canDrawOverlays(this);
@@ -106,13 +146,13 @@ public class PermissionActivity extends Activity {
         }
     }
 
-    private String[] toStringFormat(List<String> list){
+    private String[] toStringFormat(List<String> list) {
         String[] arr = new String[list.size()];
         return list.toArray(arr);
     }
 
-    private void onPermissionRequestResult(boolean grant){
-        if (listener != null){
+    private void onPermissionRequestResult(boolean grant) {
+        if (listener != null) {
             listener.onPermissionResult(grant);
 
         }
@@ -122,8 +162,8 @@ public class PermissionActivity extends Activity {
         finish();
     }
 
-    public static void requestPermission(Context context, List<String> permissionList, PermissionResultListener listener){
-        if(VERSION.SDK_INT < VERSION_CODES.M){
+    public static void requestPermission(Context context, List<String> permissionList, PermissionResultListener listener) {
+        if (VERSION.SDK_INT < VERSION_CODES.M) {
             listener.onPermissionResult(true);
             return;
         }
@@ -133,7 +173,7 @@ public class PermissionActivity extends Activity {
             listener.onPermissionResult(true);
             return;
         }*/
-        if (context == null){
+        if (context == null) {
             context = JiMiSDK.mContext;
         }
         PermissionActivity.listener = listener;
@@ -143,8 +183,8 @@ public class PermissionActivity extends Activity {
         context.startActivity(intent);
     }
 
-    public static void requestFloatPermission(Context context, PermissionResultListener listener){
-        if(VERSION.SDK_INT < VERSION_CODES.M){
+    public static void requestFloatPermission(Context context, PermissionResultListener listener) {
+        if (VERSION.SDK_INT < VERSION_CODES.M) {
             listener.onPermissionResult(true);
             return;
         }
@@ -155,13 +195,13 @@ public class PermissionActivity extends Activity {
             return;
         }*/
 
-        if(Settings.canDrawOverlays(context)){
+        if (Settings.canDrawOverlays(context)) {
             listener.onPermissionResult(true);
             return;
         }
 
         PermissionActivity.listener = listener;
-        if (context == null){
+        if (context == null) {
             context = JiMiSDK.mContext;
         }
         Intent intent = new Intent(context, PermissionActivity.class);
@@ -169,27 +209,27 @@ public class PermissionActivity extends Activity {
         context.startActivity(intent);
     }
 
-    private void requestFloatPermission(){
+    private void requestFloatPermission() {
         /*int sdkVersion = getApplicationInfo().targetSdkVersion;
         if(sdkVersion < VERSION_CODES.M) {
             onPermissionResult(true);
             return;
         }*/
 
-        Log.e("JiMiSDK","requestFloatPermission--------");
+        Log.e("JiMiSDK", "requestFloatPermission--------");
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this) && this.getPackageName() != null) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + this.getPackageName()));
                 startActivityForResult(intent, REQUEST_FLOAT);
-            }else {
+            } else {
                 onPermissionRequestResult(true);
             }
-        }else{
+        } else {
             onPermissionRequestResult(true);
         }
     }
 
-    public interface PermissionResultListener{
+    public interface PermissionResultListener {
         void onPermissionResult(boolean grant);
     }
 }

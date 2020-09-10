@@ -84,6 +84,7 @@
     <string name="jm_permission_tip_init">需要授权存储空间读写权限，手机权限才能正常使用</string>
     <string name="jm_permission_tip_float">需要授权显示在其他应用上层才能正常使用</string>
     <string name="jm_confirm">确定</string>
+    <string name="jm_permission">去授权</string>
     <string name="jm_permission_dialog_title">温馨提示</string>
     <string name="jm_permission_dialog_content">为确保您能正常使用，需开启以下权限，请选择允许/确认，如拒绝可能会导致无法正常使用</string>
     <string name="jm_dialog_title">提示</string>

@@ -151,8 +151,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         // TODO Auto-generated method stub
         parent = contentView.findViewById((AppConfig.resourceId(activity, "parent", "id")));
         right_back =contentView.findViewById((AppConfig.resourceId(activity, "right_back", "id")));
-        
-        
+
+
         mWebview = (WebView) contentView.findViewById(AppConfig.resourceId(activity,
                 "webview", "id"));
         mGifImageView = (GifImageView) contentView.findViewById(AppConfig.resourceId(activity,

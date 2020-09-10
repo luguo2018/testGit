@@ -3,6 +3,7 @@
     android:id="@+id/linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/jmtransparent_background"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -127,12 +128,12 @@
             android:background="@color/jm_exit_dialog_bg" />
 
         <TextView
-            android:id="@+id/dialog_delete"
+            android:id="@+id/confirm_tv"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="@string/jm_confirm"
+            android:text="@string/jm_permission"
             android:textAllCaps="false"
             android:textColor="@color/jmfont_red"
             android:textSize="15sp" />
