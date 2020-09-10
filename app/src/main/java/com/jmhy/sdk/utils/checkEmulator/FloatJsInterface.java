@@ -11,9 +11,13 @@ import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseFloatActivity;
+import com.jmhy.sdk.sdk.Loginout;
+import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatUtils;
+import com.jmhy.sdk.utils.MediaUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.Utils;
+import com.jmhy.sdk.utils.changeAccountUtil;
 
 /**
  * 创建人luow
@@ -59,15 +63,17 @@ public class FloatJsInterface {
     }
 
 	/**
-	 * 下载链接
+	 * 下载链接 弃用，暂用于保存图片
 	 * @param url
 	 */
 	@JavascriptInterface
 	public void JavascriptToDown(String url){
-		
-		Intent viewIntent = new Intent("android.intent.action.VIEW",
-				Uri.parse(url));
-		activity.startActivity(viewIntent);
+		MediaUtils.saveImage(activity, MediaUtils.getBitmap(url));
+		DialogUtils.showTip(activity,AppConfig.getString(activity, "float_snapshot_save"));
+
+//		Intent viewIntent = new Intent("android.intent.action.VIEW",
+//				Uri.parse(url));
+//		activity.startActivity(viewIntent);
 	}
 	@JavascriptInterface
 	public void JavaScriptToJumppassword() {
@@ -90,9 +96,30 @@ public class FloatJsInterface {
 				baseFloatActivity.removeContentView();
 				AppConfig.isShow = false;
 				FloatUtils.destroyFloat();
+
+				AppConfig.skin9_is_switch=true;
+				AppConfig.isswitch=false;
 			}
 		});
 	}
+
+	/**
+	 * 修改游客账密   删除旧帐号  存状态isChangeGuestAccount  调用登录时登新号
+	 */
+	@JavascriptInterface
+	public void JavascriptSetAccount(final String oldAccount, final String newAccount, final String newPassword) {
+		changeAccountUtil.changeAccount(activity,true,oldAccount,newAccount,newPassword,"");
+	}
+
+	/**
+	 * 修改密码 改完旧的帐号列表中改账号token登录不上  先删除该帐号  存状态isChangeGuestAccount  调用登录时用新设置的账号密码
+	 */
+	@JavascriptInterface
+	public void JavascriptChangePassword(final String account, final String password) {
+		changeAccountUtil.changeAccount(activity,true,account,account,password,"");
+	}
+
+
 	/**
 	 * 跳转浏览器
 	 */

@@ -41,11 +41,14 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private int mWbeHeight;
     public boolean notice;
     public boolean protocol;
-    private View right_back;
+    private View right_back,back_view;
     private boolean isShowKeyboard;
     private int reduceHeight;
-    public FloatUserInfoActivity(Activity activity) {
+    private CloseFloatListener closeFloatListener;
+
+    public FloatUserInfoActivity(Activity activity,CloseFloatListener listener) {
         super(activity);
+        this.closeFloatListener=listener;
     }
 
     @Override
@@ -151,13 +154,20 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         // TODO Auto-generated method stub
         parent = contentView.findViewById((AppConfig.resourceId(activity, "parent", "id")));
         right_back =contentView.findViewById((AppConfig.resourceId(activity, "right_back", "id")));
-
+        back_view =contentView.findViewById((AppConfig.resourceId(activity, "back_view", "id")));
+        if (back_view!=null){
+            back_view.setOnClickListener(this);
+        }
 
         mWebview = (WebView) contentView.findViewById(AppConfig.resourceId(activity,
                 "webview", "id"));
         mGifImageView = (GifImageView) contentView.findViewById(AppConfig.resourceId(activity,
                 "gif", "id"));
         switch (AppConfig.skin) {
+            case 9:
+                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_9",
+                        "drawable"));
+                break;
             case 8:
                 mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
                         "drawable"));
@@ -250,7 +260,9 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         });
 
         parent.setOnClickListener(this);
-        right_back.setOnClickListener(this);
+        if (AppConfig.skin==9){//皮肤9的右侧返回键
+            right_back.setOnClickListener(this);
+        }
         mWebview.setWebChromeClient(new WebChromeClient() {
             public void openFileChooser(ValueCallback<Uri> valueCallback) {
                 uploadMessage = valueCallback;
@@ -270,20 +282,22 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 
                 //h5文件选择回调，监听类型传对应格式打开文件选择器
                 ArrayList fileType = new ArrayList();
-                for (int i = 0; i < fileChooserParams.getAcceptTypes().length; i++) {
-                    Log.i(TAG, "查看webview打开文件选择器的文件类型：" + fileChooserParams.getAcceptTypes()[i]);
-                    if (fileChooserParams.getAcceptTypes()[i].equals("image/png")) {
-                        fileType.add(MimeType.IMAGE);
-                    } else if (fileChooserParams.getAcceptTypes()[i].equals("video/mp4")) {
-                        fileType.add(MimeType.VEDIO);
-                    } else if (fileChooserParams.getAcceptTypes()[i].equals("application/msword")) {
-                        fileType.add(MimeType.DOC);
-                        fileType.add(MimeType.DOCX);
-                        fileType.add(MimeType.PDF);
-                        fileType.add(MimeType.PPT);
-                        fileType.add(MimeType.PPTX);
-                        fileType.add(MimeType.XLS);
-                        fileType.add(MimeType.XLSX);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    for (int i = 0; i < fileChooserParams.getAcceptTypes().length; i++) {
+                        Log.i(TAG, "查看webview打开文件选择器的文件类型：" + fileChooserParams.getAcceptTypes()[i]);
+                        if (fileChooserParams.getAcceptTypes()[i].equals("image/png")) {
+                            fileType.add(MimeType.IMAGE);
+                        } else if (fileChooserParams.getAcceptTypes()[i].equals("video/mp4")) {
+                            fileType.add(MimeType.VEDIO);
+                        } else if (fileChooserParams.getAcceptTypes()[i].equals("application/msword")) {
+                            fileType.add(MimeType.DOC);
+                            fileType.add(MimeType.DOCX);
+                            fileType.add(MimeType.PDF);
+                            fileType.add(MimeType.PPT);
+                            fileType.add(MimeType.PPTX);
+                            fileType.add(MimeType.XLS);
+                            fileType.add(MimeType.XLSX);
+                        }
                     }
                 }
                 Log.i("测试webV文件打开格式", "类型" + fileType);
@@ -330,8 +344,21 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             }
         } else if (v.getId() ==AppConfig.resourceId(activity, "right_back", "id")) {
             removeContentView();
+            closeFloatListener.closeFloat();
         } else if (v.getId() ==AppConfig.resourceId(activity, "parent", "id") ) {
 
+        } else if (v.getId() ==AppConfig.resourceId(activity, "back_view", "id") ) {
+            if (AppConfig.skin==9){//皮肤9点背景层关闭浮窗
+                removeContentView();
+                closeFloatListener.closeFloat();
+            }
         }
+    }
+
+
+    public interface CloseFloatListener {
+
+        void closeFloat();
+
     }
 }

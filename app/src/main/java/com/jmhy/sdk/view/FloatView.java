@@ -9,20 +9,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
@@ -33,7 +30,6 @@ import android.widget.Toast;
 
 import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.activity.JmCommunityActivity;
-import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.utils.DisplayUtil;
@@ -67,6 +63,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private boolean mIsRight = false;// logo是否在右边
     private boolean mCanHide;// 是否允许隐藏
+    private boolean showFloatLogo;// 显示浮标
     private float mTouchStartX;
     private float mTouchStartY;
     private int mScreenWidth;
@@ -130,8 +127,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         kefuTip.setVisibility(VISIBLE);
                     }
 
-
-                    Log.i("测试日志", "轮询，显示toast");
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
                     layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
 
@@ -155,9 +150,13 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     }
 
     public void setRedDotState() {
-        Message message = mTimerHandler.obtainMessage();
-        message.what = SHOW_KEFU_FLOAT;
-        mTimerHandler.sendMessage(message);
+        Log.i("查看","浮窗展示"+ showFloatLogo);
+        if (showFloatLogo){
+            Message message = mTimerHandler.obtainMessage();
+            message.what = SHOW_KEFU_FLOAT;
+            mTimerHandler.sendMessage(message);
+        }
+
     }
 
     private void init(Context context) {
@@ -546,6 +545,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * 隐藏悬浮窗
      */
     public void hide() {
+        showFloatLogo = false;
         setVisibility(View.GONE);
         Message message = mTimerHandler.obtainMessage();
         message.what = HANDLER_TYPE_HIDE_LOGO;
@@ -558,7 +558,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      */
     public void show() {
         Log.i(TAG, "显示悬浮窗...");
-
+        showFloatLogo = true;
         try {
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
