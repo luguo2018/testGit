@@ -18,6 +18,10 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
     protected LinearLayout.LayoutParams lp;
     protected boolean isShow;
 
+    public BaseFloatActivity(Activity activity) {
+        this.activity = activity;
+    }
+
     /**
      * 设置布局动态添加
      *
@@ -34,12 +38,14 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
         if (activity != null && contentView != null && !isShow) {
             activity.addContentView(contentView, lp);
         } else {
-            Toast.makeText(activity,"正在显示或者Activity为null",Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "正在显示或者Activity为null", Toast.LENGTH_LONG).show();
         }
     }
-    public boolean isShow(){
+
+    public boolean isShow() {
         return isShow;
     }
+
     /**
      * 获取根布局
      *
@@ -58,13 +64,13 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
      *
      * @param url web链接
      */
-    public abstract void setViews(Activity activity, @Nullable String url);
+    public abstract void setViews( @Nullable String url);
 
     /**
      * 移除布局
      */
-    public  void removeContentView(){
-            isShow=false;
+    public void removeContentView() {
+        isShow = false;
     }
 
     /**

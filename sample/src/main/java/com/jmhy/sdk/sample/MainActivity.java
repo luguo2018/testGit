@@ -1,6 +1,7 @@
 package com.jmhy.sdk.sample;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -116,7 +117,8 @@ public class MainActivity extends Activity {
         Log.i("jimi测试","刘海屏高度："+utils.getNotchHigth());
         Log.i("jimi测试", AppUtils.dp2px(this,375)+"------"+ AppUtils.dp2px(this,315));
         try {   //BuildConfig.APPLICATION_ID   当前应用包名
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+//            PackageInfo packageInfo = getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(this.getPackageName(), PackageManager.GET_SIGNATURES);
             String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
             Log.e("获取应用签名", BuildConfig.APPLICATION_ID + "---:" + signValidString);
         } catch (Exception e) {
@@ -142,6 +144,7 @@ public class MainActivity extends Activity {
         mBtnloginout = (Button)findViewById(R.id.loginout);
         mRoleLayout = findViewById(R.id.role_ll);
         force_exit = findViewById(R.id.force_exit);
+
         /************************
          *    初始化接口调用        *
          *   接口在主线程调用哦^_^  *
