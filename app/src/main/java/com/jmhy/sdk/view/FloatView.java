@@ -719,10 +719,12 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 //            mContext.startActivity(intent);
 //        }
         if(floatUserInfoActivity==null){
-            floatUserInfoActivity = new FloatUserInfoActivity((Activity) mContext);
-            floatUserInfoActivity.setViews(url);
+            floatUserInfoActivity = FloatUserInfoActivity.getInstance();
+            floatUserInfoActivity.setViews((Activity) mContext,url);
+            floatUserInfoActivity.show();
         }else {
-            floatUserInfoActivity.setViews(url);
+            floatUserInfoActivity.setViews((Activity) mContext,url);
+            floatUserInfoActivity.show();
         }
     }
     private PopupWindow popupWindow;

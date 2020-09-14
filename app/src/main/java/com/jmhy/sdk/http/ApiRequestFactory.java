@@ -137,7 +137,8 @@ public class ApiRequestFactory {
 			postParams.add(new BasicNameValuePair("sign", md5ResultString));
 	
 		    urlBuilderData.append("sign=").append(md5ResultString);
-
+			Log.e("TAG", "md5Str: "+md5Str.toString());
+			Log.e("TAG", "md5ResultString: "+md5ResultString);
 			Log.d("JiMiSDK", "params: " + urlBuilderData.toString());
 		
 		    String data = null;

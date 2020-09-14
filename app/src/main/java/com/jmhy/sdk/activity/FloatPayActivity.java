@@ -37,18 +37,28 @@ public class FloatPayActivity extends BaseFloatActivity {
     private View parent;
     private FloatJspayInterface jspayInterface;
 
-    public FloatPayActivity(Activity activity) {
-        super(activity);
+    public FloatPayActivity( ) {
     }
 
     @Override
-    public void setViews(@Nullable String url) {
+    public void setViews(Activity activity,@Nullable String url) {
+        this.activity=activity;
         if (contentView != null) {
             return;
         }
         murl = url;
         setContentView(AppConfig.resourceId(activity, "jmuserp", "layout"));
         intView();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    public boolean isShow() {
+        return super.isShow();
     }
 
     @Override
@@ -199,6 +209,7 @@ public class FloatPayActivity extends BaseFloatActivity {
 
     @Override
     public void removeContentView() {
+        super.removeContentView();
         if (contentView != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override

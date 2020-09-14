@@ -6,11 +6,16 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.jmhy.sdk.BuildConfig;
+import com.jmhy.sdk.bean.InitInfo;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.http.OkHttpException;
+import com.jmhy.sdk.http.ResponseCallback;
+import com.jmhy.sdk.http.OkHttpManager;
+import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.model.InitExt;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.Utils;
@@ -125,9 +130,27 @@ public class JmhyApi {
 		paramsdata.put("ext_data", ext_data);
 		HashmapToJson toJson = new HashmapToJson();
 		params.put("context", toJson.toJson(paramsdata));
+		HashMap<String, String> p = new HashMap<>();
+		p.put("access_token", "");
+		p.put("apkSign", signValidString);
+		p.put("time", (String) params.get("time"));
+		p.put("context",toJson.toJson(paramsdata));
+		OkHttpManager.getInstance().postRequest(WebApi.ACTION_INIT, p, new ResponseCallback<Result<InitInfo>>() {
 
-		return WebApi.startThreadRequest(WebApi.ACTION_INIT, listener, params,
-				appKey);
+			@Override
+			public void onSuccess(Result<InitInfo> initInfoResult) {
+				Log.d("TAG", "onSuccess() called with: initInfoResult = [" + initInfoResult.toString() + "]");
+			}
+
+			@Override
+			public void onFailure(OkHttpException e) {
+
+			}
+		});
+		return null;
+//
+//		return WebApi.startThreadRequest(WebApi.ACTION_INIT, listener, params,
+//				appKey);
 	}
 
 	/**

@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.OkHttpManager;
 import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
 import com.jmhy.sdk.utils.MimeType;
@@ -44,17 +45,24 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private View right_back;
     private boolean isShowKeyboard;
     private int reduceHeight;
-    public FloatUserInfoActivity(Activity activity) {
-        super(activity);
-    }
 
+    private FloatUserInfoActivity() {
+    }
+    private static class SingletonHolder {
+        private static final FloatUserInfoActivity INSTANCE = new FloatUserInfoActivity();
+    }
+    public static FloatUserInfoActivity getInstance(){
+        return SingletonHolder.INSTANCE;
+    }
     @Override
     public void setContentView(@NonNull int layout_id) {
         super.setContentView(layout_id);
     }
 
+
     @Override
-    public void setViews(String url) {
+    public void setViews(final Activity activity, String url) {
+        this.activity =activity;
         if(contentView!=null){
             return;
         }
@@ -94,6 +102,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 
     @Override
     public void removeContentView() {
+        super.removeContentView();
+
         if (contentView != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -116,6 +126,16 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             });
 
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    public boolean isShow() {
+        return super.isShow();
     }
 
     private void intView() {

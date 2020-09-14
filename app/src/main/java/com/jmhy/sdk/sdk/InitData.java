@@ -30,7 +30,7 @@ public class InitData {
 
 	private InitListener listener;
 	private Context context;
-	private ApiAsyncTask iniTask; // 初始化
+	//private ApiAsyncTask iniTask; // 初始化
 
 	private String ver_id;
 	private Seference seference;
@@ -61,7 +61,8 @@ public class InitData {
 		ext.isEmu = Utils.isEmulator(context);
 		ext.isEmu2 = Utils.checkIsRunningInEmulator(context);
 		ext.isHasSimCard = Utils.ishasSimCard(context);
-		iniTask = JmhyApi.get().startInit(context, AppConfig.appId,
+//		iniTask =
+				JmhyApi.get().startInit(context, AppConfig.appId,
 				AppConfig.appKey, ver_id, ext, new ApiRequestListener() {
 					@Override
 					public void onSuccess(Object obj) {

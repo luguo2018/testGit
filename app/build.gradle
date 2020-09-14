@@ -42,6 +42,9 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs\\huosdk-gson-2.8.2.jar')
+    implementation files('libs\\huosdk-union-okhttp-3.4.1.jar')
+    implementation files('libs\\huosdk-union-okio-1.11.0.jar')
     testImplementation 'junit:junit:4.12'
     api files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 //    implementation 'com.android.support:appcompat-v7:27.1.1'

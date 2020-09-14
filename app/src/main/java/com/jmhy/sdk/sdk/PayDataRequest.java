@@ -141,10 +141,12 @@ public class PayDataRequest {
 //        intent.setClass(mContext, JmpayActivity.class);
 //        mContext.startActivity(intent);
         if(floatPayActivity==null){
-            floatPayActivity = new FloatPayActivity((Activity) mContext);
-            floatPayActivity.setViews(url);
+            floatPayActivity = new FloatPayActivity();
+            floatPayActivity.setViews((Activity) mContext,url);
+            floatPayActivity.show();
         }else {
-            floatPayActivity.setViews(url);
+            floatPayActivity.setViews((Activity) mContext,url);
+            floatPayActivity.show();
         }
     }
 
