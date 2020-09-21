@@ -22,7 +22,7 @@ import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.LoginMessageinfo;
-import com.jmhy.sdk.model.Registermsg;
+import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.UserInfo;

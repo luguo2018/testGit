@@ -57,15 +57,15 @@ public class ApiResponseFactory {
 		try {
 			Log.i("kk", "data"+data);
 			if (webApi.equals(WebApi.ACTION_INIT)) {
-				result = JSONParse.parseInitMsg(data);
+//				result = JSONParse.parseInitMsg(data);
 			}else if (webApi.equals(WebApi.ACTION_USERREGISTER)) {
-				result = JSONParse.parseuserRegister(data);
+//				result = JSONParse.parseuserRegister(data);
 			}else if (webApi.equals(WebApi.ACTION_SMS)) {
 				result = JSONParse.parseRequestSMS(data);
 			}else if (webApi.equals(WebApi.ACTION_PHONE_LOGIN)) {
 				result = JSONParse.parseMobilelogin(data);
 			}else if (webApi.equals(WebApi.ACTION_PHONE_REGISTER)) {
-				result = JSONParse.parseuserRegister(data);
+//				result = JSONParse.parseuserRegister(data);
 			}else if (webApi.equals(WebApi.ACTION_AUTOLOGIN)) {
 				result = JSONParse.parseAutologin(data);
 			}else if (webApi.equals(WebApi.ACTION_USRRLOGIN)) {

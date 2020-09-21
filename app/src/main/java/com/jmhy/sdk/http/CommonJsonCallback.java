@@ -29,9 +29,7 @@ public class CommonJsonCallback<T> implements Callback {
     protected final int ERROR = 1; //网络失败
     protected final int JSON_ERROR = -2; //解析失败
     protected final int OTHER_ERROR = 44000; //未知错误
-    protected final int TOKEN_ERROR = 44001; //未知错误
-    protected final int SIGN_ERROR = 44002; //未知错误
-    protected final int SUCCESS = 0; //未知错误
+    protected final int SUCCESS = 0; //成功
     private Handler mDeliveryHandler; //进行消息的转发
     private ResponseCallback<T> mListener;
     protected final String ERROR_MSG = "message";
@@ -90,7 +88,7 @@ public class CommonJsonCallback<T> implements Callback {
                     mListener.onFailure(new OkHttpException(JSON_ERROR, JSON_MSG));
                 }
             } else { //将服务端返回的异常回调到应用层去处理
-                mListener.onFailure(new OkHttpException(OTHER_ERROR, result.get(ERROR_MSG) + ""));
+                mListener.onFailure(new OkHttpException(result.getInt(RESULT_CODE), result.get(ERROR_MSG) + ""));
                 Log.e("TAG", "onResponse处理失败");
             }
         } catch (Exception e) {

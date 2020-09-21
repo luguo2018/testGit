@@ -3,6 +3,8 @@ package com.jmhy.sdk.http;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.huosdk.huounion.sdk.okhttp3.OkHttpClient;
 import com.huosdk.huounion.sdk.okhttp3.Request;
 import com.jmhy.sdk.utils.OkHttpUtils;
@@ -43,13 +45,14 @@ public class OkHttpManager {
      * @param parameter
      * @param callback
      */
-    public void postRequest(@NonNull String url, @NonNull HashMap<String, String> parameter, final ResponseCallback callback) {
+    public Call postRequest(@NonNull String url, @NonNull HashMap<String, String> parameter, final ResponseCallback callback) {
 
         Request request = new Request.Builder()
                 .url(url)
                 .post(OkHttpUtils.hasMapToRequestBody(parameter))
                 .build();
-        okHttpClient.newCall(request).enqueue(new CommonJsonCallback(handler, callback));
-
+        Call  call=  okHttpClient.newCall(request);
+        call.enqueue(new CommonJsonCallback(handler, callback));
+        return call;
     }
 }

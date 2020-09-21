@@ -13,18 +13,20 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.model.MobileUser;
-import com.jmhy.sdk.model.Registermsg;
+import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 
 public class JmSetpwd4Fragment extends JmBaseFragment implements OnClickListener {
 
-	private ApiAsyncTask mRegisterTask;
+	private Call mRegisterTask;
 
 	// 吉米
 	private ImageView mIvvisitor;
@@ -40,31 +42,6 @@ public class JmSetpwd4Fragment extends JmBaseFragment implements OnClickListener
 	private String code;
 	private String code_area;
 	private View contentView;
-
-	private Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			if(getActivity() == null || getActivity().isFinishing()){
-				return;
-			}
-			switch (msg.what) {
-			case AppConfig.FLAG_FAIL:
-				String resultmsg = (String) msg.obj;
-				showMsg(resultmsg);
-				break;
-			case AppConfig.REGISTER_SUCCESS:
-
-				Registermsg registermsg = (Registermsg) msg.obj;
-
-				toAutologin(registermsg);
-
-				getActivity().finish();
-
-			}
-		}
-	};
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -182,37 +159,26 @@ public class JmSetpwd4Fragment extends JmBaseFragment implements OnClickListener
 
 	//手机号注册
 	public void getMobileRegister( final String password){
-		 mRegisterTask = JmhyApi.get().startMobileRegister(getActivity(), AppConfig.appKey,
-				 user, password, mobile, code, code_area, new ApiRequestListener() {
-					
+		mRegisterTask = JmhyApi.get().startMobileRegister(
+				user, password, mobile, code, code_area, new ApiRequestListener() {
+
 					@Override
 					public void onSuccess(Object obj) {
-						// TODO Auto-generated method stub
-						if(obj!=null){
-						Registermsg registermsg = (Registermsg)obj;
-						if(registermsg.getCode().equals("0")){
+						Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
+						Registermsg registermsg = registermsgResult.data;
 						//	Log.i("kk","Auto"+registermsg.getAuto_login_token());
-							mSeference.saveAccount(user, "~~test",
-									registermsg.getAuto_login_token());
-							AppConfig.saveMap(user, "~~test",
-									registermsg.getAuto_login_token());
-							sendData(AppConfig.REGISTER_SUCCESS, obj,
-									handler);
-							
-						}else{
-							sendData(AppConfig.FLAG_FAIL, registermsg.getMessage(),
-									handler);
-						}
-						}else{
-							sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(getActivity(), "http_rror_msg"),
-									handler);
-						}
+						mSeference.saveAccount(user, "~~test",
+								registermsg.getAuto_login_token());
+						AppConfig.saveMap(user, "~~test",
+								registermsg.getAuto_login_token());
+						toAutologin(registermsg);
+						getActivity().finish();
 					}
-					
+
 					@Override
 					public void onError(int statusCode) {
-						// TODO Auto-generated method stub
-						sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"), handler);
+						showMsg(statusCode+"");
+
 					}
 				});
 		
@@ -229,7 +195,7 @@ public class JmSetpwd4Fragment extends JmBaseFragment implements OnClickListener
 	@Override
 	public void onDestroy() {
 		if(mRegisterTask != null){
-			mRegisterTask.cancel(false);
+			mRegisterTask.cancel();
 		}
 
 		super.onDestroy();

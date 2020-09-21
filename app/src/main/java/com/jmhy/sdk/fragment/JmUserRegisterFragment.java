@@ -1,13 +1,15 @@
 package com.jmhy.sdk.fragment;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.Registermsg;
+import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -39,7 +41,7 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
 	private String user;
 	private String password;
 	private Button mBtsubmit;
-	private ApiAsyncTask mRegisterTask;
+	private Call mRegisterTask;
 	private TextView mTvagreement;
 	private ApiAsyncTask mGuestTask;
 	private ImageView mIvkefu;
@@ -242,30 +244,19 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
 	 *            密码
 	 */
 	public void getRegister(final String username, final String password) {
-		mRegisterTask = JmhyApi.get().startRegister(getActivity(),
-				AppConfig.appKey, username, password, new ApiRequestListener() {
+		mRegisterTask = JmhyApi.get().startRegister( username, password, new ApiRequestListener() {
 
 					@Override
 					public void onSuccess(Object obj) {
-						// TODO Auto-generated method stub
-						if (obj != null) {
-							Registermsg registermsg = (Registermsg) obj;
-							if (registermsg.getCode().equals("0")) {
+						Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
+						Registermsg registermsg = registermsgResult.getData();
 
-								mSeference.saveAccount(username, "~~test",
-										registermsg.getAuto_login_token());
-								AppConfig.saveMap(username, "~~test",
-										registermsg.getAuto_login_token());
-								sendData(AppConfig.REGISTER_SUCCESS, obj,
-										handler);
-							} else {
-								sendData(AppConfig.FLAG_FAIL,
-										registermsg.getMessage(), handler);
-							}
-						} else {
-							sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-									getActivity(), "http_rror_msg"), handler);
-						}
+						mSeference.saveAccount(username, "~~test",
+								registermsg.getAuto_login_token());
+						AppConfig.saveMap(username, "~~test",
+								registermsg.getAuto_login_token());
+						sendData(AppConfig.REGISTER_SUCCESS, obj,
+								handler);
 					}
 
 					@Override
@@ -336,7 +327,7 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
 			mGuestTask.cancel(false);
 		}
 		if(mRegisterTask != null){
-			mRegisterTask.cancel(false);
+			mRegisterTask.cancel();
 		}
 
 		super.onDestroy();

@@ -37,12 +37,12 @@ public class FloatPayActivity extends BaseFloatActivity {
     private View parent;
     private FloatJspayInterface jspayInterface;
 
-    public FloatPayActivity( ) {
+    public FloatPayActivity(Activity activity) {
+        super(activity);
     }
 
     @Override
-    public void setViews(Activity activity,@Nullable String url) {
-        this.activity=activity;
+    public void setViews( @Nullable String url) {
         if (contentView != null) {
             return;
         }

@@ -14,6 +14,7 @@ public class InitInfo {
     int is_auto_login_on;
     int is_log_on;
     int is_shm;
+    int is_service_float_on;
     int switch_login;
     int skin;
     String h5_game_url;
@@ -32,6 +33,23 @@ public class InitInfo {
     JSONObject moblie_direct_login;
     int icon_skin;
     String hgu;
+
+    public JSONObject getChannel_sdk_list() {
+        return channel_sdk_list;
+    }
+
+    public void setChannel_sdk_list(JSONObject channel_sdk_list) {
+        this.channel_sdk_list = channel_sdk_list;
+    }
+
+    JSONObject channel_sdk_list;
+    public int getIs_service_float_on() {
+        return is_service_float_on;
+    }
+
+    public void setIs_service_float_on(int is_service_float_on) {
+        this.is_service_float_on = is_service_float_on;
+    }
 
 
     public int getIs_sdk_float_on() {

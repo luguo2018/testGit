@@ -1,18 +1,23 @@
 apply plugin: 'com.android.library'
 
 
-
 android {
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
 
 
-        defaultConfig {
+    defaultConfig {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            //热修复支持五种
+            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
+        }
     }
 
     compileOptions {
@@ -45,8 +50,12 @@ dependencies {
     implementation files('libs\\huosdk-gson-2.8.2.jar')
     implementation files('libs\\huosdk-union-okhttp-3.4.1.jar')
     implementation files('libs\\huosdk-union-okio-1.11.0.jar')
+    implementation files('libs\\alicloud-android-hotfix-3.2.15.jar')
+    implementation files('libs\\alicloud-android-ut-5.4.3.jar')
+    implementation files('libs\\alicloud-android-utdid-2.5.1-proguard.jar')
+    implementation files('libs\\alicloud-android-utils-1.1.6.4.jar')
     testImplementation 'junit:junit:4.12'
-    api files ('libs/RangersAppLog-Lite-cn-3.3.12.aar')
+    api files('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 //    implementation 'com.android.support:appcompat-v7:27.1.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -54,7 +63,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
-task assembleJar(type:Jar, dependsOn: "assembleRelease") {
+task assembleJar(type: Jar, dependsOn: "assembleRelease") {
     from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
     destinationDir = file('build/libs')
     //输出的jar路径
@@ -71,7 +80,7 @@ task assembleJar(type:Jar, dependsOn: "assembleRelease") {
 }
 
 
-task assembleJrttJar(type:Jar, dependsOn: "assembleRelease") {
+task assembleJrttJar(type: Jar, dependsOn: "assembleRelease") {
     from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
     destinationDir = file('build/libs')
     archiveName = 'jrtt.jar'
@@ -83,7 +92,7 @@ task assembleJrttJar(type:Jar, dependsOn: "assembleRelease") {
     include "com/jmhy/sdk/statistics/JrttStatistics.class"
 }
 
-task assembleMiitHelperJar(type:Jar, dependsOn: "assembleRelease") {
+task assembleMiitHelperJar(type: Jar, dependsOn: "assembleRelease") {
     from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
     destinationDir = file('build/libs')
     archiveName = 'MiitHelper.jar'
@@ -113,20 +122,22 @@ def releaseTime() {
 }
 
 task clearJar(type: Delete) {//删除原来的jar包
-    delete 'libs/sdk.jar'}
+    delete 'libs/sdk.jar'
+}
 
 task makeJar(type: Jar) {
     from file('build/intermediates/javac/release/compileReleaseJavaWithJavac/classes')
     archiveName = 'temp.jar'
     destinationDir = file('build/outputs')
     //过滤不需要的class，防止使用的时候出现dex错误
-     exclude "**/**/BuildConfig.class"
+    exclude "**/**/BuildConfig.class"
     exclude "**/**/BuildConfig\$*.class"
     exclude "**/R.class"
     exclude "**/R\$*.class"    //指定打包的class，前面为包名
     //只导入资源路径集下的部分资源
-    include "com/**/*.class"}
-   makeJar.dependsOn(build)
+    include "com/**/*.class"
+}
+makeJar.dependsOn(build)
 
 //混淆jar
 task proguard(dependsOn: ['makeJar'], type: proguard.gradle.ProGuardTask) {

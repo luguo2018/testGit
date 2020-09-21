@@ -34,12 +34,20 @@ android {
         debug {
             signingConfig signingConfigs.release
             minifyEnabled false
+            versionNameSuffix '1.0'
+            jniDebuggable false
+            renderscriptDebuggable false
+            renderscriptOptimLevel 3
+            debuggable true
         }
 
         release {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
         }
     }
 
