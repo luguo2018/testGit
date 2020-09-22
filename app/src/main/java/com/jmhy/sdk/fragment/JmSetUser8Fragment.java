@@ -21,7 +21,7 @@ import com.jmhy.sdk.activity.PermissionActivity;
 import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.model.Guest;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.utils.MediaUtils;
 import com.jmhy.sdk.utils.Utils;
 

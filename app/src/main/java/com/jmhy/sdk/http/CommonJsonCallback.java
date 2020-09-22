@@ -77,7 +77,10 @@ public class CommonJsonCallback<T> implements Callback {
                  */
                 Gson gson = new GsonBuilder().serializeNulls().create();
                 T obj = null;
-                if (!mListener.mType.getClass().equals("java.lang.Class")) {
+                String classType = mListener.getClass().getGenericSuperclass()+"";
+                Log.e("TAG", "handleResponse: classType"+classType);
+
+                if (!classType.contains("java.lang.String")) {
                     obj = gson.fromJson((String) responseObj, mListener.mType);
                 } else {
                     obj = (T) responseObj;

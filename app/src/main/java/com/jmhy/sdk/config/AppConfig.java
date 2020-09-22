@@ -2,7 +2,7 @@ package com.jmhy.sdk.config;
 
 import android.content.Context;
 
-import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.bean.PayData;
 
 import org.json.JSONObject;
 

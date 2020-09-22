@@ -27,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
-import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.adapter.UserAdapter;
 import com.jmhy.sdk.adapter.UserAdapter.InnerItemOnclickListener;
@@ -35,8 +34,7 @@ import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.LoginMessage;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Seference;
@@ -77,7 +75,7 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
     List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
     private UserAdapter mUserAdapter;
 
-    private ApiAsyncTask mGuestTask;
+    private Call mGuestTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -178,34 +176,6 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
                     popupWindow.showAtLocation(mIuserlist, Gravity.NO_GRAVITY, x, y);
                     mIuserlist.setImageResource(AppConfig.resourceId(getActivity(), "jm_urpullup_new", "drawable"));
                     break;
-                case AppConfig.GUEST_lOGIN_SUCCESS:
-                    Guest guest = (Guest) msg.obj;
-                    String murl = Utils
-                            .toBase64url(guest.getShow_url_after_login());
-
-                    if (!TextUtils.isEmpty(guest.getUpass())) {
-                        Bundle args = new Bundle();
-                        // Log.i("kk",mobileUser.getMoblie())
-                        args.putString("username", guest.getUname());
-                        args.putString("upass", guest.getUpass());
-                        args.putString("msg", guest.getMessage());
-                        args.putString("gametoken", guest.getGame_token());
-                        args.putString("openid", guest.getOpenid());
-                        args.putString("url", murl);
-                        Fragment mJmSetUserFragment = FragmentUtils.getJmSetUserFragment(getActivity(), args);
-                        addFragmentToActivity(getFragmentManager(),
-                                mJmSetUserFragment, AppConfig.resourceId(
-                                        getActivity(), "content", "id"));
-                    } else {
-
-                        wrapaLoginInfo("success", guest.getMessage(),
-                                guest.getUname(), guest.getOpenid(),
-                                guest.getGame_token());
-
-                        turnToNotice(murl);
-                        getActivity().finish();
-                    }
-                    break;
             }
         }
     };
@@ -226,13 +196,13 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
                         loginInfo.getUname(),
                         loginInfo.getOpenid(),
                         loginInfo.getGame_token());
-				showUserMsg(loginInfo.getUname());
-				AppConfig.USERURL = Utils.toBase64url(loginInfo
-						.getFloat_url_user_center());
-				String url = Utils
-						.toBase64url(loginInfo.getShow_url_after_login());
-				turnToNotice(url);
-				getActivity().finish();
+                showUserMsg(loginInfo.getUname());
+                AppConfig.USERURL = Utils.toBase64url(loginInfo
+                        .getFloat_url_user_center());
+                String url = Utils
+                        .toBase64url(loginInfo.getShow_url_after_login());
+                turnToNotice(url);
+                getActivity().finish();
             }
 
             @Override
@@ -499,17 +469,17 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
                         "~~test", loginInfo.getLogin_token());
                 Utils.saveUserToSd(getActivity());
                 wrapaLoginInfo("success",
-						"登录成功",
-						loginInfo.getUname(),
-						loginInfo.getOpenid(),
-						loginInfo.getGame_token());
-				showUserMsg(loginInfo.getUname());
-				AppConfig.USERURL = Utils.toBase64url(loginInfo
-						.getFloat_url_user_center());
-				String url = Utils
-						.toBase64url(loginInfo.getShow_url_after_login());
-				turnToNotice(url);
-				getActivity().finish();
+                        "登录成功",
+                        loginInfo.getUname(),
+                        loginInfo.getOpenid(),
+                        loginInfo.getGame_token());
+                showUserMsg(loginInfo.getUname());
+                AppConfig.USERURL = Utils.toBase64url(loginInfo
+                        .getFloat_url_user_center());
+                String url = Utils
+                        .toBase64url(loginInfo.getShow_url_after_login());
+                turnToNotice(url);
+                getActivity().finish();
             }
 
             @Override
@@ -532,24 +502,36 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
 
                     @Override
                     public void onSuccess(Object obj) {
-                        // TODO Auto-generated method stub
-                        if (obj != null) {
-                            Guest guest = (Guest) obj;
-                            if (guest.getCode().equals("0")) {
-                                mSeference.saveAccount(guest.getUname(),
-                                        "~~test", guest.getLogin_token());
-                                AppConfig.saveMap(guest.getUname(), "~~test",
-                                        guest.getLogin_token());
-                                Utils.saveUserToSd(getActivity());
-                                sendData(AppConfig.GUEST_lOGIN_SUCCESS, obj,
-                                        handler);
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL,
-                                        guest.getMessage(), handler);
-                            }
+                        Guest guest = (Guest) obj;
+                        mSeference.saveAccount(guest.getUname(),
+                                "~~test", guest.getLogin_token());
+                        AppConfig.saveMap(guest.getUname(), "~~test",
+                                guest.getLogin_token());
+                        Utils.saveUserToSd(getActivity());
+                        String murl = Utils
+                                .toBase64url(guest.getShow_url_after_login());
+
+                        if (!TextUtils.isEmpty(guest.getUpass())) {
+                            Bundle args = new Bundle();
+                            // Log.i("kk",mobileUser.getMoblie())
+                            args.putString("username", guest.getUname());
+                            args.putString("upass", guest.getUpass());
+                            args.putString("msg", "登录成功");
+                            args.putString("gametoken", guest.getGame_token());
+                            args.putString("openid", guest.getOpenid());
+                            args.putString("url", murl);
+                            Fragment mJmSetUserFragment = FragmentUtils.getJmSetUserFragment(getActivity(), args);
+                            addFragmentToActivity(getFragmentManager(),
+                                    mJmSetUserFragment, AppConfig.resourceId(
+                                            getActivity(), "content", "id"));
                         } else {
-                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                                    getActivity(), "http_rror_msg"), handler);
+
+                            wrapaLoginInfo("success", "登录成功",
+                                    guest.getUname(), guest.getOpenid(),
+                                    guest.getGame_token());
+
+                            turnToNotice(murl);
+                            getActivity().finish();
                         }
                     }
 
@@ -583,7 +565,7 @@ public class JmUserLogin3Fragment extends JmBaseFragment implements
     @Override
     public void onDestroy() {
         if (mGuestTask != null) {
-            mGuestTask.cancel(false);
+            mGuestTask.cancel();
         }
         if (mLoginTask != null) {
             mLoginTask.cancel();

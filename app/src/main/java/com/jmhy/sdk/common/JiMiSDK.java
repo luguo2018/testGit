@@ -8,7 +8,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Handler;
@@ -25,8 +24,7 @@ import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
-import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
 import com.jmhy.sdk.push.PushService;
@@ -39,7 +37,6 @@ import com.jmhy.sdk.sdk.RoleinfoRequest;
 import com.jmhy.sdk.sdk.StatisticsSDK;
 import com.jmhy.sdk.utils.ActivityStackManager;
 import com.jmhy.sdk.utils.ConfigUtils;
-import com.jmhy.sdk.utils.DealCrash;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.MiitHelper;
@@ -47,10 +44,7 @@ import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.StatisticsSDKUtils;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.view.Exitdialog;
-import com.jmhy.sdk.view.Exitdialog.ExitDialogListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -315,7 +309,7 @@ public class JiMiSDK {
 	public static void payment(Activity activity, PayData payData,
 							   ApiListenerInfo listener) {
 		apiListenerInfo = listener;
-		String url = Utils.toBase64url(payData.getOcontent());
+		String url = Utils.toBase64url(payData.getO_content());
 		PayDataRequest.turnToIntent(activity, url);
 	}
 
@@ -489,7 +483,6 @@ public class JiMiSDK {
 					activity.stopService(intentFour);
 
 					FloatUtils.destroyFloat();
-					WebApi.shutdown();
 					statisticsSDK.onExit();
 					exitlistener.ExitSuccess("success");
 				}

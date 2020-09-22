@@ -1,8 +1,6 @@
 package com.jmhy.sdk.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,10 +15,9 @@ import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.Result;
-import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.bean.MobileUser;
 import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 

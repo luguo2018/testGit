@@ -7,13 +7,12 @@ import org.json.JSONObject;
 
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseResponse;
-import com.jmhy.sdk.model.Guest;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.model.LoginMessage;
-import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.bean.MobileUser;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.model.OnlineMessage;
-import com.jmhy.sdk.model.PayData;
-import com.jmhy.sdk.bean.Registermsg;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.utils.Utils;
 
 public class JSONParse {
@@ -113,58 +112,54 @@ public class JSONParse {
     public static MobileUser parseMobilelogin(String data) throws JSONException {
         MobileUser mobileUser = new MobileUser();
         JSONObject jsonObject = new JSONObject(data);
-        String code = jsonObject.optString("code");
-        mobileUser.setCode(code);
-        mobileUser.setMessage(jsonObject.optString("message"));
-        if (code.equals("0")) {
-            JSONObject dataObject = jsonObject.optJSONObject("data");
-            mobileUser.setMoblie_code(dataObject.optString("code"));
-            mobileUser.setCode_area(dataObject.optString("code_area"));
-            mobileUser
-                    .setPhone_register(dataObject.optString("phone_register"));
-            mobileUser.setUnname(dataObject.optString("uname"));
-            mobileUser.setMoblie(dataObject.optString("mobile"));
-            mobileUser.setFloat_url_user_center(dataObject
-                    .optString("float_url_user_center"));
-            mobileUser.setFloat_url_home_center(dataObject
-                    .optString("float_url_home_center"));
-            mobileUser.setGame_token(dataObject.optString("game_token"));
-            mobileUser.setLogin_token(dataObject.optString("login_token"));
-            mobileUser.setOpenid(dataObject.optString("openid"));
-            mobileUser.setShow_url_after_login(dataObject
-                    .optString("show_url_after_login"));
-            mobileUser.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
-            mobileUser.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
-            mobileUser.setIs_package_new(dataObject.optString("is_package_new"));
+        JSONObject dataObject = jsonObject.optJSONObject("data");
+        mobileUser.setCode(dataObject.optString("code"));
+        mobileUser.setCode_area(dataObject.optString("code_area"));
+        mobileUser
+                .setPhone_register(dataObject.optString("phone_register"));
+        mobileUser.setUname(dataObject.optString("uname"));
+        mobileUser.setMobile(dataObject.optString("mobile"));
+        mobileUser.setFloat_url_user_center(dataObject
+                .optString("float_url_user_center"));
+        mobileUser.setFloat_url_home_center(dataObject
+                .optString("float_url_home_center"));
+        mobileUser.setGame_token(dataObject.optString("game_token"));
+        mobileUser.setLogin_token(dataObject.optString("login_token"));
+        mobileUser.setOpenid(dataObject.optString("openid"));
+        mobileUser.setShow_url_after_login(dataObject
+                .optString("show_url_after_login"));
+        mobileUser.setFloat_red_recommend(dataObject.optInt("float_red_recommend"));
+        mobileUser.setFloat_url_gift_center(dataObject.optString("float_url_gift_center"));
+        mobileUser.setIs_package_new(dataObject.optString("is_package_new"));
 
-            String url = dataObject.optString("h5_game_url");
-            if (!TextUtils.isEmpty(url)) {
-                AppConfig.loginH5GameUrl = Utils.toBase64url(url);
-            }
-            AppConfig.openid = mobileUser.getOpenid();
-            AppConfig.USERURL = Utils.toBase64url(mobileUser.getFloat_url_user_center());
-            AppConfig.GIFT = Utils.toBase64url(mobileUser.getFloat_url_gift_center());
-            AppConfig.float_url_home_center = Utils.toBase64url(mobileUser.getFloat_url_home_center());
-            if (mobileUser.getFloat_red_recommend() == 1) {
-                AppConfig.showAccountTip = true;
-                AppConfig.showGiftTip = false;
-            } else if (mobileUser.getFloat_red_recommend() == 2) {
-                AppConfig.showAccountTip = false;
-                AppConfig.showGiftTip = true;
-            } else if (mobileUser.getFloat_red_recommend() == 3) {
-                AppConfig.showAccountTip = true;
-                AppConfig.showGiftTip = true;
-            }
-            mobileUser.setShow_set_account(dataObject.optInt("show_set_account"));
-            if (mobileUser.getShow_set_account() == 1) {
-                AppConfig.skin9_show_setAccount = true;
-            }else {
-                AppConfig.skin9_show_setAccount = false;
-            }
+        String url = dataObject.optString("h5_game_url");
+        if (!TextUtils.isEmpty(url)) {
+            AppConfig.loginH5GameUrl = Utils.toBase64url(url);
+        }
+        AppConfig.openid = mobileUser.getOpenid();
+        AppConfig.USERURL = Utils.toBase64url(mobileUser.getFloat_url_user_center());
+        AppConfig.GIFT = Utils.toBase64url(mobileUser.getFloat_url_gift_center());
+        AppConfig.float_url_home_center = Utils.toBase64url(mobileUser.getFloat_url_home_center());
+        if (mobileUser.getFloat_red_recommend() == 1) {
+            AppConfig.showAccountTip = true;
+            AppConfig.showGiftTip = false;
+        } else if (mobileUser.getFloat_red_recommend() == 2) {
+            AppConfig.showAccountTip = false;
+            AppConfig.showGiftTip = true;
+        } else if (mobileUser.getFloat_red_recommend() == 3) {
+            AppConfig.showAccountTip = true;
+            AppConfig.showGiftTip = true;
+        }
+        mobileUser.setShow_set_account(dataObject.optInt("show_set_account"));
+        if (mobileUser.getShow_set_account() == 1) {
+            AppConfig.skin9_show_setAccount = true;
+        } else {
+            AppConfig.skin9_show_setAccount = false;
         }
 
         return mobileUser;
     }
+
     /**
      * 自动登录
      *
@@ -212,7 +207,7 @@ public class JSONParse {
             loginMessage.setShow_set_account(dataObject.optInt("show_set_account"));
             if (loginMessage.getShow_set_account() == 1) {
                 AppConfig.skin9_show_setAccount = true;
-            }else {
+            } else {
                 AppConfig.skin9_show_setAccount = false;
             }
         }
@@ -223,8 +218,6 @@ public class JSONParse {
         Guest mGuest = new Guest();
         JSONObject jsonObject = new JSONObject(data);
         String code = jsonObject.optString("code");
-        mGuest.setCode(code);
-        mGuest.setMessage(jsonObject.optString("message"));
         if (code.equals("0")) {
             JSONObject dataObject = jsonObject.optJSONObject("data");
             mGuest.setGame_token(dataObject.optString("game_token"));
@@ -259,7 +252,7 @@ public class JSONParse {
             mGuest.setShow_set_account(dataObject.optInt("show_set_account"));
             if (mGuest.getShow_set_account() == 1) {
                 AppConfig.skin9_show_setAccount = true;
-            }else {
+            } else {
                 AppConfig.skin9_show_setAccount = false;
             }
         }
@@ -277,15 +270,13 @@ public class JSONParse {
         PayData payData = new PayData();
         JSONObject jsonObject = new JSONObject(data);
         String code = jsonObject.optString("code");
-        payData.setCode(code);
-        payData.setMessage(jsonObject.optString("message"));
         if (code.equals("0")) {
             JSONObject dataObject = jsonObject.optJSONObject("data");
-            payData.setOcontent(dataObject.optString("o_content"));
-            payData.setOtype(dataObject.optString("o_type"));
-            payData.setOrderid(dataObject.optString("order_id"));
-            payData.setRealnameneedeed(dataObject.optString("real_name_needeed"));
-            payData.setCallbackUrl(dataObject.optString("callback_url"));
+//            payData.setOcontent(dataObject.optString("o_content"));
+//            payData.setOtype(dataObject.optString("o_type"));
+//            payData.setOrderid(dataObject.optString("order_id"));
+//            payData.setRealnameneedeed(dataObject.optString("real_name_needeed"));
+//            payData.setCallbackUrl(dataObject.optString("callback_url"));
             long date = dataObject.optLong("user_reg_date");
             payData.setUser_reg_date(String.valueOf(date));
             //payData.setUser_reg_date(dataObject.optString("user_reg_date"));
@@ -301,13 +292,11 @@ public class JSONParse {
         JSONObject jsonObject = new JSONObject(data);
         String code = jsonObject.optString("code");
         String message = jsonObject.optString("message");
-        user.setCode(code);
-        user.setMessage(message);
         if (code.equals("0")) {
             JSONObject dataObject = jsonObject.optJSONObject("data");
 
             user.setOpenid(dataObject.optString("openid"));
-            user.setUnname(dataObject.optString("uname"));
+            user.setUname(dataObject.optString("uname"));
             user.setLogin_token(dataObject.optString("login_token"));
             user.setGame_token(dataObject.optString("game_token"));
             user.setShow_url_after_login(dataObject.optString("show_url_after_login"));
@@ -336,7 +325,7 @@ public class JSONParse {
             user.setShow_set_account(dataObject.optInt("show_set_account"));
             if (user.getShow_set_account() == 1) {
                 AppConfig.skin9_show_setAccount = true;
-            }else {
+            } else {
                 AppConfig.skin9_show_setAccount = false;
             }
         }
@@ -386,8 +375,8 @@ public class JSONParse {
             msg.setShowUrl(dataObject.optString("showUrl", ""));
             msg.setShowMsg(dataObject.optString("showMsg", ""));
             msg.setExit(dataObject.optInt("exit"));
-            msg.setChannel_event(dataObject.optString("channel_event",""));
-            msg.setApplication_notice(dataObject.optString("application_notice",""));
+            msg.setChannel_event(dataObject.optString("channel_event", ""));
+            msg.setApplication_notice(dataObject.optString("application_notice", ""));
         }
         return msg;
 
@@ -439,7 +428,7 @@ public class JSONParse {
             loginMessage.setShow_set_account(dataObject.optInt("show_set_account"));
             if (loginMessage.getShow_set_account() == 1) {
                 AppConfig.skin9_show_setAccount = true;
-            }else {
+            } else {
                 AppConfig.skin9_show_setAccount = false;
             }
             loginMessage.setSetPwdCode(dataObject.optString("code"));

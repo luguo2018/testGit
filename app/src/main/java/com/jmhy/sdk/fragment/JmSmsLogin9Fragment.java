@@ -17,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.LoginMessage;
-import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.bean.MobileUser;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
@@ -60,9 +60,9 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
     private int j = 0;
     private int count_down = 60;
 
-    private ApiAsyncTask mSmsTask;
-    private ApiAsyncTask mLoginmobileTask;
-    private ApiAsyncTask mGuestTask;
+    private Call mSmsTask;
+    private Call mLoginmobileTask;
+    private Call mGuestTask;
 
     List<String> moreCountList = new ArrayList<String>();
     List<String> morePwdList = new ArrayList<String>();
@@ -189,12 +189,12 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
                         // 跳转设置密码
                         Bundle args = new Bundle();
                         // Log.i("kk",mobileUser.getMoblie());
-                        AppConfig.save_guest_end=false;
-                        args.putString("username", mobileUser.getUnname());
-                        args.putString("moblie", mobileUser.getMoblie());
+                        AppConfig.save_guest_end = false;
+                        args.putString("username", mobileUser.getUname());
+                        args.putString("moblie", mobileUser.getMobile());
                         args.putString("code_area", mobileUser.getCode_area());
-                        args.putString("code", mobileUser.getMoblie_code());
-                        args.putBoolean("isOneKeyLogin",false);
+                        args.putString("code", mobileUser.getCode());
+                        args.putBoolean("isOneKeyLogin", false);
                         Fragment mJmSetpwdFragment = FragmentUtils.getJmSetpwdFragment(getActivity(), args);
                         replaceFragmentToActivity(getFragmentManager(),
                                 mJmSetpwdFragment, AppConfig.resourceId(
@@ -202,9 +202,9 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
 
                     } else {
                         // 直接登录成功，返回数据
-                        mSeference.saveTimeAndType(mobileUser.getUnname(),new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "手机号登录");
-                        mSeference.saveAccount(mobileUser.getUnname(), "~~test", mobileUser.getLogin_token());
-                        AppConfig.saveMap(mobileUser.getUnname(), "~~test", mobileUser.getLogin_token());
+                        mSeference.saveTimeAndType(mobileUser.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "手机号登录");
+                        mSeference.saveAccount(mobileUser.getUname(), "~~test", mobileUser.getLogin_token());
+                        AppConfig.saveMap(mobileUser.getUname(), "~~test", mobileUser.getLogin_token());
                         Utils.saveUserToSd(getActivity());
 
                         Utils.saveTimeAndTypeToSd(getActivity());
@@ -221,12 +221,12 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
 //                        AppConfig.float_url_home_center = Utils.toBase64url(mobileUser
 //                                .getFloat_url_home_center());
                         Intent oneKeyLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
-                        oneKeyLoginIntent.putExtra("message",mobileUser.getMessage());
-                        oneKeyLoginIntent.putExtra("uName",mobileUser.getUnname());
-                        oneKeyLoginIntent.putExtra("openId",mobileUser.getOpenid());
-                        oneKeyLoginIntent.putExtra("token",mobileUser.getGame_token());
+                        oneKeyLoginIntent.putExtra("message", "登录成功");
+                        oneKeyLoginIntent.putExtra("uName", mobileUser.getUname());
+                        oneKeyLoginIntent.putExtra("openId", mobileUser.getOpenid());
+                        oneKeyLoginIntent.putExtra("token", mobileUser.getGame_token());
                         oneKeyLoginIntent.putExtra("noticeUrl", Utils.toBase64url(mobileUser.getShow_url_after_login()));
-                        oneKeyLoginIntent.putExtra("type",AppConfig.MOBILELOGIN_SUCCESS);
+                        oneKeyLoginIntent.putExtra("type", AppConfig.MOBILELOGIN_SUCCESS);
                         startActivity(oneKeyLoginIntent);
 
                         getActivity().finish();
@@ -286,24 +286,9 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
 
                     @Override
                     public void onSuccess(Object obj) {
-                        // TODO Auto-generated method stub
-                        if (obj != null) {
-                            MobileUser mobileUser = (MobileUser) obj;
-                            if (mobileUser.getCode().equals("0")) {
-
-                                sendData(AppConfig.MOBILELOGIN_SUCCESS, obj,
-                                        handler);
-
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL,
-                                        mobileUser.getMessage(), handler);
-                            }
-                        } else {
-                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                                    getActivity(), "http_rror_msg"), handler);
-                        }
+                        sendData(AppConfig.MOBILELOGIN_SUCCESS, obj,
+                                handler);
                     }
-
                     @Override
                     public void onError(int statusCode) {
                         // TODO Auto-generated method stub
@@ -386,13 +371,13 @@ public class JmSmsLogin9Fragment extends JmBaseFragment implements
     @Override
     public void onDestroy() {
         if (mGuestTask != null) {
-            mGuestTask.cancel(false);
+            mGuestTask.cancel();
         }
         if (mSmsTask != null) {
-            mSmsTask.cancel(false);
+            mSmsTask.cancel();
         }
         if (mLoginmobileTask != null) {
-            mLoginmobileTask.cancel(false);
+            mLoginmobileTask.cancel();
         }
         super.onDestroy();
         mIbcode.setClickable(true);

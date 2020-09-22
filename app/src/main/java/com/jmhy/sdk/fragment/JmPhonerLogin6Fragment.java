@@ -19,13 +19,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
+import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.Result;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.bean.Guest;
+import com.jmhy.sdk.bean.MobileUser;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
@@ -53,9 +54,9 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
     private boolean flag = true;
     private int j = 0;
 
-    private ApiAsyncTask mSmsTask;
-    private ApiAsyncTask mLoginmobileTask;
-    private ApiAsyncTask mGuestTask;
+    private Call mSmsTask;
+    private Call mLoginmobileTask;
+    private Call mGuestTask;
     private MobileUser mMobileUser;
 
     List<String> moreCountList = new ArrayList<String>();
@@ -141,89 +142,11 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
             }
         });
     }
-	private void regFailed(String code){
-		showMsg(code);
-	}
-    private Handler handler = new Handler() {
 
-        @Override
-        public void handleMessage(Message msg) {
-            if (getActivity() == null || getActivity().isFinishing()) {
-                return;
-            }
-            switch (msg.what) {
-                case AppConfig.CODE_BUTTON:
-                    if ((60 - j) == 0) {
-                        mIbcode.setClickable(true);
-                        flag = false;
-                        mIbcode.setText(""
-                                + AppConfig.getString(getActivity(),
-                                "moblie_bt_code"));
+    private void regFailed(String code) {
+        showMsg(code);
+    }
 
-                        j = 0;
-                    } else {
-
-                        mIbcode.setText((60 - j) + "s");
-                    }
-                    j++;
-                    break;
-                case AppConfig.MOBILELOGIN_SUCCESS:
-                    flag = false;
-                    mMobileUser = (MobileUser) msg.obj;
-                    // 直接登录成功，返回数据
-                    mSeference.saveAccount(mMobileUser.getUnname(), "~~test",
-                            mMobileUser.getLogin_token());
-                    AppConfig.saveMap(mMobileUser.getUnname(), "~~test",
-                            mMobileUser.getLogin_token());
-                    Utils.saveUserToSd(getActivity());
-                    // 直接登录成功，返回数据
-                    wrapaLoginInfo("success", mMobileUser.getMessage(),
-                            mMobileUser.getUnname(), mMobileUser.getOpenid(),
-                            mMobileUser.getGame_token());
-                    showUserMsg(mMobileUser.getUnname());
-                    AppConfig.USERURL = Utils.toBase64url(mMobileUser
-                            .getFloat_url_user_center());
-                    String url = Utils.toBase64url(mMobileUser
-                            .getShow_url_after_login());
-                    turnToIntent(url);
-                    getActivity().finish();
-
-                    break;
-                case AppConfig.CODE_SUCCESS:
-                    mEdcode.requestFocus();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO Auto-generated method stub
-                            while (flag) {
-                                handler.sendEmptyMessage(AppConfig.CODE_BUTTON);
-                                try {
-                                    Thread.sleep(900);
-                                } catch (InterruptedException e) {
-                                    // TODO Auto-generated catch block
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }).start();
-                    Msg msg2 = (Msg) msg.obj;
-                    showMsg(msg2.getMessage());
-                    break;
-                case AppConfig.CODE_FAIL:
-
-                    mIbcode.setClickable(true);
-                    flag = false;
-                    mIbcode.setText(""
-                            + AppConfig.getString(getActivity(),
-                            "moblie_bt_code"));
-
-                    j = 0;
-                    String result = (String) msg.obj;
-                    showMsg(result);
-                    break;
-            }
-        }
-    };
 
     /**
      * 手机登录
@@ -241,30 +164,31 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
 
                     @Override
                     public void onSuccess(Object obj) {
-                        // TODO Auto-generated method stub
-                        if (obj != null) {
-                            MobileUser mobileUser = (MobileUser) obj;
-                            if (mobileUser.getCode().equals("0")) {
-
-                                sendData(AppConfig.MOBILELOGIN_SUCCESS, obj,
-                                        handler);
-
-                            } else {
-                                regFailed(mobileUser.getMessage());
-                            }
-                        } else {
-                            regFailed( AppConfig.getString(
-									getActivity(), "http_rror_msg"));
-                        }
+                        flag = false;
+                        mMobileUser = (MobileUser) obj;
+                        // 直接登录成功，返回数据
+                        mSeference.saveAccount(mMobileUser.getUname(), "~~test",
+                                mMobileUser.getLogin_token());
+                        AppConfig.saveMap(mMobileUser.getUname(), "~~test",
+                                mMobileUser.getLogin_token());
+                        Utils.saveUserToSd(getActivity());
+                        // 直接登录成功，返回数据
+                        wrapaLoginInfo("success", "登录成功",
+                                mMobileUser.getUname(), mMobileUser.getOpenid(),
+                                mMobileUser.getGame_token());
+                        showUserMsg(mMobileUser.getUname());
+                        AppConfig.USERURL = Utils.toBase64url(mMobileUser
+                                .getFloat_url_user_center());
+                        String url = Utils.toBase64url(mMobileUser
+                                .getShow_url_after_login());
+                        turnToIntent(url);
+                        getActivity().finish();
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
-                        sendData(
-                                AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
+                        showMsg(AppConfig.getString(getActivity(),
+                                "http_rror_msg"));
                     }
                 });
     }
@@ -398,26 +322,15 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
                     @Override
                     public void onSuccess(Object obj) {
                         // TODO Auto-generated method stub
-                        if (obj != null) {
-                            Msg msg = (Msg) obj;
-                            if (msg.getCode().equals("0")) {
-                                sendData(AppConfig.CODE_SUCCESS,
-                                        obj, handler);
-                            } else if (msg.getCode().equals("44010")) {
-                                regFailed(msg.getMessage());
-                            } else {
-                                sendData(AppConfig.CODE_FAIL,
-                                        msg.getMessage(), handler);
-                            }
-                        }
+                        Result result = (Result) obj;
+                        mEdcode.requestFocus();
+                        showMsg(result.getMessage());
                     }
+
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
-                        sendData(
-                                AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
+                        showMsg(AppConfig.getString(getActivity(),
+                                "http_rror_msg"));
                     }
                 });
 
@@ -433,32 +346,41 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
                     @Override
                     public void onSuccess(Object obj) {
                         // TODO Auto-generated method stub
-                        if (obj != null) {
-                            Guest guest = (Guest) obj;
-                            if (guest.getCode().equals("0")) {
-                                mSeference.saveAccount(guest.getUname(),
-                                        "~~test", guest.getLogin_token());
-                                AppConfig.saveMap(guest.getUname(), "~~test",
-                                        guest.getLogin_token());
-                                Utils.saveUserToSd(getActivity());
-                                sendData(AppConfig.GUEST_lOGIN_SUCCESS, obj,
-                                        handler);
-                            } else {
-                                regFailed(guest.getMessage());
-                            }
+                        Guest guest = (Guest) obj;
+                        mSeference.saveAccount(guest.getUname(),
+                                "~~test", guest.getLogin_token());
+                        AppConfig.saveMap(guest.getUname(), "~~test",
+                                guest.getLogin_token());
+                        Utils.saveUserToSd(getActivity());
+                        String noticeUrl = Utils.toBase64url(guest.getShow_url_after_login());
+                        if (!TextUtils.isEmpty(guest.getUpass())) {
+                            Bundle args = new Bundle();
+                            args.putString("username", guest.getUname());
+                            args.putString("upass", guest.getUpass());
+                            args.putString("msg", "登录成功");
+                            args.putString("gametoken", guest.getGame_token());
+                            args.putString("openid", guest.getOpenid());
+                            args.putString("url", noticeUrl);
+                            AppConfig.save_guest_end = false;
+                            Fragment mJmSetUserFragment = FragmentUtils.getJmSetUserFragment(getActivity(), args);
+                            replaceFragmentToActivity(getFragmentManager(), mJmSetUserFragment, AppConfig.resourceId(getActivity(), "content", "id"));
                         } else {
-                            regFailed(AppConfig.getString(
-									getActivity(), "http_rror_msg"));
+                            Intent intent = new Intent(getActivity(), JmTopLoginTipActivity.class);
+                            intent.putExtra("message", "登录成功");
+                            intent.putExtra("uName", guest.getUname());
+                            intent.putExtra("openId", guest.getOpenid());
+                            intent.putExtra("token", guest.getGame_token());
+                            intent.putExtra("noticeUrl", noticeUrl);
+                            intent.putExtra("type", AppConfig.GUEST_lOGIN_SUCCESS);
+                            startActivity(intent);
+                            getActivity().finish();
                         }
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
-                        sendData(
-                                AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
+                        showMsg(AppConfig.getString(getActivity(),
+                                "http_rror_msg"));
                     }
                 });
     }
@@ -466,13 +388,13 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
     @Override
     public void onDestroy() {
         if (mGuestTask != null) {
-            mGuestTask.cancel(false);
+            mGuestTask.cancel();
         }
         if (mSmsTask != null) {
-            mSmsTask.cancel(false);
+            mSmsTask.cancel();
         }
         if (mLoginmobileTask != null) {
-            mLoginmobileTask.cancel(false);
+            mLoginmobileTask.cancel();
         }
         super.onDestroy();
         mIbcode.setClickable(true);
@@ -486,24 +408,24 @@ public class JmPhonerLogin6Fragment extends JmBaseFragment implements
 
     //手机号注册
     public void getMobileRegister(final String password) {
-        final String user = mMobileUser.getUnname();
+        final String user = mMobileUser.getUname();
         JmhyApi.get().startMobileRegister(
-                user, password, mMobileUser.getMoblie(), code, mMobileUser.getCode_area(), new ApiRequestListener() {
+                user, password, mMobileUser.getMobile(), code, mMobileUser.getCode_area(), new ApiRequestListener() {
 
                     @Override
                     public void onSuccess(Object obj) {
                         // TODO Auto-generated method stub
-						Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
+                        Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
                         //	Log.i("kk","Auto"+registermsg.getAuto_login_token());
                         mSeference.saveAccount(user, "~~test",
-								registermsgResult.getData().getAuto_login_token());
+                                registermsgResult.getData().getAuto_login_token());
                         AppConfig.saveMap(user, "~~test",
-								registermsgResult.getData().getAuto_login_token());
+                                registermsgResult.getData().getAuto_login_token());
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        regFailed(statusCode+"");
+                        regFailed(statusCode + "");
                     }
                 });
 

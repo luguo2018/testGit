@@ -8,21 +8,29 @@ import android.util.Log;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.BuildConfig;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.bean.InitInfo;
 import com.jmhy.sdk.bean.LoginInfo;
+import com.jmhy.sdk.bean.MobileUser;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.http.JSONParse;
 import com.jmhy.sdk.http.OkHttpException;
 import com.jmhy.sdk.http.ResponseCallback;
 import com.jmhy.sdk.http.OkHttpManager;
 import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.model.InitExt;
+import com.jmhy.sdk.model.LoginMessage;
+import com.jmhy.sdk.model.OnlineMessage;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.Utils;
+
+import org.json.JSONException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -156,17 +164,16 @@ public class JmhyApi {
      *
      * @param context
      * @param appKey
-     * @param mobile手机号码
-     * @param codearea   区号
-     * @param type       1注册2登陆3找回密码
+     * @param codearea 区号
+     * @param type     1注册2登陆3找回密码
      * @param listener
      * @return
      */
-    public ApiAsyncTask startRequestSMS(Context context, String appKey,
-                                        String mobile, String codearea, String type,
-                                        ApiRequestListener listener) {
+    public Call startRequestSMS(Context context, String appKey,
+                                String mobile, String codearea, String type,
+                                final ApiRequestListener listener) {
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -175,8 +182,18 @@ public class JmhyApi {
         paramsdata.put("type", type);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_SMS, listener, params,
-                appKey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_SMS, params, new ResponseCallback<Result>() {
+            @Override
+            public void onSuccess(Result result) {
+                listener.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /**
@@ -184,17 +201,16 @@ public class JmhyApi {
      *
      * @param context
      * @param appKey
-     * @param mobile手机号码
-     * @param codearea   区号
-     * @param code       验证码
+     * @param codearea 区号
+     * @param code     验证码
      * @param listener
      * @return
      */
-    public ApiAsyncTask startloginMoblie(Context context, String appKey,
-                                         String mobile, String codearea, String code,
-                                         ApiRequestListener listener) {
+    public Call startloginMoblie(Context context, String appKey,
+                                 final String mobile, String codearea, String code,
+                                 final ApiRequestListener listener) {
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -203,8 +219,24 @@ public class JmhyApi {
         paramsdata.put("code", code);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_PHONE_LOGIN, listener,
-                params, appKey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_LOGIN, params, new ResponseCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    MobileUser mobileUser = JSONParse.parseMobilelogin(result);
+                    listener.onSuccess(mobileUser);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /**
@@ -212,17 +244,16 @@ public class JmhyApi {
      *
      * @param context
      * @param appKey
-     * @param mobile手机号码
-     * @param codearea   区号
-     * @param code       验证码
+     * @param codearea 区号
+     * @param code     验证码
      * @param listener
      * @return
      */
-    public ApiAsyncTask startloginMoblie(Context context, String appKey,
-                                         String mobile, String codearea, String code, String autoReg,
-                                         ApiRequestListener listener) {
+    public Call startloginMoblie(Context context, String appKey,
+                                 String mobile, String codearea, String code, String autoReg,
+                                 final ApiRequestListener listener) {
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -232,8 +263,23 @@ public class JmhyApi {
         paramsdata.put("code", code);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_PHONE_LOGIN, listener,
-                params, appKey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_LOGIN, params, new ResponseCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                try {
+                    MobileUser mobileUser = JSONParse.parseMobilelogin(result);
+                    listener.onSuccess(mobileUser);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /**
@@ -256,9 +302,9 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USERREGISTER, params, new ResponseCallback<Result>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USERREGISTER, params, new ResponseCallback<Result<Registermsg>>() {
             @Override
-            public void onSuccess(Result result) {
+            public void onSuccess(Result<Registermsg> result) {
                 listener.onSuccess(result);
             }
 
@@ -273,6 +319,7 @@ public class JmhyApi {
 
     /**
      * 手机号码注册
+     *
      * @param username
      * @param password
      * @param mobile
@@ -373,7 +420,7 @@ public class JmhyApi {
      * @return
      */
     public Call starusreLogin(
-            String username, String pwd, ApiRequestListener listener) {
+            String username, String pwd, final ApiRequestListener listener) {
         HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
@@ -384,15 +431,15 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USRRLOGIN, params, new ResponseCallback<Result>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USRRLOGIN, params, new ResponseCallback<Result<LoginInfo>>() {
             @Override
-            public void onSuccess(Result Result) {
-                Log.d("TAG", "onSuccess() called with: Result = [" + Result.toString() + "]");
+            public void onSuccess(Result<LoginInfo> result) {
+                listener.onSuccess(result.getData());
             }
 
             @Override
             public void onFailure(OkHttpException e) {
-
+                listener.onError(e.getEcode());
             }
         });
         return call;
@@ -401,23 +448,26 @@ public class JmhyApi {
     /**
      * 修改用户账号
      */
-    public ApiAsyncTask startSetAccount(Context context, String appkey, String account, String password, String confirm_password, ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+    public Call startSetAccount(Context context, String appkey, String account, String password, String confirm_password, final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap< >();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
         params.put("uname", account + "");
         params.put("upass", password + "");
         params.put("reupass", confirm_password + "");
-//		paramsdata.put("uname", account + "");
-//		paramsdata.put("upass", password + "");
-//		paramsdata.put("reupass", confirm_password + "");
-
-
-        HashmapToJson toJson = new HashmapToJson();
         params.put("context", "");
-        return WebApi.startThreadRequest(WebApi.ACTION_SET_ACCOUNT, listener,
-                params, appkey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_SET_ACCOUNT, params, new ResponseCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                listener.onSuccess(result);
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
 
@@ -426,22 +476,27 @@ public class JmhyApi {
      *
      * @param context
      * @param appkey
-     * @param username
-     * @param pwd
      * @param listener
      * @return
      */
-    public ApiAsyncTask starguestLogin(Context context, String appkey,
-                                       ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+    public Call starguestLogin(Context context, String appkey,
+                               final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap<>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
-
-        HashmapToJson toJson = new HashmapToJson();
         params.put("context", "");
-        return WebApi.startThreadRequest(WebApi.ACTION_GUEST, listener, params,
-                appkey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GUEST, params, new ResponseCallback<Result<Guest>>() {
+            @Override
+            public void onSuccess(Result<Guest> result) {
+                listener.onSuccess(result.getData());
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /**
@@ -465,12 +520,12 @@ public class JmhyApi {
      * @param listener
      * @return
      */
-    public ApiAsyncTask starCreate(Context context, String appkey,
-                                   String opendid, String cporderid, String ordername, String amount,
-                                   String roleid, String rolename, String level, String gender,
-                                   String serverno, String servername, String balance, String power, String viplevel,
-                                   String ext, ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+    public Call starCreate(Context context, String appkey,
+                           String opendid, String cporderid, String ordername, String amount,
+                           String roleid, String rolename, String level, String gender,
+                           String serverno, String servername, String balance, String power, String viplevel,
+                           String ext, final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -492,9 +547,18 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CREATE, params, new ResponseCallback<Result<PayData>>() {
+            @Override
+            public void onSuccess(Result<PayData> result) {
+                listener.onSuccess(result.getData());
+            }
 
-        return WebApi.startThreadRequest(WebApi.ACTION_CREATE, listener,
-                params, appkey);
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /***
@@ -516,12 +580,12 @@ public class JmhyApi {
      * @param listener
      * @return
      */
-    public ApiAsyncTask starRole(Context context, String appkey,
-                                 String opendid, String type, String roleid, String rolename,
-                                 String level, String gender, String serverno, String servername, String balance,
-                                 String power, String viplevel, String ext,
-                                 ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+    public Call starRole(Context context, String appkey,
+                         String opendid, String type, String roleid, String rolename,
+                         String level, String gender, String serverno, String servername, String balance,
+                         String power, String viplevel, String ext,
+                         final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -540,9 +604,18 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_REPORT, params, new ResponseCallback<String>() {
+            @Override
+            public void onSuccess(String o) {
+                listener.onSuccess(o);
+            }
 
-        return WebApi.startThreadRequest(WebApi.ACTION_REPORT, listener,
-                params, appkey);
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
     /**
@@ -553,25 +626,32 @@ public class JmhyApi {
      * @param listener
      * @return
      */
-    public ApiAsyncTask starguserLoginout(Context context, String appkey,
-                                          ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+    public Call starguserLoginout(Context context, String appkey,
+                                  final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap<String, String>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
-
-        HashmapToJson toJson = new HashmapToJson();
         params.put("context", "");
-        return WebApi.startThreadRequest(WebApi.ACTION_LOGINOUT, listener,
-                params, appkey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_LOGINOUT, params, new ResponseCallback<Result>() {
+            @Override
+            public void onSuccess(Result o) {
+                listener.onSuccess(o);
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
-    public ApiAsyncTask starbug(Context context, String appkey, String openid,
-                                String content, ApiRequestListener listener) {
+    public Call starbug(Context context, String appkey, String openid,
+                        String content, ApiRequestListener listener) {
         if (deviceInfo == null) {
             deviceInfo = new DeviceInfo(context);
         }
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -581,8 +661,18 @@ public class JmhyApi {
         paramsdata.put("error_level", "1");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_BUG, listener,
-                params, appkey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_BUG, params, new ResponseCallback() {
+            @Override
+            public void onSuccess(Object o) {
+
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+
+            }
+        });
+        return call;
     }
 
     /**
@@ -605,12 +695,12 @@ public class JmhyApi {
      * @param listener
      * @return
      */
-    public ApiAsyncTask starOnline(Context context, String appkey,
-                                   String opendid, String type, String roleid, String rolename, String seconds,
-                                   String level, String gender, String serverno, String servername, String balance,
-                                   String power, String viplevel, String ext,
-                                   ApiRequestListener listener) {
-        HashMap<String, Object> params = new HashMap<String, Object>();
+    public Call starOnline(Context context, String appkey,
+                           String opendid, String type, String roleid, String rolename, String seconds,
+                           String level, String gender, String serverno, String servername, String balance,
+                           String power, String viplevel, String ext,
+                           final ApiRequestListener listener) {
+        HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -626,56 +716,25 @@ public class JmhyApi {
         paramsdata.put("power", power + "");
         paramsdata.put("vip_level", viplevel + "");
         paramsdata.put("ext", ext + "");
-
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONLINE, params, new ResponseCallback<Result<OnlineMessage>>() {
+            @Override
+            public void onSuccess(Result<OnlineMessage> result) {
+                listener.onSuccess(result.getData());
+            }
 
-        return WebApi.startThreadRequest(WebApi.ACTION_ONLINE, listener,
-                params, appkey);
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
 
-    public ApiAsyncTask getWebSocketToken(Context context, String access_token, String appKey, ApiRequestListener listener) {
+    public Call startOneKeylogin(String oneKeyToken, String appkey, final ApiRequestListener listener) {
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
-        params.put("access_token", access_token);
-        params.put("time", System.currentTimeMillis() / 1000 + "");
-        paramsdata.put("ext_data", "");
-        HashmapToJson toJson = new HashmapToJson();
-        params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_GETTOKEN, listener, params,
-                appKey);
-    }
-
-    public ApiAsyncTask getFloatState(Context context, String jm_customer_token, String appKey, ApiRequestListener listener) {
-
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
-        params.put("access_token", AppConfig.Token + "");
-        params.put("jm_customer_token", jm_customer_token);
-        params.put("time", System.currentTimeMillis() / 1000 + "");
-        paramsdata.put("ext_data", "");
-        HashmapToJson toJson = new HashmapToJson();
-        params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_FLOATSTATE, listener, params, appKey);
-    }
-
-    public ApiAsyncTask clearNotice(Context context, String jm_customer_token, String appKey, ApiRequestListener listener) {
-
-        HashMap<String, Object> params = new HashMap<String, Object>();
-        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
-        params.put("access_token", AppConfig.Token + "");
-        params.put("jm_customer_token", jm_customer_token);
-        params.put("time", System.currentTimeMillis() / 1000 + "");
-        paramsdata.put("ext_data", "");
-        HashmapToJson toJson = new HashmapToJson();
-        params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_CLEANNOTICE, listener, params, appKey);
-    }
-
-    public ApiAsyncTask startOneKeylogin(String oneKeyToken, String appkey, ApiRequestListener listener) {
-
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        HashMap<String, String> params = new HashMap<String, String>();
         HashMap<String, Object> paramsdata = new HashMap<String, Object>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
@@ -683,6 +742,96 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        return WebApi.startThreadRequest(WebApi.ACTION_ONEKEYLOGIN, listener, params, appkey);
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONEKEYLOGIN, params, new ResponseCallback<Result<LoginMessage>>() {
+            @Override
+            public void onSuccess(Result<LoginMessage> result) {
+                listener.onSuccess(result.getData());
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
     }
+
+    /******************分割线**********************************************************************************************
+     *
+     *
+     *
+     *
+     */
+    public Call getWebSocketToken(Context context, String access_token, String appKey, final ApiRequestListener listener) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+        params.put("access_token", access_token);
+        params.put("time", System.currentTimeMillis() / 1000 + "");
+        paramsdata.put("ext_data", "");
+        HashmapToJson toJson = new HashmapToJson();
+        params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GETTOKEN, params, new ResponseCallback<Result<LoginMessage>>() {
+            @Override
+            public void onSuccess(Result<LoginMessage> result) {
+                listener.onSuccess(result.getData());
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
+    }
+
+    public Call getFloatState(Context context, String jm_customer_token, String appKey, final ApiRequestListener listener) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+        params.put("access_token", AppConfig.Token + "");
+        params.put("jm_customer_token", jm_customer_token);
+        params.put("time", System.currentTimeMillis() / 1000 + "");
+        paramsdata.put("ext_data", "");
+        HashmapToJson toJson = new HashmapToJson();
+        params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_FLOATSTATE, params, new ResponseCallback<Result<LoginMessage>>() {
+            @Override
+            public void onSuccess(Result<LoginMessage> result) {
+                listener.onSuccess(result.getData());
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
+    }
+
+    public Call clearNotice(Context context, String jm_customer_token, String appKey, final ApiRequestListener listener) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, Object> paramsdata = new HashMap<String, Object>();
+        params.put("access_token", AppConfig.Token + "");
+        params.put("jm_customer_token", jm_customer_token);
+        params.put("time", System.currentTimeMillis() / 1000 + "");
+        paramsdata.put("ext_data", "");
+        HashmapToJson toJson = new HashmapToJson();
+        params.put("context", toJson.toJson(paramsdata));
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CLEANNOTICE, params, new ResponseCallback<Result<LoginMessage>>() {
+            @Override
+            public void onSuccess(Result<LoginMessage> result) {
+                listener.onSuccess(result.getData());
+            }
+
+            @Override
+            public void onFailure(OkHttpException e) {
+                listener.onError(e.getEcode());
+            }
+        });
+        return call;
+    }
+
+
 }

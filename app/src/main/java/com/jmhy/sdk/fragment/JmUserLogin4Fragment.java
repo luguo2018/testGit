@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
-import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.adapter.UserAdapter;
 import com.jmhy.sdk.adapter.UserAdapter.InnerItemOnclickListener;
@@ -36,8 +34,7 @@ import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.LoginMessage;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Seference;
@@ -77,7 +74,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
     List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
     private UserAdapter mUserAdapter;
 
-    private ApiAsyncTask mGuestTask;
+    private Call mGuestTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -188,7 +185,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
                         // Log.i("kk",mobileUser.getMoblie())
                         args.putString("username", guest.getUname());
                         args.putString("upass", guest.getUpass());
-                        args.putString("msg", guest.getMessage());
+                        args.putString("msg", "登录成功");
                         args.putString("gametoken", guest.getGame_token());
                         args.putString("openid", guest.getOpenid());
                         args.putString("url", murl);
@@ -198,7 +195,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
                                         getActivity(), "content", "id"));
                     } else {
 
-                        wrapaLoginInfo("success", guest.getMessage(),
+                        wrapaLoginInfo("success", "登录成功",
                                 guest.getUname(), guest.getOpenid(),
                                 guest.getGame_token());
 
@@ -519,9 +516,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
                         @Override
                         public void onSuccess(Object obj) {
                             // TODO Auto-generated method stub
-                            if (obj != null) {
                                 Guest guest = (Guest) obj;
-                                if (guest.getCode().equals("0")) {
                                     mSeference.saveAccount(guest.getUname(),
                                             "~~test", guest.getLogin_token());
                                     AppConfig.saveMap(guest.getUname(), "~~test",
@@ -529,14 +524,6 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
                                     Utils.saveUserToSd(getActivity());
                                     sendData(AppConfig.GUEST_lOGIN_SUCCESS, obj,
                                             handler);
-                                } else {
-                                    sendData(AppConfig.FLAG_FAIL,
-                                            guest.getMessage(), handler);
-                                }
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                                        getActivity(), "http_rror_msg"), handler);
-                            }
                         }
 
                         @Override
@@ -569,7 +556,7 @@ public class JmUserLogin4Fragment extends JmBaseFragment implements
         @Override
         public void onDestroy () {
             if (mGuestTask != null) {
-                mGuestTask.cancel(false);
+                mGuestTask.cancel();
             }
             if (mLoginTask != null) {
                 mLoginTask.cancel();

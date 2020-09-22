@@ -1,11 +1,9 @@
 package com.jmhy.sdk.fragment;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,25 +12,24 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.OneKeyLoginListener;
-import com.jmhy.sdk.model.Guest;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
-import com.jmhy.sdk.utils.HasNotchInScreenUtil;
 import com.jmhy.sdk.utils.Utils;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.TokenResultListener;
@@ -66,9 +63,9 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
     private boolean flag = true;
     private int j = 0;
 
-    private ApiAsyncTask mSmsTask;
+    private Call mSmsTask;
     private ApiAsyncTask mLoginmobileTask;
-    private ApiAsyncTask mGuestTask;
+    private Call mGuestTask;
 
     List<String> moreCountList = new ArrayList<String>();
     List<String> morePwdList = new ArrayList<String>();
@@ -148,94 +145,10 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
         }
     }
 
+    private void flagFailed(String msg) {
+        showMsg(msg);
 
-    private Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (getActivity() == null || getActivity().isFinishing()) {
-                return;
-            }
-            switch (msg.what) {
-                case oneKeyLoginFail:
-                    Log.i("jimi测试查看", "" + msg.obj);
-                    Toast.makeText(getActivity(), msg.obj + "", Toast.LENGTH_SHORT).show();
-//                    view.setVisibility(View.VISIBLE);
-                    break;
-                case AppConfig.FLAG_FAIL:
-                    String resultmsg = (String) msg.obj;
-                    showMsg(resultmsg);
-                    break;
-                case AppConfig.GUEST_lOGIN_SUCCESS:
-
-                    Guest guest = (Guest) msg.obj;
-                    String noticeUrl = Utils.toBase64url(guest.getShow_url_after_login());
-
-                    if (!TextUtils.isEmpty(guest.getUpass())) {
-//                    if (true) {
-                        Bundle args = new Bundle();
-                        args.putString("username", guest.getUname());
-                        args.putString("upass", guest.getUpass());
-                        args.putString("msg", guest.getMessage());
-                        args.putString("gametoken", guest.getGame_token());
-                        args.putString("openid", guest.getOpenid());
-                        args.putString("url", noticeUrl);
-                        AppConfig.save_guest_end=false;
-                        Fragment mJmSetUserFragment = FragmentUtils.getJmSetUserFragment(getActivity(), args);
-                        replaceFragmentToActivity(getFragmentManager(), mJmSetUserFragment, AppConfig.resourceId(getActivity(), "content", "id"));
-                    } else {
-                        Intent intent = new Intent(getActivity(), JmTopLoginTipActivity.class);
-                        intent.putExtra("message", guest.getMessage());
-                        intent.putExtra("uName", guest.getUname());
-                        intent.putExtra("openId", guest.getOpenid());
-                        intent.putExtra("token", guest.getGame_token());
-                        intent.putExtra("noticeUrl", noticeUrl);
-                        intent.putExtra("type", AppConfig.GUEST_lOGIN_SUCCESS);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                    break;
-                case AppConfig.ONEKEY_lOGIN_SUCCESS:
-                    LoginMessage loginMessage = (LoginMessage) msg.obj;
-                    Log.i("jimi","测试"+loginMessage.getSetPwdCode());
-                    if (loginMessage.getSetPwdCode()!=null&&loginMessage.getSetPwdCode()!=""){//有code验证码   跳到设置密码页
-                        Bundle args = new Bundle();
-                        // Log.i("kk",mobileUser.getMoblie());
-                        AppConfig.save_guest_end=false;
-                        args.putString("username", loginMessage.getUname());
-                        args.putString("moblie", loginMessage.getMobile());
-                        args.putString("code_area", "86");
-                        args.putString("code", loginMessage.getSetPwdCode());
-                        args.putBoolean("isOneKeyLogin", true);
-                        Fragment mJmSetpwdFragment = FragmentUtils.getJmSetpwdFragment(getActivity(), args);
-                        replaceFragmentToActivity(getFragmentManager(), mJmSetpwdFragment, AppConfig.resourceId(getActivity(), "content", "id"));
-                    } else {
-                        Intent oneKeyLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
-                        oneKeyLoginIntent.putExtra("message", loginMessage.getMessage());
-                        oneKeyLoginIntent.putExtra("uName", loginMessage.getUname());
-                        oneKeyLoginIntent.putExtra("openId", loginMessage.getOpenid());
-                        oneKeyLoginIntent.putExtra("token", loginMessage.getGame_token());
-                        oneKeyLoginIntent.putExtra("noticeUrl", Utils.toBase64url(loginMessage.getShow_url_after_login()));
-                        oneKeyLoginIntent.putExtra("type", AppConfig.ONEKEY_lOGIN_SUCCESS);
-
-                        startActivity(oneKeyLoginIntent);
-                        getActivity().finish();
-                    }
-                    break;
-                case AppConfig.CODE_SUCCESS://输手机号  点登录按钮  发请求验证码，发完跳转
-                    Fragment mJmUserLoginFragment = Fragment.instantiate(getActivity(), JmSmsLogin9Fragment.class.getName());
-                    replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
-                    break;
-                case AppConfig.CODE_FAIL:
-
-                    flag = false;
-                    j = 0;
-                    String result = (String) msg.obj;
-                    showMsg(result);
-                    break;
-            }
-        }
-    };
+    }
 
     @Override
     public void onClick(View v) {
@@ -287,7 +200,29 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                                 AppConfig.saveMap(loginMessage.getUname(), "~~test", loginMessage.getLogin_token());
                                 Utils.saveUserToSd(getActivity());
                                 Utils.saveTimeAndTypeToSd(getActivity());
-                                sendData(AppConfig.ONEKEY_lOGIN_SUCCESS, obj, handler);
+                                Log.i("jimi", "测试" + loginMessage.getSetPwdCode());
+                                if (loginMessage.getSetPwdCode() != null && loginMessage.getSetPwdCode() != "") {//有code验证码   跳到设置密码页
+                                    Bundle args = new Bundle();
+                                    // Log.i("kk",mobileUser.getMoblie());
+                                    AppConfig.save_guest_end = false;
+                                    args.putString("username", loginMessage.getUname());
+                                    args.putString("moblie", loginMessage.getMobile());
+                                    args.putString("code_area", "86");
+                                    args.putString("code", loginMessage.getSetPwdCode());
+                                    args.putBoolean("isOneKeyLogin", true);
+                                    Fragment mJmSetpwdFragment = FragmentUtils.getJmSetpwdFragment(getActivity(), args);
+                                    replaceFragmentToActivity(getFragmentManager(), mJmSetpwdFragment, AppConfig.resourceId(getActivity(), "content", "id"));
+                                } else {
+                                    Intent oneKeyLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
+                                    oneKeyLoginIntent.putExtra("message", loginMessage.getMessage());
+                                    oneKeyLoginIntent.putExtra("uName", loginMessage.getUname());
+                                    oneKeyLoginIntent.putExtra("openId", loginMessage.getOpenid());
+                                    oneKeyLoginIntent.putExtra("token", loginMessage.getGame_token());
+                                    oneKeyLoginIntent.putExtra("noticeUrl", Utils.toBase64url(loginMessage.getShow_url_after_login()));
+                                    oneKeyLoginIntent.putExtra("type", AppConfig.ONEKEY_lOGIN_SUCCESS);
+                                    startActivity(oneKeyLoginIntent);
+                                    getActivity().finish();
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.i("jimi", "一键登录返回数据错误" + e);
@@ -296,13 +231,8 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
 
                         @Override
                         public void onError(int statusCode) {
-                            // TODO Auto-generated method stub
-                            Log.i("jimisdk", "一键登录校验失败" + statusCode);
+                            Toast.makeText(getActivity(),  "登录校检失败", Toast.LENGTH_SHORT).show();
 
-                            Message message = handler.obtainMessage();
-                            message.what = oneKeyLoginFail;
-                            message.obj = "登录校验失败";
-                            handler.sendMessage(message);
                         }
                     });
                 }
@@ -317,10 +247,8 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                     //一键登录失败
                     view.setVisibility(View.VISIBLE);
                     Log.i("jimisdk", "一键登录失败onError: " + msg);
-                    Message message = handler.obtainMessage();
-                    message.what = oneKeyLoginFail;
-                    message.obj = msg;
-                    handler.sendMessage(message);
+                    Toast.makeText(getActivity(),  "登录校检失败", Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
@@ -329,11 +257,11 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                     Log.i("jimisdk", "一键登录取消: " + msg);
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             view.setVisibility(View.GONE);
             e.printStackTrace();
-            Log.i("jimi","异常："+e);
-            Toast.makeText(getActivity(), "异常："+e, Toast.LENGTH_SHORT).show();
+            Log.i("jimi", "异常：" + e);
+            Toast.makeText(getActivity(), "异常：" + e, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }
@@ -353,35 +281,14 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
 
                     @Override
                     public void onSuccess(Object obj) {
-                        // TODO Auto-generated method stub
-                        if (obj != null) {
-                            Msg msg = (Msg) obj;
-                            if (msg.getCode().equals("0")) {
-
-                                sendData(AppConfig.CODE_SUCCESS,
-
-                                        obj, handler);
-                            } else if (msg.getCode().equals("44010")) {
-
-                                sendData(AppConfig.FLAG_FAIL,
-
-                                        msg.getMessage(), handler);
-                            } else {
-
-                                sendData(AppConfig.CODE_FAIL,
-
-                                        msg.getMessage(), handler);
-                            }
-                        }
+                        Fragment mJmUserLoginFragment = Fragment.instantiate(getActivity(), JmSmsLogin9Fragment.class.getName());
+                        replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
-                        sendData(
-                                AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
+                        flagFailed(AppConfig.getString(getActivity(),
+                                "http_rror_msg"));
                     }
                 });
 
@@ -400,37 +307,49 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
             public void onSuccess(Object obj) {
                 // TODO Auto-generated method stub
                 Log.i("测试日志1", "obj" + obj.toString());
-                if (obj != null) {
-                    Guest guest = (Guest) obj;
-                    if (guest.getUpass() != null) {
-                        if (!guest.getUpass().equals("")) {
-                            JiMiSDK.getStatisticsSDK().onRegister(TAG, true);
-                        }
+                Guest guest = (Guest) obj;
+                if (guest.getUpass() != null) {
+                    if (!guest.getUpass().equals("")) {
+                        JiMiSDK.getStatisticsSDK().onRegister(TAG, true);
                     }
-                    if (guest.getCode().equals("0")) {
-                        mSeference.saveTimeAndType(guest.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "游客登录");
-                        mSeference.saveAccount(guest.getUname(), "~~test", guest.getLogin_token());
-                        AppConfig.saveMap(guest.getUname(), "~~test", guest.getLogin_token());
-                        Utils.saveUserToSd(getActivity());
+                }
+                mSeference.saveTimeAndType(guest.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "游客登录");
+                mSeference.saveAccount(guest.getUname(), "~~test", guest.getLogin_token());
+                AppConfig.saveMap(guest.getUname(), "~~test", guest.getLogin_token());
+                Utils.saveUserToSd(getActivity());
 
-                        Utils.saveTimeAndTypeToSd(getActivity());
-                        sendData(AppConfig.GUEST_lOGIN_SUCCESS, obj, handler);
-                    } else {
-                        sendData(AppConfig.FLAG_FAIL, guest.getMessage(), handler);
-                    }
+                Utils.saveTimeAndTypeToSd(getActivity());
+                String noticeUrl = Utils.toBase64url(guest.getShow_url_after_login());
+
+                if (!TextUtils.isEmpty(guest.getUpass())) {
+//                    if (true) {
+                    Bundle args = new Bundle();
+                    args.putString("username", guest.getUname());
+                    args.putString("upass", guest.getUpass());
+                    args.putString("msg", "登录成功");
+                    args.putString("gametoken", guest.getGame_token());
+                    args.putString("openid", guest.getOpenid());
+                    args.putString("url", noticeUrl);
+                    AppConfig.save_guest_end = false;
+                    Fragment mJmSetUserFragment = FragmentUtils.getJmSetUserFragment(getActivity(), args);
+                    replaceFragmentToActivity(getFragmentManager(), mJmSetUserFragment, AppConfig.resourceId(getActivity(), "content", "id"));
                 } else {
-                    sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                            getActivity(), "http_rror_msg"), handler);
+                    Intent intent = new Intent(getActivity(), JmTopLoginTipActivity.class);
+                    intent.putExtra("message", "登录成功");
+                    intent.putExtra("uName", guest.getUname());
+                    intent.putExtra("openId", guest.getOpenid());
+                    intent.putExtra("token", guest.getGame_token());
+                    intent.putExtra("noticeUrl", noticeUrl);
+                    intent.putExtra("type", AppConfig.GUEST_lOGIN_SUCCESS);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
 
             @Override
             public void onError(int statusCode) {
-                // TODO Auto-generated method stub
-                sendData(
-                        AppConfig.FLAG_FAIL,
-                        AppConfig.getString(getActivity(),
-                                "http_rror_msg"), handler);
+                flagFailed(AppConfig.getString(getActivity(),
+                        "http_rror_msg"));
             }
         });
     }
@@ -438,10 +357,10 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
     @Override
     public void onDestroy() {
         if (mGuestTask != null) {
-            mGuestTask.cancel(false);
+            mGuestTask.cancel();
         }
         if (mSmsTask != null) {
-            mSmsTask.cancel(false);
+            mSmsTask.cancel();
         }
         if (mLoginmobileTask != null) {
             mLoginmobileTask.cancel(false);

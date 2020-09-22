@@ -18,8 +18,7 @@ import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.LoginMessage;
+import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -151,7 +150,7 @@ public class EmailLoginFragment extends JmBaseFragment {
                         // Log.i("kk",mobileUser.getMoblie())
                         args.putString("username", guest.getUname());
                         args.putString("upass", guest.getUpass());
-                        args.putString("msg", guest.getMessage());
+                        args.putString("msg", "登录成功");
                         args.putString("gametoken", guest.getGame_token());
                         args.putString("openid", guest.getOpenid());
                         args.putString("url", murl);
@@ -160,7 +159,7 @@ public class EmailLoginFragment extends JmBaseFragment {
                                 mJmSetUserFragment, AppConfig.resourceId(
                                         getActivity(), "content", "id"));
                     } else {
-                        wrapaLoginInfo("success", guest.getMessage(),
+                        wrapaLoginInfo("success", "登录成功",
                                 guest.getUname(), guest.getOpenid(),
                                 guest.getGame_token());
 
