@@ -3,12 +3,9 @@ package com.jmhy.sdk.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.sdk.StatisticsSDK;
 

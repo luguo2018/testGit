@@ -726,8 +726,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 }
             });
             floatUserInfoActivity.setViews(url);
+            floatUserInfoActivity.show();
         }else {
             floatUserInfoActivity.setViews(url);
+            floatUserInfoActivity.show();
         }
         hide();
     }

@@ -16,7 +16,8 @@
 -verbose
 -dontwarn android.support.v4.**,android.net.compatibility.**,android.net.http.**,com.android.internal.http.multipart.**,org.apache.commons.**,org.apache.http.**
 -ignorewarnings
-
+-keep class com.taobao.sophix.**{*;}
+-keep class com.ta.utdid2.device.**{*;}
 
 -keep interface  android.support.v4.app.** {
     <fields>;

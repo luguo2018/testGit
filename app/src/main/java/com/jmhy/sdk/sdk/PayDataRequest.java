@@ -7,15 +7,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.jmhy.sdk.activity.FloatPayActivity;
 import com.jmhy.sdk.activity.JmpayActivity;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -24,7 +22,6 @@ public class PayDataRequest {
 
     private ApiListenerInfo listener;
     private static Context mContext;
-    private static ApiAsyncTask payTask; // 初始化
     private static PayDataRequest mPayData;
     private static PaymentInfo mPayInfo;
     private static ApiListenerInfo mListener;
@@ -51,7 +48,7 @@ public class PayDataRequest {
         mListener = listener;
         mPayInfo = payInfo;
         Utils.getSeferencegame(context);
-        handler.sendEmptyMessage(AppConfig.GET_PAY);
+        payHttp();
         return mPayData;
     }
 
@@ -60,36 +57,23 @@ public class PayDataRequest {
      * http请求，初始化接口
      */
     public static void payHttp() {
-        payTask = JmhyApi.get().starCreate(mContext, AppConfig.appKey, AppConfig.openid,
+        JmhyApi.get().starCreate(mContext, AppConfig.appKey, AppConfig.openid,
                 mPayInfo.getCporderid(), mPayInfo.getOrdername(), mPayInfo.getAmount(), mPayInfo.getRoleid(),
                 mPayInfo.getRolename(), mPayInfo.getLevel(), mPayInfo.getGender(), mPayInfo.getServerno(), mPayInfo.getZoneName(), mPayInfo.getBalance(),
                 mPayInfo.getPower(), mPayInfo.getViplevel(), mPayInfo.getExt(), new ApiRequestListener() {
-
                     @Override
                     public void onSuccess(Object obj) {
                         // TODO Auto-generated method stub
-                        if (obj != null) {
-                            PayData payData = (PayData) obj;
-                            if (payData.getCode().equals("0")) {
-                                sendData(AppConfig.PAY_SUCCESS, obj,
-                                        handler);
-
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL,
-                                        payData.getMessage(), handler);
-                            }
-                        } else {
-                            sendData(AppConfig.FLAG_FAIL,
-                                    AppConfig.getString(mContext, "http_rror_msg"), handler);
-                        }
-
+                        PayData payData = (PayData) obj;
+                        String url = Utils
+                                .toBase64url(payData.getO_content());
+                        turnToIntent(url);
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
-                        sendData(AppConfig.FLAG_FAIL,
-                                AppConfig.getString(mContext, "http_rror_msg"), handler);
+                        Activity activity = (Activity) mContext;
+                        DialogUtils.showTip(activity, statusCode+"");
                     }
                 });
     }
@@ -105,29 +89,8 @@ public class PayDataRequest {
         msg.sendToTarget();
     }
 
-    private static Handler handler = new Handler(Looper.getMainLooper()) {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case AppConfig.GET_PAY:
-                    payHttp();
-                    break;
-                case AppConfig.PAY_SUCCESS:
-                    PayData payData = (PayData) msg.obj;
-                    String url = Utils
-                            .toBase64url(payData.getOcontent());
-                    turnToIntent(url);
-                    break;
-                case AppConfig.FLAG_FAIL:
-                    Activity activity = (Activity)mContext;
-                    String message = (String) msg.obj;
-                    DialogUtils.showTip(activity, message);
-                    break;
-            }
-        }
-    };
     static FloatPayActivity floatPayActivity;
+
     public static void turnToIntent(String url) {
         if (TextUtils.isEmpty(url)) {
             // Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
@@ -140,11 +103,13 @@ public class PayDataRequest {
 //        intent.putExtra("url", url);
 //        intent.setClass(mContext, JmpayActivity.class);
 //        mContext.startActivity(intent);
-        if(floatPayActivity==null){
+        if (floatPayActivity == null) {
             floatPayActivity = new FloatPayActivity((Activity) mContext);
             floatPayActivity.setViews(url);
-        }else {
+            floatPayActivity.show();
+        } else {
             floatPayActivity.setViews(url);
+            floatPayActivity.show();
         }
     }
 

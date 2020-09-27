@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 
 import org.json.JSONObject;

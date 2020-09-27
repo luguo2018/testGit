@@ -74,5 +74,12 @@
         android:layout_height="wrap_content"
         android:text="强制退出"
         tools:visibility="visible" />
+    <Button
+        android:id="@+id/hot_fix"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="我是热更新之后"
+        tools:visibility="visible" />
+
 
 </LinearLayout>

@@ -4,12 +4,6 @@ import android.text.TextUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.jmhy.sdk.http.ApiAsyncTask;
-import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.http.JMApiTask;
 
 public class WebApi {
 
@@ -146,32 +140,8 @@ public class WebApi {
 	public static String ACTION_CLEANNOTICE;
 	//一键登录
 	public static String ACTION_ONEKEYLOGIN;
+	//热更新查询
+	public static String HOTFIX_INQUIRE;
 
-	/**
-	 * 后台启动http连接，使用Thread实现
-	 *
-	 * @param webApi
-	 * @param listener
-	 * @param params
-	 * @param appKey
-	 */
-	public static ApiAsyncTask startThreadRequest(String webApi,
-			ApiRequestListener listener, HashMap<String, Object> params,
-			String appKey) {
 
-		ApiAsyncTask task = new JMApiTask(webApi, listener, params, appKey);
-		threadPool.execute(task);
-
-		return task;
-	}
-
-	private static ExecutorService threadPool;
-
-	static {
-		threadPool = Executors.newCachedThreadPool();
-	}
-
-	public static void shutdown(){
-		threadPool.shutdown();
-	}
 }

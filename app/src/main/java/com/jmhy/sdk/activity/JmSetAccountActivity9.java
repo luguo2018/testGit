@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.fragment.JmSwitchLogin9Fragment;
@@ -42,7 +43,7 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
     private String path;
     private File file;
     private String url;
-    ApiAsyncTask setGuestAccountTask;
+    Call setGuestAccountTask;
     Activity mActivity;
     private String password;
     private String result;
@@ -52,25 +53,6 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
     private String openid;
     private final static int SetAccountSuccess = 999;
     String edit_accpunt,edit_password,edit_confirm_password;
-
-    private Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SetAccountSuccess:
-                    Log.i("jimi","修改游客账号成功");
-                    Toast.makeText(mActivity,"设置成功,请重新登录",Toast.LENGTH_SHORT).show();
-                    changeAccountUtil.changeAccount(mActivity,false,"",edit_accpunt,edit_password,edit_confirm_password);
-                    break;
-                case AppConfig.CODE_FAIL:
-                    String result = (String) msg.obj;
-                    showMsg(result);
-                    break;
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,20 +120,14 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
 
             @Override
             public void onSuccess(Object obj) {
-                // TODO Auto-generated method stub
-                Log.i("测试日志1", "obj" + obj.toString());
-                Msg msg = (Msg) obj;
-                if (msg.getCode().equals("0")) {
-                    sendData(SetAccountSuccess, obj, handler);
-                } else {
-                    sendData(AppConfig.CODE_FAIL, msg.getMessage(), handler);
-                }
+                Log.i("jimi","修改游客账号成功");
+                Toast.makeText(mActivity,"设置成功,请重新登录",Toast.LENGTH_SHORT).show();
+                changeAccountUtil.changeAccount(mActivity,false,"",edit_accpunt,edit_password,edit_confirm_password);
             }
 
             @Override
             public void onError(int statusCode) {
-                // TODO Auto-generated method stub
-                sendData(AppConfig.CODE_FAIL, AppConfig.getString(mActivity, "http_rror_msg"), handler);
+                showMsg(AppConfig.getString(mActivity, "http_rror_msg"));
             }
         });
     }
@@ -160,7 +136,7 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
     public void onDestroy() {
         super.onDestroy();
         if (setGuestAccountTask != null) {
-            setGuestAccountTask.cancel(false);
+            setGuestAccountTask.cancel();
         }
     }
 }

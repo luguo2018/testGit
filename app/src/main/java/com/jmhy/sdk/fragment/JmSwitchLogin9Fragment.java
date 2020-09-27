@@ -19,26 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jmhy.sdk.activity.JmAutoLoginActivity;
-import com.jmhy.sdk.activity.JmLoginActivity;
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.adapter.SwitchAccountAdapter9;
+import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.config.WebApi;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.Msg;
-import com.jmhy.sdk.push.PushService;
 import com.jmhy.sdk.sdk.JmhyApi;
-import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.UserInfo;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.view.CustomerCodeView;
 import com.jmhy.sdk.view.DeleteDialog;
-import com.jmhy.sdk.view.Exitdialog;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 
@@ -52,7 +47,7 @@ import java.util.Map;
 import static com.jmhy.sdk.config.AppConfig.skin9_switch_showDelete;
 
 public class JmSwitchLogin9Fragment extends JmBaseFragment implements
-        OnClickListener{
+        OnClickListener {
 
     // 吉米
     private String TAG = "jimisdk";
@@ -75,10 +70,10 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     private boolean flag = true;
     private boolean showDelete = false;
     private int j = 0;
-    private int auto_clickPosition=999;
+    private int auto_clickPosition = 999;
     private int count_down = 20;
 
-    private ApiAsyncTask mautoLoginTask;
+    private Call OkCall;
 
     static List<String> moreAccountList = new ArrayList<String>();
     static List<String> morePwdList = new ArrayList<String>();
@@ -126,10 +121,10 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onActivityCreated(savedInstanceState);
-        context=getActivity();
+        context = getActivity();
 //        intView();
         initView();
-        skin9_switch_showDelete=false;
+        skin9_switch_showDelete = false;
         setListInfo(skin9_switch_showDelete);
     }
 
@@ -147,15 +142,14 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     }
 
 
-
     private void setListInfo(boolean showDelete) {
-        Log.i("jimi数据111",moreAccountList+"\n"+moreTimeList+"\n"+moreTypeList);
+        Log.i("jimi数据111", moreAccountList + "\n" + moreTimeList + "\n" + moreTypeList);
         if (mSeference.isExitData()) {
             insertDataFromSerference();
         } else {
             insertDataFromFile();
         }
-        Log.i("jimi数据",moreAccountList+"\n"+moreTimeList+"\n"+moreTypeList);
+        Log.i("jimi数据", moreAccountList + "\n" + moreTimeList + "\n" + moreTypeList);
         mUserAdapter = new SwitchAccountAdapter9(getActivity(), moreAccountList, moreTimeList, moreTypeList);
         myListView.setAdapter(mUserAdapter);
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -163,10 +157,10 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!skin9_switch_showDelete) {
                     auto_clickPosition = position;
-                    account=moreAccountList.get(position);
-                    if (moreTypeList.size()!=0){
+                    account = moreAccountList.get(position);
+                    if (moreTypeList.size() != 0) {
                         autoLogin(moreUidList.get(position), moreTypeList.get(position));
-                    }else{
+                    } else {
                         autoLogin(moreUidList.get(position), "");
                     }
                 }
@@ -174,42 +168,39 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
         });
         mUserAdapter.setOnInnerItemOnClickListener(new SwitchAccountAdapter9.InnerItemOnclickListener() {
 
+            @Override
+            public void itemClick(final int position) {
+                // TODO Auto-generated method stub
+                DeleteDialog exitdialog = new DeleteDialog(getActivity(), AppConfig.resourceId(getActivity(), "jm_MyDialog", "style"), new DeleteDialog.DeleteDialogListener() {
                     @Override
-                    public void itemClick(final int position) {
-                        // TODO Auto-generated method stub
-                        DeleteDialog exitdialog = new DeleteDialog(getActivity(), AppConfig.resourceId(getActivity(), "jm_MyDialog", "style"), new DeleteDialog.DeleteDialogListener() {
-                            @Override
-                            public void onDelete() {
-                                Log.i("jimi","删除"+moreAccountList.get(position));
-                                mSeference.clearingTimeAndType(moreAccountList.get(position));
-                                mSeference.clearingAccount(moreAccountList.get(position));
-                                moreAccountList.remove(position);
-                                moreUidList.remove(position);
-                                morePwdList.remove(position);
+                    public void onDelete() {
+                        Log.i("jimi", "删除" + moreAccountList.get(position));
+                        mSeference.clearingTimeAndType(moreAccountList.get(position));
+                        mSeference.clearingAccount(moreAccountList.get(position));
+                        moreAccountList.remove(position);
+                        moreUidList.remove(position);
+                        morePwdList.remove(position);
 
-                                moreTimeList.remove(position);
-                                moreTypeList.remove(position);
+                        moreTimeList.remove(position);
+                        moreTypeList.remove(position);
 
-                                mUserAdapter.notifyDataSetChanged();
-                                Utils.saveUserToSd(getActivity());
-                                Utils.saveTimeAndTypeToSd(getActivity());
-                            }
+                        mUserAdapter.notifyDataSetChanged();
+                        Utils.saveUserToSd(getActivity());
+                        Utils.saveTimeAndTypeToSd(getActivity());
+                    }
 
-                            @Override
-                            public void onCancel() {
-                                Log.i("jimi","取消删除");
-                            }
-                        });
-                        exitdialog.show();
-
+                    @Override
+                    public void onCancel() {
+                        Log.i("jimi", "取消删除");
                     }
                 });
+                exitdialog.show();
 
-
+            }
+        });
 
 
     }
-
 
 
     private Handler handler = new Handler() {
@@ -220,28 +211,6 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                 return;
             }
             switch (msg.what) {
-                case AppConfig.AUTO_LOGIN_SUCCESS:
-                    LoginMessage result = (LoginMessage) msg.obj;
-                    Intent autoLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
-                    autoLoginIntent.putExtra("message", result.getMessage());
-                    autoLoginIntent.putExtra("openId", result.getOpenid());
-                    autoLoginIntent.putExtra("uName", result.getUname());
-                    autoLoginIntent.putExtra("token", result.getGame_token());
-                    autoLoginIntent.putExtra("url", Utils.toBase64url(result.getShow_url_after_login()));
-                    autoLoginIntent.putExtra("type", AppConfig.AUTO_LOGIN_SUCCESS);
-                    startActivity(autoLoginIntent);
-                    getActivity().finish();
-
-
-                    break;
-                case AppConfig.FLAG_FAIL:
-                    String resultmsg = (String) msg.obj;
-                    showMsg(resultmsg);
-                    JmSwitchLogin9Fragment.deleteAccount(getActivity(),true,account);
-                    AppConfig.ismobillg = false;
-                    Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(getActivity());
-                    replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
-                    break;
                 case AppConfig.CODE_SUCCESS:
                     flag = true;
                     new Thread(new Runnable() {
@@ -291,17 +260,15 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
         int id = v.getId();
         if (id == AppConfig.resourceId(getActivity(), "changeItem", "id")) {//删除item
             setListInfo(!skin9_switch_showDelete);
-            skin9_switch_showDelete=!skin9_switch_showDelete;
-            changeItem.setVisibility(skin9_switch_showDelete?View.GONE:View.VISIBLE);
-            complete.setVisibility(skin9_switch_showDelete?View.VISIBLE:View.GONE);
-        }
-        else if (id == AppConfig.resourceId(getActivity(), "changeItem_tv", "id")) {
+            skin9_switch_showDelete = !skin9_switch_showDelete;
+            changeItem.setVisibility(skin9_switch_showDelete ? View.GONE : View.VISIBLE);
+            complete.setVisibility(skin9_switch_showDelete ? View.VISIBLE : View.GONE);
+        } else if (id == AppConfig.resourceId(getActivity(), "changeItem_tv", "id")) {
             setListInfo(!skin9_switch_showDelete);
-            skin9_switch_showDelete=!skin9_switch_showDelete;
-            complete.setVisibility(skin9_switch_showDelete?View.VISIBLE:View.GONE);
-            changeItem.setVisibility(skin9_switch_showDelete?View.GONE:View.VISIBLE);
-        }
-        else if (id == AppConfig.resourceId(getActivity(), "to_home_login", "id")) {//返回登录首页
+            skin9_switch_showDelete = !skin9_switch_showDelete;
+            complete.setVisibility(skin9_switch_showDelete ? View.VISIBLE : View.GONE);
+            changeItem.setVisibility(skin9_switch_showDelete ? View.GONE : View.VISIBLE);
+        } else if (id == AppConfig.resourceId(getActivity(), "to_home_login", "id")) {//返回登录首页
             AppConfig.skin9_is_switch = false;
             Fragment mJmUserLoginFragment = Fragment.instantiate(getActivity(), JmLoginHomePage9Fragment.class.getName());
             replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
@@ -332,7 +299,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                 morePwdList.add(tempPwd);
                 moreUidList.add(tempUid);
             }
-            if (AppConfig.skin==9) {
+            if (AppConfig.skin == 9) {
                 if (tU.length() > 3) {
                     String time = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[3] : "empty");
                     String loginType = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[4] : "empty");
@@ -353,7 +320,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                 String time = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[3] : "empty");
                 String loginType = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[4] : "empty");
                 if (time.equals("empty") && !loginType.equals("empty")) {
-                    mSeference.saveTimeAndType(tempUser,time, loginType);
+                    mSeference.saveTimeAndType(tempUser, time, loginType);
                 }
             }
             if (!tempUser.equals("empty") && !tempPwd.equals("empty") && !tempUid.equals("empty")) {
@@ -384,13 +351,13 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
         Log.i("jimi测试", "timeAndTypecontentList数据：" + timeAndTypecontentList);
         if (timeAndTypecontentList == null)
             return false;
-        Log.i("jimi测试", "--------数据：" + timeAndTypecontentList+"---"+contentList);
-        if (timeAndTypecontentList.size()<contentList.size()){//账号数据多  时间类型数据少  旧版→新版
-            for (int i = 0; i < (timeAndTypecontentList.size()+contentList.size()); i++) {
+        Log.i("jimi测试", "--------数据：" + timeAndTypecontentList + "---" + contentList);
+        if (timeAndTypecontentList.size() < contentList.size()) {//账号数据多  时间类型数据少  旧版→新版
+            for (int i = 0; i < (timeAndTypecontentList.size() + contentList.size()); i++) {
                 moreTimeList.add(new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()));
                 moreTypeList.add("");
             }
-        }else {
+        } else {
             for (int i = 0; i < timeAndTypecontentList.size(); i++) {
                 moreTimeList.add(timeAndTypecontentList.get(i).get("time"));
                 moreTypeList.add(timeAndTypecontentList.get(i).get("loginType"));
@@ -402,10 +369,10 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
 
     @Override
     public void onDestroy() {
-        if (mautoLoginTask != null) {
-            mautoLoginTask.cancel(false);
+        if (OkCall != null) {
+            OkCall.cancel();
         }
-        if(handler != null){
+        if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
         super.onDestroy();
@@ -413,47 +380,45 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
 
         j = 0;
     }
+
     public void autoLogin(String logintoken, final String type) {
-        mautoLoginTask = JmhyApi.get().starlAutoLogin(getActivity(), AppConfig.appKey, logintoken, new ApiRequestListener() {
+        OkCall = JmhyApi.get().starlAutoLogin( logintoken, new ApiRequestListener() {
 
             @Override
             public void onSuccess(Object obj) {
-                if (obj != null) {
-                    LoginMessage loginMessage = (LoginMessage) obj;
+                LoginInfo loginInfo = (LoginInfo) obj;
+                Log.i("jimi", "账号" + loginInfo.getUname() + "类型" + type);
+                mSeference.saveTimeAndType(loginInfo.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), type);
 
-                    if (loginMessage.getCode().equals("0")) {
-                        Log.i("jimi","账号"+loginMessage.getUname()+"类型"+type);
-                        mSeference.saveTimeAndType(loginMessage.getUname(),new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()),type);
-
-                        mSeference.saveAccount(loginMessage.getUname(), "~~test",
-                                loginMessage.getLogin_token());
-                        AppConfig.saveMap(loginMessage.getUname(), "~~test",
-                                loginMessage.getLogin_token());
-                        Utils.saveUserToSd(getActivity());
-                        Utils.saveTimeAndTypeToSd(getActivity());
-                        sendData(AppConfig.AUTO_LOGIN_SUCCESS, obj,
-                                handler);
-
-                    } else {
-                        sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(),
-                                handler);
-                    }
-                } else {
-
-                    sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
-                            handler);
-                }
+                mSeference.saveAccount(loginInfo.getUname(), "~~test",
+                        loginInfo.getLogin_token());
+                AppConfig.saveMap(loginInfo.getUname(), "~~test",
+                        loginInfo.getLogin_token());
+                Utils.saveUserToSd(getActivity());
+                Utils.saveTimeAndTypeToSd(getActivity());
+                Intent autoLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
+                autoLoginIntent.putExtra("message", "登录成功");
+                autoLoginIntent.putExtra("openId", loginInfo.getOpenid());
+                autoLoginIntent.putExtra("uName", loginInfo.getUname());
+                autoLoginIntent.putExtra("token", loginInfo.getGame_token());
+                autoLoginIntent.putExtra("url", Utils.toBase64url(loginInfo.getShow_url_after_login()));
+                autoLoginIntent.putExtra("type", AppConfig.AUTO_LOGIN_SUCCESS);
+                startActivity(autoLoginIntent);
+                getActivity().finish();
             }
 
             @Override
             public void onError(int statusCode) {
-                sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
-                        handler);
+                showMsg(statusCode+"");
+                JmSwitchLogin9Fragment.deleteAccount(getActivity(), true, account);
+                AppConfig.ismobillg = false;
+                Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(getActivity());
+                replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
             }
         });
     }
 
-    public static void deleteAccount(Activity activity,boolean isJSChange,String deleteAccount) {
+    public static void deleteAccount(Activity activity, boolean isJSChange, String deleteAccount) {
         Seference mSeference = new Seference(activity);
         if (mSeference.isExitData()) {
             moreAccountList.clear();
@@ -473,13 +438,12 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
             timeAndTypecontentList = mSeference.getTimeAndTypeContentList();
             Log.i("jimi测试", "timeAndTypecontentList数据：" + timeAndTypecontentList);
             if (timeAndTypecontentList == null)
-                return ;
+                return;
             for (int i = 0; i < timeAndTypecontentList.size(); i++) {
                 moreTimeList.add(timeAndTypecontentList.get(i).get("time"));
                 moreTypeList.add(timeAndTypecontentList.get(i).get("loginType"));
             }
-        }
-        else {
+        } else {
             moreAccountList.clear();
             morePwdList.clear();
             moreUidList.clear();
@@ -518,7 +482,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                     String time = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[3] : "empty");
                     String loginType = ((tU != null && tU.split(":").length == 3) ? tU.split(":")[4] : "empty");
                     if (time.equals("empty") && !loginType.equals("empty")) {
-                        mSeference.saveTimeAndType(tempUser,time, loginType);
+                        mSeference.saveTimeAndType(tempUser, time, loginType);
                     }
                 }
                 if (!tempUser.equals("empty") && !tempPwd.equals("empty") && !tempUid.equals("empty")) {
@@ -529,14 +493,14 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
         }
 
         int position = -1;
-        if (isJSChange){//h5改号去账号里比对删除该账号
-            for(int i=0;i<moreAccountList.size();i++){
-                if (deleteAccount.equals(moreAccountList.get(i))){
-                    position=i;
+        if (isJSChange) {//h5改号去账号里比对删除该账号
+            for (int i = 0; i < moreAccountList.size(); i++) {
+                if (deleteAccount.equals(moreAccountList.get(i))) {
+                    position = i;
                 }
             }
-        }else{//原生登录后才会触发   直接取第0个记录去删
-            position=0;
+        } else {//原生登录后才会触发   直接取第0个记录去删
+            position = 0;
         }
         if (position != -1) {
             mSeference.clearingTimeAndType(moreAccountList.get(position));

@@ -42,13 +42,23 @@ public class FloatPayActivity extends BaseFloatActivity {
     }
 
     @Override
-    public void setViews(@Nullable String url) {
+    public void setViews( @Nullable String url) {
         if (contentView != null) {
             return;
         }
         murl = url;
         setContentView(AppConfig.resourceId(activity, "jmuserp", "layout"));
         intView();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    public boolean isShow() {
+        return super.isShow();
     }
 
     @Override
@@ -199,6 +209,7 @@ public class FloatPayActivity extends BaseFloatActivity {
 
     @Override
     public void removeContentView() {
+        super.removeContentView();
         if (contentView != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override

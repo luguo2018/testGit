@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.OkHttpManager;
 import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
 import com.jmhy.sdk.utils.MimeType;
@@ -50,14 +51,14 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         super(activity);
         this.closeFloatListener=listener;
     }
-
     @Override
     public void setContentView(@NonNull int layout_id) {
         super.setContentView(layout_id);
     }
 
+
     @Override
-    public void setViews(String url) {
+    public void setViews( String url) {
         if(contentView!=null){
             return;
         }
@@ -97,6 +98,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 
     @Override
     public void removeContentView() {
+        super.removeContentView();
+
         if (contentView != null) {
             activity.runOnUiThread(new Runnable() {
                 @Override
@@ -109,6 +112,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                     viewGroup1.removeAllViews();
                     Log.d(TAG, "removeContentView: childCount=" + count);
                     viewGroup.removeView(contentView);
+                    mWebview.clearCache(true);
                     mWebview=null;
                     mGifImageView=null;
                     FloatUserInfoActivity.this.parent=null;
@@ -119,6 +123,16 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             });
 
         }
+    }
+
+    @Override
+    public void show() {
+        super.show();
+    }
+
+    @Override
+    public boolean isShow() {
+        return super.isShow();
     }
 
     private void intView() {
@@ -258,9 +272,11 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 }
             }
         });
-
-        parent.setOnClickListener(this);
+        if(parent!=null){
+            parent.setOnClickListener(this);
+        }
         if (AppConfig.skin==9){//皮肤9的右侧返回键
+            if(right_back!=null)
             right_back.setOnClickListener(this);
         }
         mWebview.setWebChromeClient(new WebChromeClient() {

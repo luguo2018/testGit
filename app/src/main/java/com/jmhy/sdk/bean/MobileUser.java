@@ -1,20 +1,18 @@
-package com.jmhy.sdk.model;
+package com.jmhy.sdk.bean;
 
 import android.service.autofill.UserData;
 import android.util.Log;
 
 import com.jmhy.sdk.common.JiMiSDK;
 
-public class MobileUser  {
-    private String code;
+public class MobileUser {
     private String code_area;
-    private String moblie_code;
-    private String unname;
-    private String phone_register;
-    private String message;
-    private String moblie;
+    private String code;
+    private String uname;
     private String is_package_new;
-
+    private String h5_game_url;
+    private String hgu;
+    private String phone_register;
     private String openid;
     private String login_token;
     private String game_token;
@@ -25,13 +23,46 @@ public class MobileUser  {
     private String float_url_gift_center;
     private int float_red_recommend;
     private int show_set_account;
+    private String mobile;
 
-    public String getCode() {
-        return code;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getPhone_register() {
+        return phone_register;
+    }
+
+    public void setPhone_register(String phone_register) {
+        this.phone_register = phone_register;
+    }
+
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    public String getH5_game_url() {
+        return h5_game_url;
+    }
+
+    public void setH5_game_url(String h5_game_url) {
+        this.h5_game_url = h5_game_url;
+    }
+
+    public String getHgu() {
+        return hgu;
+    }
+
+    public void setHgu(String hgu) {
+        this.hgu = hgu;
     }
 
     public String getCode_area() {
@@ -50,45 +81,6 @@ public class MobileUser  {
         this.code_area = code_area;
     }
 
-    public String getMoblie_code() {
-        return moblie_code;
-    }
-
-    public void setMoblie_code(String moblie_code) {
-        this.moblie_code = moblie_code;
-    }
-
-    public String getUnname() {
-        return unname;
-    }
-
-    public void setUnname(String unname) {
-        this.unname = unname;
-    }
-
-    public String getPhone_register() {
-        return phone_register;
-    }
-
-    public void setPhone_register(String phone_register) {
-        this.phone_register = phone_register;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMoblie() {
-        return moblie;
-    }
-
-    public void setMoblie(String moblie) {
-        this.moblie = moblie;
-    }
 
 
     public String getOpenid() {
@@ -155,26 +147,6 @@ public class MobileUser  {
         this.float_red_recommend = float_red_recommend;
     }
 
-    @Override
-    public String toString() {
-        return "MobileUser{" +
-                "code='" + code + '\'' +
-                ", code_area='" + code_area + '\'' +
-                ", moblie_code='" + moblie_code + '\'' +
-                ", unname='" + unname + '\'' +
-                ", phone_register='" + phone_register + '\'' +
-                ", message='" + message + '\'' +
-                ", moblie='" + moblie + '\'' +
-                ", openid='" + openid + '\'' +
-                ", login_token='" + login_token + '\'' +
-                ", game_token='" + game_token + '\'' +
-                ", show_url_after_login='" + show_url_after_login + '\'' +
-                ", float_url_user_center='" + float_url_user_center + '\'' +
-                ", channel_user_info='" + channel_user_info + '\'' +
-                ", float_url_gift_center='" + float_url_gift_center + '\'' +
-                ", float_red_recommend=" + float_red_recommend +
-                '}';
-    }
 
     public int getShow_set_account() {
         return show_set_account;
@@ -190,9 +162,38 @@ public class MobileUser  {
 
     public void setIs_package_new(String is_package_new) {
         this.is_package_new = is_package_new;
-        Log.i("测试mobile","is_package_new"+is_package_new);
-        if (is_package_new.equals("1")){
+        Log.i("测试mobile", "is_package_new" + is_package_new);
+        if (is_package_new.equals("1")) {
             JiMiSDK.getStatisticsSDK().onRegister("JiMiSDK", true);
         }
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public String toString() {
+        return "MobileUser{" +
+                "code_area='" + code_area + '\'' +
+                ", uname='" + uname + '\'' +
+                ", is_package_new='" + is_package_new + '\'' +
+                ", h5_game_url='" + h5_game_url + '\'' +
+                ", hgu='" + hgu + '\'' +
+                ", openid='" + openid + '\'' +
+                ", login_token='" + login_token + '\'' +
+                ", game_token='" + game_token + '\'' +
+                ", show_url_after_login='" + show_url_after_login + '\'' +
+                ", float_url_user_center='" + float_url_user_center + '\'' +
+                ", float_url_home_center='" + float_url_home_center + '\'' +
+                ", channel_user_info='" + channel_user_info + '\'' +
+                ", float_url_gift_center='" + float_url_gift_center + '\'' +
+                ", float_red_recommend=" + float_red_recommend +
+                ", show_set_account=" + show_set_account +
+                '}';
     }
 }

@@ -12,10 +12,8 @@ import java.util.Date;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.http.JMApiTask;
 import com.jmhy.sdk.sdk.JmhyApi;
 
-import android.R.string;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -175,7 +173,7 @@ public class DealCrash implements UncaughtExceptionHandler {
 	private void upLoadToIntent(final Thread thread, final Throwable ex) {
 	String msg = "OS Version:"+mDeviceInfo.getSystemInfo()+ex;
 
-		bugtask = JmhyApi.get().starbug(mContext, AppConfig.appKey, AppConfig.openid, 
+		 JmhyApi.get().starbug(mContext, AppConfig.appKey, AppConfig.openid,
 				msg, new ApiRequestListener() {
 					
 					@Override

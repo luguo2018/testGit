@@ -13,11 +13,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.model.Guest;
-import com.jmhy.sdk.model.Registermsg;
+import com.jmhy.sdk.http.Result;
+import com.jmhy.sdk.bean.Guest;
+import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.Utils;
 
@@ -27,7 +28,8 @@ import com.jmhy.sdk.utils.Utils;
  */
 public class EmailRegisterFragment extends JmBaseFragment {
     private EditText email, password;
-    private ApiAsyncTask apiAsyncTask, mGuestTask;
+    private Call mGuestTask;
+    Call apiAsyncTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,8 +43,8 @@ public class EmailRegisterFragment extends JmBaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        email = (EditText)view.findViewById(AppConfig.resourceId(getActivity(), "email", "id"));
-        password = (EditText)view.findViewById(AppConfig.resourceId(getActivity(), "password", "id"));
+        email = (EditText) view.findViewById(AppConfig.resourceId(getActivity(), "email", "id"));
+        password = (EditText) view.findViewById(AppConfig.resourceId(getActivity(), "password", "id"));
         View visitorLogin = view.findViewById(AppConfig.resourceId(getActivity(), "visitor_login", "id"));
         View autoLogin = view.findViewById(AppConfig.resourceId(getActivity(), "auto_login", "id"));
         View submit = view.findViewById(AppConfig.resourceId(getActivity(), "submit", "id"));
@@ -75,47 +77,55 @@ public class EmailRegisterFragment extends JmBaseFragment {
 
     @Override
     public void onDestroy() {
-        if(apiAsyncTask != null){
-            apiAsyncTask.cancel(false);
+        if (apiAsyncTask != null) {
+            apiAsyncTask.cancel();
         }
-
-        if(mGuestTask != null){
-            mGuestTask.cancel(false);
+        if (mGuestTask != null) {
+            mGuestTask.cancel();
         }
-
         super.onDestroy();
     }
 
     public void guestLogin() {
         mGuestTask = JmhyApi.get().starguestLogin(getActivity(),
                 AppConfig.appKey, new ApiRequestListener() {
-
                     @Override
                     public void onSuccess(Object obj) {
-                        // TODO Auto-generated method stub
-                        if (obj != null) {
-                            Guest guest = (Guest) obj;
-                            if (guest.getCode().equals("0")) {
-                                mSeference.saveAccount(guest.getUname(),
-                                        "~~test", guest.getLogin_token());
-                                AppConfig.saveMap(guest.getUname(), "~~test",
-                                        guest.getLogin_token());
-                                Utils.saveUserToSd(getActivity());
-                                sendData(AppConfig.GUEST_lOGIN_SUCCESS, obj,
-                                        handler);
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL,
-                                        guest.getMessage(), handler);
-                            }
+                        Guest guest = (Guest) obj;
+                        mSeference.saveAccount(guest.getUname(),
+                                "~~test", guest.getLogin_token());
+                        AppConfig.saveMap(guest.getUname(), "~~test",
+                                guest.getLogin_token());
+                        Utils.saveUserToSd(getActivity());
+                        String murl = Utils
+                                .toBase64url(guest.getShow_url_after_login());
+
+                        if (!TextUtils.isEmpty(guest.getUpass())) {
+                            Fragment fragment = Fragment.instantiate(getActivity(), VisitorFragment.class.getName());
+                            Bundle args = new Bundle();
+                            // Log.i("kk",mobileUser.getMoblie())
+                            args.putString("username", guest.getUname());
+                            args.putString("upass", guest.getUpass());
+                            args.putString("msg", "登录成功");
+                            args.putString("gametoken", guest.getGame_token());
+                            args.putString("openid", guest.getOpenid());
+                            args.putString("url", murl);
+                            fragment.setArguments(args);
+                            addFragmentToActivity(getFragmentManager(),
+                                    fragment, AppConfig.resourceId(
+                                            getActivity(), "content", "id"));
                         } else {
-                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                                    getActivity(), "http_rror_msg"), handler);
+                            wrapaLoginInfo("success", "登录成功",
+                                    guest.getUname(), guest.getOpenid(),
+                                    guest.getGame_token());
+
+                            turnToNotice(murl);
+                            getActivity().finish();
                         }
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        // TODO Auto-generated method stub
                         sendData(
                                 AppConfig.FLAG_FAIL,
                                 AppConfig.getString(getActivity(),
@@ -124,7 +134,7 @@ public class EmailRegisterFragment extends JmBaseFragment {
                 });
     }
 
-    private void register(){
+    private void register() {
         String emailText = email.getText().toString();
         String passwordText = password.getText().toString();
 
@@ -141,37 +151,28 @@ public class EmailRegisterFragment extends JmBaseFragment {
     }
 
     private void register(final String username, final String password) {
-        apiAsyncTask = JmhyApi.get().startRegister(getActivity(),
-                AppConfig.appKey, username, password, new ApiRequestListener() {
+        apiAsyncTask = JmhyApi.get().startRegister(username, password, new ApiRequestListener() {
 
-                    @Override
-                    public void onSuccess(Object obj) {
-                        if (obj != null) {
-                            Registermsg registermsg = (Registermsg) obj;
-                            if (registermsg.getCode().equals("0")) {
-                                mSeference.saveAccount(username, "~~test",
-                                        registermsg.getAuto_login_token());
-                                AppConfig.saveMap(username, "~~test",
-                                        registermsg.getAuto_login_token());
-                                sendData(AppConfig.REGISTER_SUCCESS, obj,
-                                        handler);
-                            } else {
-                                sendData(AppConfig.FLAG_FAIL,
-                                        registermsg.getMessage(), handler);
-                            }
-                        } else {
-                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
-                                    getActivity(), "http_rror_msg"), handler);
-                        }
-                    }
+            @Override
+            public void onSuccess(Object obj) {
+                Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
+                mSeference.saveAccount(username, "~~test",
+                        registermsgResult.getData().getAuto_login_token());
+                AppConfig.saveMap(username, "~~test",
+                        registermsgResult.getData().getAuto_login_token());
+                sendData(AppConfig.REGISTER_SUCCESS, obj,
+                        handler);
+            }
 
-                    @Override
-                    public void onError(int statusCode) {
-                        sendData(AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
-                    }
-                });
+            @Override
+            public void onError(int statusCode) {
+                regFailed(statusCode + "");
+            }
+        });
+    }
+
+    private void regFailed(String code) {
+        showMsg(code);
     }
 
     private Handler handler = new Handler() {
@@ -179,10 +180,6 @@ public class EmailRegisterFragment extends JmBaseFragment {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case AppConfig.FLAG_FAIL:
-                    String resultmsg = (String) msg.obj;
-                    showMsg(resultmsg);
-                    break;
                 case AppConfig.REGISTER_SUCCESS:
                     Registermsg registermsg = (Registermsg) msg.obj;
 
@@ -190,36 +187,7 @@ public class EmailRegisterFragment extends JmBaseFragment {
 
                     getActivity().finish();
                     break;
-                case AppConfig.GUEST_lOGIN_SUCCESS:
-                    Guest guest = (Guest) msg.obj;
-                    String murl = Utils
-                            .toBase64url(guest.getShow_url_after_login());
 
-                    if (!TextUtils.isEmpty(guest.getUpass())) {
-
-                        Fragment fragment = Fragment.instantiate(getActivity(), VisitorFragment.class.getName());
-                        Bundle args = new Bundle();
-                        // Log.i("kk",mobileUser.getMoblie())
-                        args.putString("username", guest.getUname());
-                        args.putString("upass", guest.getUpass());
-                        args.putString("msg", guest.getMessage());
-                        args.putString("gametoken", guest.getGame_token());
-                        args.putString("openid", guest.getOpenid());
-                        args.putString("url", murl);
-                        fragment.setArguments(args);
-                        addFragmentToActivity(getFragmentManager(),
-                                fragment, AppConfig.resourceId(
-                                        getActivity(), "content", "id"));
-                    } else {
-
-                        wrapaLoginInfo("success", guest.getMessage(),
-                                guest.getUname(), guest.getOpenid(),
-                                guest.getGame_token());
-
-                        turnToNotice(murl);
-                        getActivity().finish();
-                    }
-                    break;
             }
         }
     };
