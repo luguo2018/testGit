@@ -1,5 +1,6 @@
 package com.jmhy.sdk.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.activity.JmAutoLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
@@ -218,13 +220,20 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
 		JiMiSDK.handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-						Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				intent.putExtra("url", url);
-				intent.putExtra("notice", true);
-				intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
-                JiMiSDK.mContext.startActivity(intent);
+				FloatUserInfoActivity floatUserInfoActivity = null;
+				if(floatUserInfoActivity==null){
+					floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+						@Override
+						public void closeFloat() {
+						}
+					});
+					floatUserInfoActivity.notice=true;
+					floatUserInfoActivity.setViews(url);
+					floatUserInfoActivity.show();
+				}else {
+					floatUserInfoActivity.setViews(url);
+					floatUserInfoActivity.show();
+				}
 			}
 		}, 1000);
 	}

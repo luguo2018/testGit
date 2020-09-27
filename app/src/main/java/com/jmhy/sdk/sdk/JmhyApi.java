@@ -376,7 +376,6 @@ public class JmhyApi {
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_AUTOLOGIN, params, new ResponseCallback<Result<LoginInfo>>() {
             @Override
             public void onSuccess(Result<LoginInfo> loginInfoResult) {
-                listener.onSuccess(loginInfoResult.getData());
                 LoginInfo loginInfo = loginInfoResult.data;
                 if (!TextUtils.isEmpty(loginInfo.getH5_game_url())) {
                     AppConfig.loginH5GameUrl = Utils.toBase64url(loginInfo.getH5_game_url());
@@ -400,6 +399,8 @@ public class JmhyApi {
                 } else {
                     AppConfig.skin9_show_setAccount = false;
                 }
+                listener.onSuccess(loginInfoResult.getData());
+
             }
 
             @Override
@@ -433,6 +434,29 @@ public class JmhyApi {
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USRRLOGIN, params, new ResponseCallback<Result<LoginInfo>>() {
             @Override
             public void onSuccess(Result<LoginInfo> result) {
+                LoginInfo loginInfo = result.data;
+                if (!TextUtils.isEmpty(loginInfo.getH5_game_url())) {
+                    AppConfig.loginH5GameUrl = Utils.toBase64url(loginInfo.getH5_game_url());
+                }
+                AppConfig.openid = loginInfo.getOpenid();
+                AppConfig.USERURL = Utils.toBase64url(loginInfo.getFloat_url_user_center());
+                AppConfig.GIFT = Utils.toBase64url(loginInfo.getFloat_url_gift_center());
+                AppConfig.float_url_home_center = Utils.toBase64url(loginInfo.getFloat_url_home_center());
+                if (loginInfo.getFloat_red_recommend() == 1) {
+                    AppConfig.showAccountTip = true;
+                    AppConfig.showGiftTip = false;
+                } else if (loginInfo.getFloat_red_recommend() == 2) {
+                    AppConfig.showAccountTip = false;
+                    AppConfig.showGiftTip = true;
+                } else if (loginInfo.getFloat_red_recommend() == 3) {
+                    AppConfig.showAccountTip = true;
+                    AppConfig.showGiftTip = true;
+                }
+                if (loginInfo.getShow_set_account() == 1) {
+                    AppConfig.skin9_show_setAccount = true;
+                } else {
+                    AppConfig.skin9_show_setAccount = false;
+                }
                 listener.onSuccess(result.getData());
             }
 
