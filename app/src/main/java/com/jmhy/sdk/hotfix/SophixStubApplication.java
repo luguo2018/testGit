@@ -5,6 +5,7 @@ import android.support.annotation.Keep;
 import android.util.Log;
 
 import com.jmhy.sdk.common.JMApplication;
+import com.jmhy.sdk.config.AppConfig;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
@@ -26,16 +27,9 @@ public class SophixStubApplication extends SophixApplication {
         initSophix();
     }
     private void initSophix() {
-        String appVersion = "0.0.0";
-        try {
-            appVersion = this.getPackageManager()
-                    .getPackageInfo(this.getPackageName(), 0)
-                    .versionName;
-        } catch (Exception e) {
-        }
         final SophixManager instance = SophixManager.getInstance();
         instance.setContext(this)
-                .setAppVersion(appVersion)
+                .setAppVersion(AppConfig.SDK_VER)
                 .setSecretMetaData(null, null, null)
                 .setEnableDebug(true)
                 .setEnableFullLog()

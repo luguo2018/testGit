@@ -35,7 +35,6 @@ import com.jmhy.sdk.adapter.UserAdapter;
 import com.jmhy.sdk.adapter.UserAdapter.InnerItemOnclickListener;
 import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.model.LoginMessage;
@@ -162,7 +161,7 @@ public class JmUserLoginFragment extends JmBaseFragment implements
         contentView = getView().findViewById(
                 AppConfig.resourceId(getActivity(), "content_view", "id"));
 
-        mTvversion.setText("v" + AppConfig.sdk_version);
+        mTvversion.setText("v" + AppConfig.SDK_VER);
         if (mSeference.isExitData()) {
             String temUser = mSeference.getPreferenceData(
                     Seference.ACCOUNT_FILE_NAME, Seference.ACCOUNT_1);

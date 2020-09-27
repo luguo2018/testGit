@@ -1,5 +1,7 @@
 package com.jmhy.sdk.sdk;
 
+import com.huosdk.gson.Gson;
+import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.bean.InitInfo;
 import com.jmhy.sdk.model.InitExt;
 import com.jmhy.sdk.utils.DialogUtils;
@@ -9,6 +11,7 @@ import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.push.PushService;
 import com.jmhy.sdk.utils.FloatUtils;
+import com.jmhy.sdk.utils.JsonUtils;
 import com.jmhy.sdk.utils.PackageUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.Utils;
@@ -106,10 +109,16 @@ public class InitData {
         AppConfig.add_global_script_url = Utils.toBase64url(result.getAdd_global_script_url());
         AppConfig.switch_login = result.getSwitch_login() + "";
         AppConfig.skin = result.getSkin();
-        AppConfig.sdkList = result.getChannel_sdk_list();
+        AppConfig.ali_hot_fix = result.getAli_hot_fix();
+        try {
+            AppConfig.sdkList = JsonUtils.beanToJson(result.getChannel_sdk_list());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
+        Log.i("测试jimsdk", "一键登录key:" + result.getMoblie_direct_login().toString());
         if (result.getMoblie_direct_login() != null) {
-            AppConfig.oneKeyLogin_SecretKey = result.getMoblie_direct_login().optString("clientSecret");
+            AppConfig.oneKeyLogin_SecretKey = result.getMoblie_direct_login().getClientSecret();
             Log.i("测试jimsdk", "一键登录key:" + AppConfig.oneKeyLogin_SecretKey);
         }
         seference.savePreferenceData("game", "token", result.getAccess_token());
@@ -132,6 +141,7 @@ public class InitData {
             intent.putExtra("notice", true);
             intent.setClass(context, JmUserinfoActivity.class);
             context.startActivity(intent);
+
         }
         listener.Success("success");
 

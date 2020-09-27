@@ -3,6 +3,7 @@ package com.jmhy.sdk.model;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
         lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         this.contentView = contentView;
+        Log.e("TAG", "setContentView: "+contentView.hashCode() );
     }
 
     public void show() {

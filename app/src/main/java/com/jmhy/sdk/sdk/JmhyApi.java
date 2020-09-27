@@ -17,7 +17,6 @@ import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.JSONParse;
 import com.jmhy.sdk.http.OkHttpException;
@@ -114,7 +113,7 @@ public class JmhyApi {
         paramsdata.put("campaign_id", ver + "");
         paramsdata.put("package_name", deviceInfo.getPackagename() + "");
         paramsdata.put("device", DEVICE + "");
-        paramsdata.put("sdk_version", AppConfig.sdk_version + "");
+        paramsdata.put("sdk_version", AppConfig.SDK_VER + "");
         paramsdata.put("package_version", AppConfig.version + "");
         paramsdata.put("game_version", Utils.getVersion(context));
         paramsdata.put("uuid", deviceInfo.getUuid() + "");
@@ -449,7 +448,7 @@ public class JmhyApi {
      * 修改用户账号
      */
     public Call startSetAccount(Context context, String appkey, String account, String password, String confirm_password, final ApiRequestListener listener) {
-        HashMap<String, String> params = new HashMap< >();
+        HashMap<String, String> params = new HashMap<>();
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
         params.put("uname", account + "");
@@ -618,6 +617,7 @@ public class JmhyApi {
         return call;
     }
 
+
     /**
      * 切换账号
      *
@@ -718,10 +718,16 @@ public class JmhyApi {
         paramsdata.put("ext", ext + "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONLINE, params, new ResponseCallback<Result<OnlineMessage>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONLINE, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<OnlineMessage> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String result) {
+                OnlineMessage onlineMessage = null;
+                try {
+                    onlineMessage = JSONParse.parseOnlineNotify(result);
+                    listener.onSuccess(onlineMessage);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

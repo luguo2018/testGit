@@ -53,6 +53,7 @@ dependencies {
     implementation files('libs\\alicloud-android-ut-5.4.3.jar')
     implementation files('libs\\alicloud-android-utdid-2.5.1-proguard.jar')
     implementation files('libs\\alicloud-android-utils-1.1.6.4.jar')
+    implementation files('libs\\jrtt.jar')
     testImplementation 'junit:junit:4.12'
     api files('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 //    implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -88,7 +89,7 @@ task assembleJrttJar(type: Jar, dependsOn: "assembleRelease") {
     exclude "**/R.class"
     exclude "**/R\$*.class"
     //只导入资源路径集下的部分资源
-    include "com/jmhy/sdk/statistics/JrttStatistics.class"
+    include "com/jmhy/sdk/statistics/*"
 }
 
 task assembleMiitHelperJar(type: Jar, dependsOn: "assembleRelease") {

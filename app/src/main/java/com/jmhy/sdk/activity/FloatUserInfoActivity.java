@@ -112,6 +112,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                     viewGroup1.removeAllViews();
                     Log.d(TAG, "removeContentView: childCount=" + count);
                     viewGroup.removeView(contentView);
+                    mWebview.clearCache(true);
                     mWebview=null;
                     mGifImageView=null;
                     FloatUserInfoActivity.this.parent=null;
@@ -271,9 +272,11 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 }
             }
         });
-
-        parent.setOnClickListener(this);
+        if(parent!=null){
+            parent.setOnClickListener(this);
+        }
         if (AppConfig.skin==9){//皮肤9的右侧返回键
+            if(right_back!=null)
             right_back.setOnClickListener(this);
         }
         mWebview.setWebChromeClient(new WebChromeClient() {

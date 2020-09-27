@@ -44,7 +44,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends Activity {
     private final static String TAG = MainActivity.class.getSimpleName();
-    private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout,mHotFix,test;
+    private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout,mHotFix;
     private Button force_exit;
     private LinearLayout mRoleLayout;
 
@@ -146,13 +146,6 @@ public class MainActivity extends Activity {
         mRoleLayout = findViewById(R.id.role_ll);
         force_exit = findViewById(R.id.force_exit);
         mHotFix=findViewById(R.id.hot_fix);
-        test = findViewById(R.id.test);
-        test.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(MainActivity.this,"测试成功",Toast.LENGTH_LONG).show();
-            }
-        });
         /************************
          *    初始化接口调用        *
          *   接口在主线程调用哦^_^  *
@@ -332,7 +325,7 @@ public class MainActivity extends Activity {
         mHotFix.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                SophixManager.getInstance().queryAndLoadNewPatch();
+                Toast.makeText(MainActivity.this,"我已经热更新好了",Toast.LENGTH_LONG).show();
             }
         });
 

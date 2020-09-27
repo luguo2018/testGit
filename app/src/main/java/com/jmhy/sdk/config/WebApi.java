@@ -140,6 +140,8 @@ public class WebApi {
 	public static String ACTION_CLEANNOTICE;
 	//一键登录
 	public static String ACTION_ONEKEYLOGIN;
+	//热更新查询
+	public static String HOTFIX_INQUIRE;
 
 
 }

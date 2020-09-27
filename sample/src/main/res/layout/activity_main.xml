@@ -78,13 +78,8 @@
         android:id="@+id/hot_fix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="热更新"
+        android:text="我是热更新之后"
         tools:visibility="visible" />
-    <Button
-        android:id="@+id/test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="热更新成功"
-        tools:visibility="visible" />
+
 
 </LinearLayout>

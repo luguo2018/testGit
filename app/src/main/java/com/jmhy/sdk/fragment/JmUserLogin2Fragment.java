@@ -33,7 +33,6 @@ import com.jmhy.sdk.adapter.UserAdapter;
 import com.jmhy.sdk.adapter.UserAdapter.InnerItemOnclickListener;
 import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.sdk.JmhyApi;
@@ -130,7 +129,7 @@ public class JmUserLogin2Fragment extends JmBaseFragment implements
 
         TextView mTvversion = (TextView) getView().findViewById(AppConfig.resourceId(getActivity(),
                 "tvversion", "id"));
-        mTvversion.setText(String.format("v%s", AppConfig.sdk_version));
+        mTvversion.setText(String.format("v%s", AppConfig.SDK_VER));
 
         if (mSeference.isExitData()) {
             String temUser = mSeference.getPreferenceData(

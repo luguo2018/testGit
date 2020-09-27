@@ -5,7 +5,6 @@ import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.bean.Guest;
@@ -169,7 +168,7 @@ public class JmUserRegisterFragment extends JmBaseFragment implements
         mIvkefu.setOnClickListener(this);
         mTvversion = (TextView) getView().findViewById(AppConfig.resourceId(getActivity(),
                 "tvversion", "id"));
-        mTvversion.setText("v" + AppConfig.sdk_version);
+        mTvversion.setText("v" + AppConfig.SDK_VER);
 
         contentView = getView().findViewById(
                 AppConfig.resourceId(getActivity(), "content_view", "id"));

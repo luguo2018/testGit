@@ -3,8 +3,6 @@ package com.jmhy.sdk.fragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,12 +20,10 @@ import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.bean.Guest;
 import com.jmhy.sdk.bean.MobileUser;
 import com.jmhy.sdk.http.Result;
-import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -119,7 +115,7 @@ public class JmPhonerLogin3Fragment extends JmBaseFragment implements
 
         TextView mTvversion = (TextView) getView().findViewById(AppConfig.resourceId(getActivity(),
                 "tvversion", "id"));
-        mTvversion.setText(String.format("v%s", AppConfig.sdk_version));
+        mTvversion.setText(String.format("v%s", AppConfig.SDK_VER));
     }
 
 

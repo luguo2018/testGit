@@ -23,6 +23,7 @@ import com.jmhy.sdk.activity.PermissionActivity;
 import com.jmhy.sdk.activity.PermissionActivity.PermissionResultListener;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
+import com.jmhy.sdk.hotfix.HotFixManager;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.bean.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
@@ -239,12 +240,13 @@ public class JiMiSDK {
 				@Override
 				public void Success(String msg) {
 //					AppConfig.skin = 8;
-					Log.i(TAG, "初始化接口 version : " + AppConfig.sdk_version + ", skin : " + AppConfig.skin);
+					Log.i(TAG, "初始化接口 version : " + AppConfig.SDK_VER + ", skin : " + AppConfig.skin);
 					Log.i(TAG, "init success");
 					init = true;
 					listener.Success(msg);
-
 					statisticsSDK.initInterface(mContext, AppConfig.sdkList);
+					//初始化成功去调用查询是否有热更新接口
+					HotFixManager.inquire();
 				}
 
 				@Override
