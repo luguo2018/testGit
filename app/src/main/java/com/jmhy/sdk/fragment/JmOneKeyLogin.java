@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+
 import com.alibaba.fastjson.JSON;
 import com.jmhy.sdk.activity.JmBaseActivity;
 import com.jmhy.sdk.config.AppConfig;
@@ -40,7 +41,7 @@ public class JmOneKeyLogin extends JmBaseActivity {
     private TokenResultListener mTokenListener;
     private String json;
     private String token;
-//    private String key = "dYG3R2817Btq+mHwklkVO30+xhyxc8ZWQh5wIFYe9ebf6I4wltzmh7KVlSIpG5n5s1QHvsTFM1TEHpQYSWaRgmQMSpsyDQAUEBx3CZb0QABmNRe71rw/Q5DFzJBuoxXo4c2R3vPVIB961dTvNCgfR6VZtGQLgkovX7vYAlnWhc+C0bv4/leKaZyW5jgogmEwX6aHTprM/HsqB3dzs+dqt3M+n7ZejUb2ZevVlc31hizQm2sP7J+Jggg9vRFATHrnb+dNIYFAoIctj3ho9sJ8BkTz2Qr/1s7Q";
+    //    private String key = "dYG3R2817Btq+mHwklkVO30+xhyxc8ZWQh5wIFYe9ebf6I4wltzmh7KVlSIpG5n5s1QHvsTFM1TEHpQYSWaRgmQMSpsyDQAUEBx3CZb0QABmNRe71rw/Q5DFzJBuoxXo4c2R3vPVIB961dTvNCgfR6VZtGQLgkovX7vYAlnWhc+C0bv4/leKaZyW5jgogmEwX6aHTprM/HsqB3dzs+dqt3M+n7ZejUb2ZevVlc31hizQm2sP7J+Jggg9vRFATHrnb+dNIYFAoIctj3ho9sJ8BkTz2Qr/1s7Q";
     private String key = AppConfig.oneKeyLogin_SecretKey;
 
     private int mScreenWidthDp;
@@ -50,12 +51,6 @@ public class JmOneKeyLogin extends JmBaseActivity {
     private OneKeyLoginListener listener;
     private ProgressDialog mProgressDialog;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mContext = this;
-    }
 
     public void invoke(Context context, final OneKeyLoginListener listener ) {
         this.listener = listener;
@@ -110,7 +105,7 @@ public class JmOneKeyLogin extends JmBaseActivity {
                         if (code.equals("700001")) {//选择其它方式
                             cancleLogin(mAlicomAuthHelper, s);
                         } else {//登录失败
-                            closeLogin(mAlicomAuthHelper, msg);
+                            closeLogin(mAlicomAuthHelper, s);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -141,7 +136,7 @@ public class JmOneKeyLogin extends JmBaseActivity {
             } else {
                 Log.i(TAG, "暂时无法使用，手机卡未打开或者已损坏");
                 AppConfig.showOneKeyLogin = false;
-                closeLogin(mAlicomAuthHelper, "暂时无法使用，手机卡未打开或者已损坏");
+//                closeLogin(mAlicomAuthHelper, "暂时无法使用，手机卡未打开或者已损坏");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,6 +144,12 @@ public class JmOneKeyLogin extends JmBaseActivity {
             Toast.makeText(context, "调用异常："+e, Toast.LENGTH_SHORT).show();
             ((Activity) context).finish();
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = this;
     }
 
     private void landscapeConfigLoginTokenLandDialog() {
@@ -331,14 +332,14 @@ public class JmOneKeyLogin extends JmBaseActivity {
         return imageView;
     }
 
-    private void closeLogin(PhoneNumberAuthHelper mAlicomAuthHelper, String msg) {
+    private void closeLogin(PhoneNumberAuthHelper mAlicomAuthHelper,String msg) {
         hideLoadingDialog();
         mAlicomAuthHelper.quitLoginPage();
         mAlicomAuthHelper.hideLoginLoading();
         listener.onError(msg);
     }
 
-    private void cancleLogin(PhoneNumberAuthHelper mAlicomAuthHelper, String msg) {
+    private void cancleLogin(PhoneNumberAuthHelper mAlicomAuthHelper,String msg) {
         hideLoadingDialog();
         mAlicomAuthHelper.quitLoginPage();
         mAlicomAuthHelper.hideLoginLoading();

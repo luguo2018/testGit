@@ -65,6 +65,7 @@
     <string name="float_snapshot_save">二维码已保存到相册</string>
     <string name="exit_title">是否退出游戏？</string>
     <string name="delete_title">是否删除账号？</string>
+    <string name="hide_title">点击确认隐藏，我将在下次登录时回归</string>
     <string name="exit_no">继续游戏</string>
     <string name="exit_yes">退出游戏</string>
     <string name="email_edit_hint">请输入邮箱账号</string>

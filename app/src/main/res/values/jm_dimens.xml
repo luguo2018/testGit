@@ -59,4 +59,6 @@
     <dimen name="jm_skin9_pading_icon_height">30dp</dimen>
     <dimen name="jm_skin9_pading_icon_width2">50dp</dimen>
     <dimen name="jm_skin9_pading_icon_height2">40dp</dimen>
+    <dimen name="jm_skin9_float_shape_w_h">120dp</dimen>
+    <dimen name="jm_skin9_float_shape_w_h_top">140dp</dimen>
 </resources>

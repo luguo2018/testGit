@@ -2,6 +2,7 @@ package com.jmhy.sdk.sdk;
 
 import com.huosdk.gson.Gson;
 import com.jmhy.sdk.activity.FloatUserInfoActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.model.InitExt;
 import com.jmhy.sdk.model.InitMsg;
 import com.jmhy.sdk.utils.DialogUtils;
@@ -12,13 +13,17 @@ import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.push.PushService;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.JsonUtils;
+import com.jmhy.sdk.utils.MediaUtils;
 import com.jmhy.sdk.utils.PackageUtils;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.Utils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -28,6 +33,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class InitData {
 
     private InitListener listener;
@@ -35,7 +42,7 @@ public class InitData {
 
     private String ver_id;
     private Seference seference;
-
+    private File file;
     public InitData(Context context, String ver_id, InitListener listener) {
         this.context = context;
         this.ver_id = ver_id;
@@ -68,6 +75,43 @@ public class InitData {
                         Log.i("jimi", "参数" + obj);
                         InitMsg result = (InitMsg) obj;
                         setInit(result);
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                String md5_float_url_name = SecurityUtils.getMD5Str(AppConfig.float_icon_url);
+                                String md5_loading_url_name = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
+                                File icon_file,loading_file;
+                                if (file==null) {
+                                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                                        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+                                    } else {
+                                        file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                                    }
+                                }
+
+                                icon_file = new File(file + "/" + md5_float_url_name + ".gif");
+                                if (!icon_file.exists()){
+                                    String path = MediaUtils.getImagePath(AppConfig.	float_icon_url, context);
+                                    MediaUtils.copyFile(path, icon_file.toString());
+                                }else{
+                                    Log.i("jimi","icon_file文件存在"+icon_file);
+                                }
+
+                                loading_file = new File(file + "/" + md5_loading_url_name + ".gif");
+                                if (!loading_file.exists()){
+                                    String path =MediaUtils.getImagePath(AppConfig.web_loading_url, context);
+                                    MediaUtils.copyFile(path, loading_file.toString());
+                                }else{
+                                    Log.i("jimi","loading_file文件存在"+loading_file);
+                                }
+
+
+
+                            }
+                        }).start();
+
                     }
 
                     @Override

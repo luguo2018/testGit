@@ -87,6 +87,8 @@ public class JSONParse {
 
             result.setAddglobalscripturl(dataObject.optString("add_global_script_url"));
             result.setMoblie_direct_login(dataObject.optString("moblie_direct_login"));
+            AppConfig.float_icon_url =Utils.toBase64url(dataObject.optString("float_icon_url"));
+            AppConfig.web_loading_url=Utils.toBase64url(dataObject.optString("web_loading_url"));
         }
         return result;
     }

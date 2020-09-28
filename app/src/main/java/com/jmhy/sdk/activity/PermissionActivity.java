@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,8 @@ import com.jmhy.sdk.config.AppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * create by yhz on 2018/9/21
@@ -40,6 +43,8 @@ public class PermissionActivity extends Activity {
     private TextView confirm_tv;
     private ImageView state1,state2;
     private View mView;
+    private Timer mTimer;
+    private TimerTask mTimerTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,6 +74,39 @@ public class PermissionActivity extends Activity {
             return;
         }
         init(list);
+
+        refreshState();
+    }
+
+    private void refreshState() {
+        if (mTimerTask==null) {
+            mTimerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    list.clear();
+                    for (String permission : permissionList) {
+                        if (ContextCompat.checkSelfPermission(PermissionActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+                            list.add(permission);
+                        }
+                    }
+                    Log.i("jimi","权限测试:"+list);
+                    show(list);
+
+                    if (list.size()>0){
+
+                    }else{
+                        removeTimer();
+                        onPermissionRequestResult(true);
+                    }
+
+                }
+            };
+        }
+        if (mTimer==null){
+            mTimer=new Timer();
+        }
+
+        mTimer.schedule(mTimerTask, 500, 500);
     }
 
     private void show(final List<String> list) {
@@ -93,8 +131,11 @@ public class PermissionActivity extends Activity {
         confirm_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+                if (list.size() > 0) {
+                    ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+                }
                 mView.setVisibility(View.GONE);
+                removeTimer();
             }
         });
         for (int i=0;i<list.size();i++){
@@ -109,10 +150,21 @@ public class PermissionActivity extends Activity {
 
     }
 
+    void removeTimer() {
+        if (mTimerTask!=null){
+            mTimerTask.cancel();
+            mTimerTask=null;
+        }
+        if (mTimer!=null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        Log.i("jimi","权限测试"+requestCode+"\n"+permissions+"\n"+grantResults);
         if (requestCode == REQUEST_PERMISSION) {
             for (int grant : grantResults) {
                 if (grant != PackageManager.PERMISSION_GRANTED) {
@@ -159,6 +211,7 @@ public class PermissionActivity extends Activity {
 
         listener = null;
         permissionList = null;
+        removeTimer();
         finish();
     }
 

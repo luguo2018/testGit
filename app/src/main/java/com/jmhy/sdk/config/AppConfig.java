@@ -97,6 +97,8 @@ public class AppConfig {
     public static List<String> iphoneidList = new ArrayList<>();
     public static String oridId;
     public static int ali_hot_fix = 0;
+    public static String float_icon_url;
+    public static String web_loading_url ;
 
     public static void saveMap(String user, String pwd, String uid) {
         loginMap.put("user", user);

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible">
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/float_hide_top"
+        android:layout_width="@dimen/jm_skin9_float_shape_w_h_top"
+        android:layout_height="@dimen/jm_skin9_float_shape_w_h_top"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/jm_float9_right_shape"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingTop="30dp"/>
+    <LinearLayout
+        android:id="@+id/float_hide"
+        android:layout_width="@dimen/jm_skin9_float_shape_w_h"
+        android:layout_height="@dimen/jm_skin9_float_shape_w_h"
+        android:layout_gravity="right|bottom"
+        android:background="@drawable/jm_float9_right_shape"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingTop="30dp">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/jm_float_hide" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="隐藏浮窗"
+            android:textColor="@color/jmfont_white" />
+    </LinearLayout>
+</FrameLayout>

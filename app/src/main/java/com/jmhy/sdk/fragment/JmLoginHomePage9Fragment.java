@@ -287,6 +287,7 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Log.i("jimi", "一键登录返回数据错误" + e);
+                                sendData(oneKeyLoginFail, "登录失败，请切换其他方式注册登录或者稍后重试", handler);
                             }
                         }
 
@@ -297,7 +298,7 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
 
                             Message message = handler.obtainMessage();
                             message.what = oneKeyLoginFail;
-                            message.obj = "登录校验失败";
+                            message.obj = "登录失败，请切换其他方式注册登录或者稍后重试";
                             handler.sendMessage(message);
                         }
                     });

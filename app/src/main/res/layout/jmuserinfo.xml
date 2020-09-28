@@ -19,8 +19,8 @@
             android:id="@+id/content"
             android:layout_width="@dimen/jm_pay_width"
             android:layout_height="@dimen/jm_pay_height"
-            android:background="@color/jmfont_white"
-            app:jm_radius="@dimen/jm_webview_radius">
+            android:background="@drawable/jm_base_login_white_bg_9"
+            app:jm_radius="@dimen/jm_userinfo_radius">
 
             <WebView
                 android:id="@+id/webview"

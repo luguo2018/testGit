@@ -1,6 +1,6 @@
 <resources>
     <dimen name="jm_login_width">334dp</dimen>
-    <dimen name="jm_login_height">378dp</dimen>
+    <dimen name="jm_login_height">350dp</dimen>
     <dimen name="jm_login_height_old">378dp</dimen>
     <dimen name="jm_register_height_old">314dp</dimen>
     <dimen name="jm_guest_height_old">287dp</dimen>

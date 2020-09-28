@@ -1,17 +1,19 @@
-
-
 package com.jmhy.sdk.view;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,13 +30,17 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.activity.JmCommunityActivity;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.utils.DisplayUtil;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.utils.Utils;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,7 +50,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private final int HANDLER_TYPE_HIDE_LOGO = 150;// 隐藏LOGO
     private final int SHOW_KEFU_FLOAT = 160;// 显示客服小红点
 
-    private WindowManager.LayoutParams mWmParams;
+    private WindowManager.LayoutParams mWmParams,mWmParams2;
     private WindowManager mWindowManager;
     private static Context mContext;
     private ObjectAnimator animator = null;
@@ -59,8 +65,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private View iconTip;
     private View kefuTip;
     private View view;
+    private View hideView;
+    private View float_hide_top,float_hide;
     private FrameLayout mFlFloatLogo;
-
     private boolean mIsRight = false;// logo是否在右边
     private boolean mCanHide;// 是否允许隐藏
     private boolean showFloatLogo;// 显示浮标
@@ -81,6 +88,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private Timer mTimer, getStateTimer;
     private TimerTask mTimerTask;
     private static ApiAsyncTask loginouttask;
+    private File file = null;
+    private boolean canVibrate = true;
+    private boolean showDialog = false;
+
     Handler mTimerHandler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -98,13 +109,19 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         }*/
 
                         setFloatLogo("jm_float_on_9","jm_float_on_new", "jm_float_on_red", "jm_float_on_4", "jm_float_on_3", "jm_float_on");
-                        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
-                        layoutParams.width = DisplayUtil.dip2px(getContext(), smallWidth);
-                        Log.i(TAG, "hidden");
-
+                        if (AppConfig.skin!=9) {
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
+                            layoutParams.width = DisplayUtil.dip2px(getContext(), smallWidth);
+                            Log.i(TAG, "hidden");
+                        }
                         refreshIconTip();
 
-                        mWmParams.alpha = 0.7f;
+                        if (AppConfig.skin==7){
+                            mWmParams.alpha = 1f;
+                        }else{
+                            mWmParams.alpha = 0.7f;
+                        }
+
                         if (mContext == null) {
                             Log.i(TAG, "mContext is null");
                         } else {
@@ -118,6 +135,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case SHOW_KEFU_FLOAT:
+                    if (showFloatLogo){//打开浮窗web页面时  不抖动浮标
+                        return;
+                    }
+
                     show();
                     //显示客服小红点
                     if (AppConfig.skin==9){
@@ -135,7 +156,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWindowManager.updateViewLayout(view, mWmParams);
                     mCanHide=false;//有消息设置false不让悬浮窗隐藏到左边
                     mDraging = false;
-                    ObjectrotationAnim();
+                    if (AppConfig.skin==9){
+                        startAnim();
+                    }
                     removeTimerTask();
                     break;
             }
@@ -150,7 +173,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     }
 
     public void setRedDotState() {
-        Log.i("查看","浮窗展示"+ showFloatLogo);
         if (showFloatLogo){
             Message message = mTimerHandler.obtainMessage();
             message.what = SHOW_KEFU_FLOAT;
@@ -186,9 +208,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         // 设置图片格式，效果为背景透明
         mWmParams.format = PixelFormat.RGBA_8888;
         // 设置浮动窗口不可聚焦（实现操作除浮动窗口外的其他可见窗口的操作）
-        mWmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+//        mWmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 //        mWmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-
+        mWmParams.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION|WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
         // 调整悬浮窗显示的停靠位置为左侧置?
         mWmParams.gravity = Gravity.LEFT | Gravity.TOP;
 
@@ -204,6 +226,16 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         mWmParams.width = LayoutParams.WRAP_CONTENT;
         mWmParams.height = LayoutParams.WRAP_CONTENT;
         try {
+            if (AppConfig.skin == 9) {
+                mWmParams2 = new WindowManager.LayoutParams();
+                mWmParams2.format = PixelFormat.RGBA_8888;
+                mWmParams2.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION|WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                mWmParams2.width = LayoutParams.WRAP_CONTENT;
+                mWmParams2.height = LayoutParams.WRAP_CONTENT;
+                mWmParams2.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+                mWindowManager.addView((createHideView(mContext)), mWmParams2);
+                hideView.setVisibility(INVISIBLE);
+            }
             addView(createView(mContext));
             mWindowManager.addView(this, mWmParams);
         } catch (Exception e) {
@@ -257,6 +289,21 @@ public class FloatView extends FrameLayout implements OnTouchListener {
      * @param context
      * @return
      */
+    private View createHideView(final Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        // 从布局文件获取浮动窗口视图
+        hideView = inflater.inflate(AppConfig.resourceId(context, "jm_float_rb_hide_9", "layout"), null);
+        float_hide_top = hideView.findViewById(AppConfig.resourceId(context, "float_hide_top", "id"));
+        float_hide = hideView.findViewById(AppConfig.resourceId(context, "float_hide", "id"));
+        return hideView;
+    }
+
+    /**
+     * 创建Float view
+     *
+     * @param context
+     * @return
+     */
     private View createView(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         // 从布局文件获取浮动窗口视图
@@ -265,7 +312,11 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
         switch (AppConfig.skin) {
             case 9:
-                rootFloatView = inflater.inflate(AppConfig.resourceId(context, "jm_float_view_9", "layout"), null);
+                if (gifExists()){
+                    rootFloatView = inflater.inflate(AppConfig.resourceId(context, "jm_float_view_9_hongbao", "layout"), null);
+                }else{
+                    rootFloatView = inflater.inflate(AppConfig.resourceId(context, "jm_float_view_9", "layout"), null);
+                }
                 break;
             case 7:
                 rootFloatView = inflater.inflate(
@@ -444,6 +495,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                 float mMoveStartY = event.getY();
                 // 如果移动量大于3才移动
                 if (Math.abs(mTouchStartX - mMoveStartX) > 3 || Math.abs(mTouchStartY - mMoveStartY) > 3) {
+                    if (hideView!=null){
+                        hideView.setVisibility(VISIBLE);
+                    }
                     mDraging = true;
                     // 更新浮动窗口位置参数
                     mWmParams.x = (int) (x - mTouchStartX);
@@ -458,6 +512,23 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                         mWmParams.alpha = 0.5f;
                     }
 
+                    if (AppConfig.skin == 9) {
+                        int cententFloatWidth = mFlFloatLogo.getWidth();
+                        int cententFloatHeight = mFlFloatLogo.getHeight();
+                        int minWidth = mScreenWidth - float_hide.getWidth()+cententFloatWidth;
+                        int minHeight = mScreenHeight - float_hide.getHeight()+cententFloatHeight;
+                        if ((mWmParams.x + cententFloatWidth) >= minWidth && (mWmParams.y + cententFloatHeight) >= minHeight && canVibrate) {
+                            canVibrate = false;
+                            showDialog = true;
+                            playVibrate(getContext());
+                            float_hide_top.setVisibility(VISIBLE);
+                        } else if (((mWmParams.x + cententFloatWidth) < minWidth || (mWmParams.y + cententFloatHeight) < minHeight) && !canVibrate) {
+                            canVibrate = true;
+                            showDialog = false;
+                            float_hide_top.setVisibility(INVISIBLE);
+                        }
+                    }
+
                     mWindowManager.updateViewLayout(this, mWmParams);
                     mLlFloatMenu.setVisibility(View.GONE);
                     return false;
@@ -465,38 +536,73 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
                 break;
             case MotionEvent.ACTION_UP:
-//                break;
+                canVibrate=true;
+
             case MotionEvent.ACTION_CANCEL:
+                if (hideView!=null){
+                    hideView.setVisibility(INVISIBLE);
+                }
+                if (showDialog){
+                    showDialog=false;
+                    if (float_hide_top!=null){
+                        float_hide_top.setVisibility(INVISIBLE);
+                    }
+                    HideDialog exitdialog = new HideDialog(getContext(), AppConfig.resourceId(getContext(), "jm_MyDialog", "style"), new HideDialog.HideDialogListener() {
 
-                if (mWmParams.x >= mScreenWidth / 2) {
-                    mWmParams.x = 0;
-                    mIsRight = false;
-                } else if (mWmParams.x < mScreenWidth / 2) {
-                    mIsRight = false;
-                    mWmParams.x = 0;
+
+                        @Override
+                        public void onConfirm() {
+                            hide();
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            mCanHide = true;
+                            cancelMethod();
+                        }
+                    });
+                    exitdialog.show();
+                }else{
+                    mCanHide = true;
+                    cancelMethod();
                 }
 
-                setFloatLogo("jm_float_9","jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
-
-                iconTip.setVisibility(GONE);
-
-                mWmParams.alpha = 1f;
-                refreshFloatMenu(mIsRight);
-                if (mCanHide){
-                    timerForHide();
-                }
-                mWindowManager.updateViewLayout(this, mWmParams);
-                // 初始化
-                mTouchStartX = mTouchStartY = 0;
                 break;
         }
         return false;
     }
 
+    void cancelMethod() {
+        if (mWmParams.x >= mScreenWidth / 2) {
+            mWmParams.x = 0;
+            mIsRight = false;
+        } else if (mWmParams.x < mScreenWidth / 2) {
+            mIsRight = false;
+            mWmParams.x = 0;
+        }
+
+        setFloatLogo("jm_float_9", "jm_float_new", "jm_float_red", "jm_float_4", "jm_float_3", "jm_float");
+
+        iconTip.setVisibility(GONE);
+
+        mWmParams.alpha = 1f;
+        refreshFloatMenu(mIsRight);
+        if (mCanHide) {
+            timerForHide();
+        }
+        mWindowManager.updateViewLayout(this, mWmParams);
+        // 初始化
+        mTouchStartX = mTouchStartY = 0;
+    }
+
     void setFloatLogo(String jm_float_9,String jm_float_new, String jm_float_red, String jm_float_4, String jm_float_3, String jm_float) {
         switch (AppConfig.skin) {
             case 9:
-                mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_9, "drawable"));
+                if (gifExists()){//文件存在读gif（皮肤9红包版）  否则默认皮肤9的图
+                    Glide.with(getContext()).load(file).into(mIvFloatLogo);
+                }else{
+                    mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_9, "drawable"));
+                }
                 break;
             case 8:
                 mIvFloatLogo.setImageResource(AppConfig.resourceId(mContext, jm_float_new, "drawable"));
@@ -534,6 +640,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             Log.e("JiMiSDK", "myfloatview removeFloatView");
 
             mWindowManager.removeView(this);
+            mWindowManager.removeView(hideView);
             mWindowManager = null;
             removeAllViews();
         } catch (Exception ex) {
@@ -794,8 +901,40 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     }
 
 
+    private boolean gifExists() {
+        if (AppConfig.float_icon_url==null || AppConfig.float_icon_url.equals("")){
+            return false;
+        }
+        String md5ResultString = SecurityUtils.getMD5Str(AppConfig.float_icon_url);
+        if (file==null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            } else {
+                file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            file= new File(file + "/" + md5ResultString + ".gif");
+        }
+        Log.i("jimi","查看文件"+file);
+        if (file.exists()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+    /**
+     * 震动
+     */
+    public static void playVibrate(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
+        long[] vibrationPattern = new long[]{0, 180};
+        // 第一个参数为开关开关的时间，第二个参数是重复次数，振动需要添加权限
+        vibrator.vibrate(vibrationPattern, -1);
+    }
+
     //实现先顺时针360度旋转然后逆时针360度旋转动画功能
-    private void ObjectrotationAnim() {
+    private void startAnim() {
         if (animator == null) {
             animator = ObjectAnimator.ofFloat(mIvFloatLogo, "rotation", -30F, 30F, -30F);
             animator.setRepeatCount(ValueAnimator.INFINITE);
