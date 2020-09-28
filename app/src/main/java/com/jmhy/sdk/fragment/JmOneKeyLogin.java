@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-
 import com.alibaba.fastjson.JSON;
 import com.jmhy.sdk.activity.JmBaseActivity;
 import com.jmhy.sdk.config.AppConfig;
@@ -332,14 +331,14 @@ public class JmOneKeyLogin extends JmBaseActivity {
         return imageView;
     }
 
-    private void closeLogin(PhoneNumberAuthHelper mAlicomAuthHelper,String msg) {
+    private void closeLogin(PhoneNumberAuthHelper mAlicomAuthHelper, String msg) {
         hideLoadingDialog();
         mAlicomAuthHelper.quitLoginPage();
         mAlicomAuthHelper.hideLoginLoading();
         listener.onError(msg);
     }
 
-    private void cancleLogin(PhoneNumberAuthHelper mAlicomAuthHelper,String msg) {
+    private void cancleLogin(PhoneNumberAuthHelper mAlicomAuthHelper, String msg) {
         hideLoadingDialog();
         mAlicomAuthHelper.quitLoginPage();
         mAlicomAuthHelper.hideLoginLoading();

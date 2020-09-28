@@ -25,7 +25,7 @@ import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.hotfix.HotFixManager;
 import com.jmhy.sdk.http.ApiAsyncTask;
-import com.jmhy.sdk.bean.PayData;
+import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.model.SdkParams;
 import com.jmhy.sdk.push.PushService;
@@ -311,7 +311,7 @@ public class JiMiSDK {
 	public static void payment(Activity activity, PayData payData,
 							   ApiListenerInfo listener) {
 		apiListenerInfo = listener;
-		String url = Utils.toBase64url(payData.getO_content());
+		String url = Utils.toBase64url(payData.getOcontent());
 		PayDataRequest.turnToIntent(activity, url);
 	}
 

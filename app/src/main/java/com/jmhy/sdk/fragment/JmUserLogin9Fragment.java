@@ -3,7 +3,6 @@ package com.jmhy.sdk.fragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,7 +23,6 @@ import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.adapter.UserAdapter;
-import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -68,7 +66,7 @@ public class JmUserLogin9Fragment extends JmBaseFragment implements
     List<HashMap<String, String>> contentList = new ArrayList<HashMap<String, String>>();
     private UserAdapter mUserAdapter;
 
-    private ApiAsyncTask mGuestTask;
+    private Call mGuestTask;
     private View view = null;
     private final static int oneKeyLoginFail = 1;
     private final static int oneKeyLoginCheckFail = 2;
@@ -177,28 +175,37 @@ public class JmUserLogin9Fragment extends JmBaseFragment implements
 
     private void login(final String userName, final String passWord) {
         Log.i("登录---", "login");
-        mLoginTask = JmhyApi.get().starusreLogin( userName, passWord, new ApiRequestListener() {
+        mLoginTask = JmhyApi.get().starusreLogin(userName, passWord, new ApiRequestListener() {
 
                     @Override
                     public void onSuccess(Object obj) {
-                        LoginInfo loginInfo = (LoginInfo) obj;
-                        mSeference.saveAccount(loginInfo.getUname(),
-                                "~~test", loginInfo.getLogin_token());
-                        AppConfig.saveMap(loginInfo.getUname(),
-                                "~~test", loginInfo.getLogin_token());
-                        Utils.saveUserToSd(getActivity());
-                        wrapaLoginInfo("success",
-                                "登录成功",
-                                loginInfo.getUname(),
-                                loginInfo.getOpenid(),
-                                loginInfo.getGame_token());
-                        showUserMsg(loginInfo.getUname());
-                        AppConfig.USERURL = Utils.toBase64url(loginInfo
-                                .getFloat_url_user_center());
-                        String url = Utils
-                                .toBase64url(loginInfo.getShow_url_after_login());
-                        turnToNotice(url);
-                        getActivity().finish();
+                        // TODO Auto-generated method stub
+                        if (obj != null) {
+                            LoginMessage loginMessage = (LoginMessage) obj;
+                            if (loginMessage.getCode().equals("0")) {
+                                mSeference.saveTimeAndType(loginMessage.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "帐号登录");
+                                mSeference.saveAccount(loginMessage.getUname(), "~~test", loginMessage.getLogin_token());
+                                AppConfig.saveMap(loginMessage.getUname(), "~~test", loginMessage.getLogin_token());
+                                Utils.saveUserToSd(getActivity());
+
+                                Utils.saveTimeAndTypeToSd(getActivity());
+
+//                                wrapaLoginInfo("success",
+//                                        loginMessage.getMessage(),
+//                                        loginMessage.getUname(),
+//                                        loginMessage.getOpenid(),
+//                                        loginMessage.getGame_token());
+                                sendData(AppConfig.LOGIN_SUCCESS, obj, handler);
+
+                            } else {
+
+                                sendData(AppConfig.FLAG_FAIL,
+                                        loginMessage.getMessage(), handler);
+                            }
+                        } else {
+                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
+                                    getActivity(), "http_rror_msg"), handler);
+                        }
                     }
 
                     @Override
@@ -335,24 +342,32 @@ public class JmUserLogin9Fragment extends JmBaseFragment implements
 
                     @Override
                     public void onSuccess(Object obj) {
-                        LoginInfo loginInfo = (LoginInfo) obj;
-                        mSeference.saveAccount(loginInfo.getUname(),
-                                "~~test", loginInfo.getLogin_token());
-                        AppConfig.saveMap(loginInfo.getUname(),
-                                "~~test", loginInfo.getLogin_token());
-                        Utils.saveUserToSd(getActivity());
-                        wrapaLoginInfo("success",
-                                "登录成功",
-                                loginInfo.getUname(),
-                                loginInfo.getOpenid(),
-                                loginInfo.getGame_token());
-                        showUserMsg(loginInfo.getUname());
-                        AppConfig.USERURL = Utils.toBase64url(loginInfo
-                                .getFloat_url_user_center());
-                        String url = Utils
-                                .toBase64url(loginInfo.getShow_url_after_login());
-                        turnToNotice(url);
-                        getActivity().finish();
+                        // TODO Auto-generated method stub
+                        if (obj != null) {
+                            LoginMessage loginMessage = (LoginMessage) obj;
+                            if (loginMessage.getCode().equals("0")) {
+                                mSeference.saveAccount(loginMessage.getUname(),
+                                        "~~test", loginMessage.getLogin_token());
+                                AppConfig.saveMap(loginMessage.getUname(),
+                                        "~~test", loginMessage.getLogin_token());
+                                Utils.saveUserToSd(getActivity());
+                                wrapaLoginInfo("success",
+                                        loginMessage.getMessage(),
+                                        loginMessage.getUname(),
+                                        loginMessage.getOpenid(),
+                                        loginMessage.getGame_token());
+                                sendData(AppConfig.LOGIN_SUCCESS, obj, handler);
+
+                            } else {
+
+                                sendData(AppConfig.FLAG_FAIL,
+                                        loginMessage.getMessage(), handler);
+                            }
+                        } else {
+
+                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
+                                    getActivity(), "http_rror_msg"), handler);
+                        }
                     }
 
                     @Override
@@ -384,7 +399,7 @@ public class JmUserLogin9Fragment extends JmBaseFragment implements
     @Override
     public void onDestroy() {
         if (mGuestTask != null) {
-            mGuestTask.cancel(false);
+            mGuestTask.cancel();
         }
         if (mLoginTask != null) {
             mLoginTask.cancel();
@@ -392,6 +407,7 @@ public class JmUserLogin9Fragment extends JmBaseFragment implements
         if (mautoLoginTask != null) {
             mautoLoginTask.cancel();
         }
+
         super.onDestroy();
     }
 }

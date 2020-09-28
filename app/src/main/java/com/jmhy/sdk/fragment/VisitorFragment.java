@@ -2,7 +2,6 @@ package com.jmhy.sdk.fragment;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ import java.util.Locale;
  * create by yhz on 2018/8/16
  * 英文版游客登录
  */
-public class VisitorFragment extends JmBaseFragment{
+public class VisitorFragment extends JmBaseFragment {
     private EditText email, password;
 
     private String upass;

@@ -46,14 +46,18 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs\\huosdk-gson-2.8.2.jar')
-    implementation files('libs\\huosdk-union-okhttp-3.4.1.jar')
-    implementation files('libs\\huosdk-union-okio-1.11.0.jar')
-    implementation files('libs\\alicloud-android-hotfix-3.2.15.jar')
-    implementation files('libs\\alicloud-android-ut-5.4.3.jar')
-    implementation files('libs\\alicloud-android-utdid-2.5.1-proguard.jar')
-    implementation files('libs\\alicloud-android-utils-1.1.6.4.jar')
-    implementation files('libs\\jrtt.jar')
+    implementation files('libs/huosdk-gson-2.8.2.jar')
+    implementation files('libs/huosdk-union-okhttp-3.4.1.jar')
+    implementation files('libs/huosdk-union-okio-1.11.0.jar')
+    implementation files('libs/alicloud-android-hotfix-3.2.15.jar')
+    implementation files('libs/alicloud-android-ut-5.4.3.jar')
+    implementation files('libs/alicloud-android-utdid-2.5.1-proguard.jar')
+    implementation files('libs/alicloud-android-utils-1.1.6.4.jar')
+    implementation files('libs/asms.jar')
+    implementation files('libs/crash_build.jar')
+    implementation files('libs/crashsdk-3.2.0.4.jar')
+    implementation files('libs/umeng-common-9.1.6.jar')
+    implementation files('libs/jrtt.jar')
     testImplementation 'junit:junit:4.12'
     api files('libs/RangersAppLog-Lite-cn-3.3.12.aar')
 //    implementation 'com.android.support:appcompat-v7:27.1.1'

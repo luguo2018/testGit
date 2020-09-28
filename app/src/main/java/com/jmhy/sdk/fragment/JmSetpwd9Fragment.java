@@ -2,6 +2,8 @@ package com.jmhy.sdk.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +21,14 @@ import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.http.Result;
-import com.jmhy.sdk.bean.MobileUser;
-import com.jmhy.sdk.bean.Registermsg;
+import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class JmSetpwd9Fragment extends JmBaseFragment implements OnClickListener {
 
@@ -47,6 +52,30 @@ public class JmSetpwd9Fragment extends JmBaseFragment implements OnClickListener
     private String code_area;
     private boolean ischeck=true;
     private boolean isOnekeyLogin=false;
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (getActivity() == null || getActivity().isFinishing()) {
+                return;
+            }
+            switch (msg.what) {
+                case AppConfig.FLAG_FAIL:
+                    String resultmsg = (String) msg.obj;
+                    showMsg(resultmsg);
+                    break;
+                case AppConfig.REGISTER_SUCCESS:
+
+                    Registermsg registermsg = (Registermsg) msg.obj;
+
+                    toAutologin(registermsg);
+
+                    getActivity().finish();
+
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,23 +172,36 @@ public class JmSetpwd9Fragment extends JmBaseFragment implements OnClickListener
 
                     @Override
                     public void onSuccess(Object obj) {
-                        Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
-                        Registermsg registermsg = registermsgResult.data;
-                        //	Log.i("kk","Auto"+registermsg.getAuto_login_token());
-                        mSeference.saveAccount(user, "~~test",
-                                registermsg.getAuto_login_token());
-                        AppConfig.saveMap(user, "~~test",
-                                registermsg.getAuto_login_token());
-                        toAutologin(registermsg);
-                        getActivity().finish();
+                        // TODO Auto-generated method stub
+                        if (obj != null) {
+                            Registermsg registermsg = (Registermsg) obj;
+                            if (registermsg.getCode().equals("0")) {
+                                //	Log.i("kk","Auto"+registermsg.getAuto_login_token());
+                                mSeference.saveTimeAndType(registermsg.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), isOnekeyLogin?"一键登录":"手机号登录");
+                                mSeference.saveAccount(user, "~~test",
+                                        registermsg.getAuto_login_token());
+                                AppConfig.saveMap(user, "~~test",
+                                        registermsg.getAuto_login_token());
+                                sendData(AppConfig.REGISTER_SUCCESS, obj,
+                                        handler);
+
+                            } else {
+                                sendData(AppConfig.FLAG_FAIL, registermsg.getMessage(),
+                                        handler);
+                            }
+                        } else {
+                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
+                                    handler);
+                        }
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        showMsg(statusCode+"");
-
+                        // TODO Auto-generated method stub
+                        sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"), handler);
                     }
                 });
+
     }
 
     @Override

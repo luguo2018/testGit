@@ -1,11 +1,7 @@
 package com.jmhy.sdk.config;
-
 import android.content.Context;
-
-import com.jmhy.sdk.bean.PayData;
-
+import com.jmhy.sdk.model.PayData;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;

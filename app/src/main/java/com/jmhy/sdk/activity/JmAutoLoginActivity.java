@@ -11,9 +11,9 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
-import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.fragment.JmSwitchLogin9Fragment;
+import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.sdk.JmhyApi;
@@ -32,7 +32,7 @@ import java.util.TimerTask;
 public class JmAutoLoginActivity extends JmBaseActivity {
 
     private TextView mTvname;
-    private Call call;
+    private Call mautoLoginTask;
     private View mBtback;
     List<String> moreCountList = new ArrayList<>();
     List<String> morePwdList = new ArrayList<>();
@@ -40,18 +40,17 @@ public class JmAutoLoginActivity extends JmBaseActivity {
     List<String> moreTypeList = new ArrayList<>();
     List<HashMap<String, String>> contentList = new ArrayList<>();
     TimerTask task;
-    Timer timer;
-    String temUid, temUser, temPwd;
+    Timer timer ;
+    String temUid,temUser,temPwd;
     String type;
     Context mContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         //setContentView(AppConfig.resourceId(this, "jmautologin", "layout"));
-        mContext = this;
-        switch (AppConfig.skin) {
+        mContext=this;
+        switch (AppConfig.skin){
             case 9:
                 setContentView(AppConfig.resourceId(this, "jmautologin_9", "layout"));
                 break;
@@ -89,13 +88,13 @@ public class JmAutoLoginActivity extends JmBaseActivity {
     private OnClickListener backListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (call != null) {
-                call.cancel();
+            if(mautoLoginTask != null){
+                mautoLoginTask.cancel();
             }
-            if (AppConfig.skin == 9) {
-                AppConfig.ismobillg = true;
-            } else {
-                AppConfig.ismobillg = false;
+            if (AppConfig.skin==9){
+                AppConfig.ismobillg=true;
+            }else{
+                AppConfig.ismobillg=false;
             }
             timer.cancel();
             AppConfig.skin9_is_switch = true;
@@ -106,11 +105,11 @@ public class JmAutoLoginActivity extends JmBaseActivity {
     };
 
     private void initView() {
-        mTvname = (TextView) findViewById(AppConfig.resourceId(this, "tvusername", "id"));
+        mTvname = (TextView)findViewById(AppConfig.resourceId(this, "tvusername", "id"));
         mBtback = findViewById(AppConfig.resourceId(this, "btbacklogin", "id"));
         mBtback.setOnClickListener(backListener);
 
-        if (AppConfig.isChangeGuestAccount) {//游客改账号之后进入这里，用新账号登录
+        if (AppConfig.isChangeGuestAccount){//游客改账号之后进入这里，用新账号登录
             mTvname.setText(AppConfig.change_new_account);
         } else {
             if (mSeference.isExitData()) {
@@ -119,7 +118,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
                 temPwd = mSeference.getContentPW(Seference.PASSWORD_1);
                 temUid = mSeference.getPreferenceData(
                         Seference.ACCOUNT_FILE_NAME, Seference.UID_1);
-                if (AppConfig.skin == 9) {
+                if(AppConfig.skin==9){
                     type = mSeference.getPreferenceData(
                             Seference.ACCOUNT_FILE_NAME, Seference.LOGIN_TYPE_1);
                 }
@@ -131,7 +130,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
                 temUser = moreCountList.get(0);
                 temPwd = morePwdList.get(0);
                 temUid = moreUidList.get(0);
-                if (AppConfig.skin == 9) {
+                if(AppConfig.skin==9){
                     type = moreTypeList.get(0);
                 }
                 AppConfig.saveMap(temUser, temPwd, temUid);
@@ -141,58 +140,88 @@ public class JmAutoLoginActivity extends JmBaseActivity {
         task = new TimerTask() {
             @Override
             public void run() {
-                if (AppConfig.isChangeGuestAccount) {
-                    AppConfig.isChangeGuestAccount = false;
+                if (AppConfig.isChangeGuestAccount){
+                    AppConfig.isChangeGuestAccount=false;
                     userLogin();
-                } else {
+                }else{
                     autoLogin(temUid);
                 }
-            }
-        };
+            }};
         timer = new Timer();
         timer.schedule(task, 3000);//设置延迟3秒访问
     }
 
     private void userLogin() {
-        if (AppConfig.change_new_password != null && !AppConfig.change_new_password.equals("")) {
-            call = JmhyApi.get().starusreLogin( AppConfig.change_new_account, AppConfig.change_new_password, new ApiRequestListener() {
+        if (AppConfig.change_new_password!=null && !AppConfig.change_new_password.equals("")) {
+             JmhyApi.get().starusreLogin(  AppConfig.change_new_account, AppConfig.change_new_password, new ApiRequestListener() {
+
                 @Override
                 public void onSuccess(Object obj) {
                     // TODO Auto-generated method stub
-                        LoginInfo loginMessage = (LoginInfo) obj;
+                    if (obj != null) {
+                        LoginMessage loginMessage = (LoginMessage) obj;
+                        if (loginMessage.getCode().equals("0")) {
                             mSeference.saveTimeAndType(loginMessage.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), "帐号登录");
                             mSeference.saveAccount(loginMessage.getUname(), "~~test", loginMessage.getLogin_token());
                             AppConfig.saveMap(loginMessage.getUname(), "~~test", loginMessage.getLogin_token());
                             Utils.saveUserToSd(mContext);
                             Utils.saveTimeAndTypeToSd(mContext);
-                            wrapaLoginInfo("success", "登录成功",
-                                    loginMessage.getUname(), loginMessage.getOpenid(),
+                            wrapaLoginInfo("success", loginMessage.getMessage(),
+                                    loginMessage.getUname(),loginMessage.getOpenid(),
                                     loginMessage.getGame_token());
                             finish();
+                        } else {
+                            sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(), handler);
+                        }
+                    } else {
+                        sendData(AppConfig.FLAG_FAIL, AppConfig.getString(mContext, "http_rror_msg"), handler);
+                    }
                 }
 
                 @Override
                 public void onError(int statusCode) {
                     // TODO Auto-generated method stub
-                    loginFailed(statusCode);
+                    sendData(AppConfig.FLAG_FAIL, AppConfig.getString(mContext, "http_rror_msg"), handler);
                 }
             });
         }
     }
-    private void loginFailed(int code) {
-        String resultmsg = code + "";
-        if (AppConfig.skin == 9) {
-            JmSwitchLogin9Fragment.deleteAccount((Activity) mContext, true, temUser);
-        } else {
-            showMsg(resultmsg);
-        }
-        AppConfig.ismobillg = false;
-        Intent intent = new Intent(JmAutoLoginActivity.this, JmLoginActivity.class);
-        intent.putExtra("message", resultmsg);
-        startActivity(intent);
-        finish();
-    }
 
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+
+                case AppConfig.FLAG_FAIL:
+                    String resultmsg = (String) msg.obj;
+                    if (AppConfig.skin==9){
+                        JmSwitchLogin9Fragment.deleteAccount((Activity) mContext,true,temUser);
+                    }else{
+                        showMsg(resultmsg);
+                    }
+                    AppConfig.ismobillg = false;
+                    Intent intent = new Intent(JmAutoLoginActivity.this, JmLoginActivity.class);
+                    intent.putExtra("message",resultmsg);
+                    startActivity(intent);
+                    finish();
+                    break;
+                case AppConfig.AUTO_LOGIN_SUCCESS:
+                    LoginMessage result = (LoginMessage) msg.obj;
+                    if (AppConfig.skin != 9) {
+                        showUserMsg(result.getUname());
+                    }
+                    String url = Utils.toBase64url(result.getShow_url_after_login());
+                    if (AppConfig.skin9_show_setAccount) {
+                        turnToSetAccount();
+                    } else {
+                        turnToNotice(url);
+                    }
+                    finish();
+                    break;
+            }
+        }
+    };
     /**
      * 从文件中获取数据
      */
@@ -219,7 +248,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
                 morePwdList.add(tempPwd);
                 moreUidList.add(tempUid);
             }
-            if (AppConfig.skin == 9) {
+            if (AppConfig.skin==9){
                 String type = ((tU != null && tU.split(":").length == 3) ? tU
                         .split(":")[4] : "empty");
                 moreTypeList.add(type);
@@ -241,7 +270,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
                 String time = ((tU.split(":").length == 3) ? tU.split(":")[3] : "empty");
                 String loginType = ((tU.split(":").length == 3) ? tU.split(":")[4] : "empty");
                 if (time.equals("empty") && !loginType.equals("empty")) {
-                    mSeference.saveTimeAndType(tempUser, time, loginType);
+                    mSeference.saveTimeAndType(tempUser,time, loginType);
                 }
             }
 
@@ -266,36 +295,43 @@ public class JmAutoLoginActivity extends JmBaseActivity {
         return true;
     }
 
-    public void autoLogin(String logintoken) {
-        call = JmhyApi.get().starlAutoLogin(logintoken, new ApiRequestListener() {
+    public void autoLogin( String logintoken ){
+        mautoLoginTask = JmhyApi.get().starlAutoLogin(logintoken, new ApiRequestListener() {
 
             @Override
             public void onSuccess(Object obj) {
-                LoginInfo loginMessage = (LoginInfo) obj;
-                mSeference.saveTimeAndType(loginMessage.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), type);
-                mSeference.saveAccount(loginMessage.getUname(), "~~test",
-                        loginMessage.getLogin_token());
-                AppConfig.saveMap(loginMessage.getUname(), "~~test",
-                        loginMessage.getLogin_token());
-                Utils.saveUserToSd(JmAutoLoginActivity.this);
-                wrapaLoginInfo("success","登录成功",
-                        loginMessage.getUname(), loginMessage.getOpenid(),
-                        loginMessage.getGame_token());
-                if (AppConfig.skin != 9) {
-                    showUserMsg(loginMessage.getUname());
+                if(obj!=null){
+                    LoginMessage loginMessage = (LoginMessage)obj;
+
+                    if(loginMessage.getCode().equals("0")){
+                        mSeference.saveTimeAndType(loginMessage.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), type);
+                        mSeference.saveAccount(loginMessage.getUname(), "~~test",
+                                loginMessage.getLogin_token());
+                        AppConfig.saveMap(loginMessage.getUname(), "~~test",
+                                loginMessage.getLogin_token());
+                        Utils.saveUserToSd(JmAutoLoginActivity.this);
+                        wrapaLoginInfo("success", loginMessage.getMessage(),
+                                loginMessage.getUname(),loginMessage.getOpenid(),
+                                loginMessage.getGame_token());
+                        sendData(AppConfig.AUTO_LOGIN_SUCCESS, obj,
+                                handler);
+
+                    }else{
+
+                        sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(),
+                                handler);
+                    }
+                }else{
+
+                    sendData(AppConfig.FLAG_FAIL, AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
+                            handler);
                 }
-                String url = Utils.toBase64url(loginMessage.getShow_url_after_login());
-                if (AppConfig.skin9_show_setAccount) {
-                    turnToSetAccount();
-                } else {
-                    turnToNotice(url);
-                }
-                finish();
             }
 
             @Override
             public void onError(int statusCode) {
-                loginFailed(statusCode);
+                sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
+                        handler);
             }
         });
     }

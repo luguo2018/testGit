@@ -15,10 +15,11 @@ import android.widget.EditText;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.bean.Guest;
+import com.jmhy.sdk.model.Guest;
+import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -29,7 +30,7 @@ import com.jmhy.sdk.utils.Utils;
  */
 public class EmailLoginFragment extends JmBaseFragment {
     private EditText email, password;
-    private Call call;
+    private Call apiAsyncTask;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,8 +81,8 @@ public class EmailLoginFragment extends JmBaseFragment {
 
     @Override
     public void onDestroy() {
-        if(call != null){
-            call.cancel();
+        if(apiAsyncTask != null){
+            apiAsyncTask.cancel();
         }
 
         super.onDestroy();
@@ -104,35 +105,42 @@ public class EmailLoginFragment extends JmBaseFragment {
     }
 
     private void login(final String username, final String password){
-        call = JmhyApi.get().starusreLogin( username, password,
+        apiAsyncTask = JmhyApi.get().starusreLogin( username, password,
                 new ApiRequestListener() {
 
                     @Override
                     public void onSuccess(Object obj) {
-                            LoginInfo loginInfo = (LoginInfo) obj;
+                        if (obj != null) {
+                            LoginMessage loginMessage = (LoginMessage) obj;
 
-                                mSeference.saveAccount(loginInfo.getUname(),
-                                        "~~test", loginInfo.getLogin_token());
-                                AppConfig.saveMap(loginInfo.getUname(),
-                                        "~~test", loginInfo.getLogin_token());
+                            if (loginMessage.getCode().equals("0")) {
+                                mSeference.saveAccount(loginMessage.getUname(),
+                                        "~~test", loginMessage.getLogin_token());
+                                AppConfig.saveMap(loginMessage.getUname(),
+                                        "~~test", loginMessage.getLogin_token());
                                 Utils.saveUserToSd(getActivity());
                                 wrapaLoginInfo("success",
-                                        "登录成功",
-                                        loginInfo.getUname(),
-                                        loginInfo.getOpenid(),
-                                        loginInfo.getGame_token());
-                            showUserMsg(loginInfo.getUname());
-                            AppConfig.USERURL = Utils.toBase64url(loginInfo
-                                    .getFloat_url_user_center());
-
-                            String url = Utils.toBase64url(loginInfo.getShow_url_after_login());
-                            turnToIntent(url);
-                            getActivity().finish();
+                                        loginMessage.getMessage(),
+                                        loginMessage.getUname(),
+                                        loginMessage.getOpenid(),
+                                        loginMessage.getGame_token());
+                                sendData(AppConfig.LOGIN_SUCCESS, obj, handler);
+                            } else {
+                                sendData(AppConfig.FLAG_FAIL,
+                                        loginMessage.getMessage(), handler);
+                            }
+                        } else {
+                            sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
+                                    getActivity(), "http_rror_msg"), handler);
+                        }
                     }
 
                     @Override
                     public void onError(int statusCode) {
-                        showMsg(statusCode+"");
+                        sendData(
+                                AppConfig.FLAG_FAIL,
+                                AppConfig.getString(getActivity(),
+                                        "http_rror_msg"), handler);
                     }
                 });
     }
@@ -141,16 +149,38 @@ public class EmailLoginFragment extends JmBaseFragment {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case AppConfig.FLAG_FAIL:
+                    String resultmsg = (String) msg.obj;
+                    showMsg(resultmsg);
+                    break;
+                /*case AppConfig.FLAG_SHOW_POPWINDOW:
+                    mRiphoen.getGlobalVisibleRect(mRectSrc);
+                    int x = mRectSrc.centerX() - mRectSrc.width() / 2;
+                    int y = mRectSrc.centerY() + mRectSrc.height() / 2;
+                    popupWindow.showAtLocation(mLinearUl, Gravity.NO_GRAVITY, x, y);
+                    break;*/
+                case AppConfig.LOGIN_SUCCESS:
+                    LoginMessage result = (LoginMessage) msg.obj;
+                    showUserMsg(result.getUname());
+                    AppConfig.USERURL = Utils.toBase64url(result
+                            .getFloat_url_user_center());
+
+                    String url = Utils.toBase64url(result.getShow_url_after_login());
+                    turnToIntent(url);
+                    getActivity().finish();
+                    break;
                 case AppConfig.GUEST_lOGIN_SUCCESS:
                     Guest guest = (Guest) msg.obj;
                     String murl = Utils
                             .toBase64url(guest.getShow_url_after_login());
+
                     if (!TextUtils.isEmpty(guest.getUpass())) {
+
                         Bundle args = new Bundle();
                         // Log.i("kk",mobileUser.getMoblie())
                         args.putString("username", guest.getUname());
                         args.putString("upass", guest.getUpass());
-                        args.putString("msg", "登录成功");
+                        args.putString("msg", guest.getMessage());
                         args.putString("gametoken", guest.getGame_token());
                         args.putString("openid", guest.getOpenid());
                         args.putString("url", murl);
@@ -159,7 +189,8 @@ public class EmailLoginFragment extends JmBaseFragment {
                                 mJmSetUserFragment, AppConfig.resourceId(
                                         getActivity(), "content", "id"));
                     } else {
-                        wrapaLoginInfo("success", "登录成功",
+
+                        wrapaLoginInfo("success", guest.getMessage(),
                                 guest.getUname(), guest.getOpenid(),
                                 guest.getGame_token());
 
