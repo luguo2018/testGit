@@ -10,7 +10,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -132,7 +131,7 @@ public class JmSetUser9Fragment extends JmBaseFragment implements
                 intent.putExtra("openId",openid);
                 intent.putExtra("token",gametoken);
                 intent.putExtra("noticeUrl",url);
-                intent.putExtra("type",AppConfig.GUEST_lOGIN_SUCCESS);
+                intent.putExtra("type", AppConfig.GUEST_lOGIN_SUCCESS);
                 startActivity(intent);
                 getActivity().finish();
             }else{

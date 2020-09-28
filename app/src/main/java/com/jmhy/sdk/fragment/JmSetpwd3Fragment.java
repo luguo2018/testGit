@@ -18,8 +18,8 @@ import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.http.Result;
-import com.jmhy.sdk.bean.MobileUser;
-import com.jmhy.sdk.bean.Registermsg;
+import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
 

@@ -13,7 +13,7 @@ import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.OnlineMessage;
-import com.jmhy.sdk.bean.PayData;
+import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FloatUtils;
@@ -203,8 +203,9 @@ public class PushService extends Service {
                                 }
                             }
                             try {
-                                JSONObject data = new JSONObject(msg.getChannel_event());
                                 if (!msg.getChannel_event().equals("")) {
+                                    JSONObject data = new JSONObject(msg.getChannel_event());
+
                                     JSONObject pay = new JSONObject(data.getString("pay"));
 
                                     PaymentInfo paymentInfo = new PaymentInfo();
@@ -224,7 +225,7 @@ public class PushService extends Service {
                                     paymentInfo.setViplevel(pay.getString("vipLevel"));
 
                                     PayData payData = new PayData();
-                                    payData.setOrder_id(pay.getString("orderId"));
+                                    payData.setOrderid(pay.getString("orderId"));
 
                                     Log.i("jimsdk测试信息", "支付上报数据1" + paymentInfo);
                                     Log.i("jimsdk测试信息", "支付上报数据2" + payData);

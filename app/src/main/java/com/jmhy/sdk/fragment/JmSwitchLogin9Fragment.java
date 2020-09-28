@@ -22,8 +22,8 @@ import android.widget.TextView;
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.adapter.SwitchAccountAdapter9;
-import com.jmhy.sdk.bean.LoginInfo;
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.Msg;
@@ -73,7 +73,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     private int auto_clickPosition = 999;
     private int count_down = 20;
 
-    private Call OkCall;
+    private Call mautoLoginTask;
 
     static List<String> moreAccountList = new ArrayList<String>();
     static List<String> morePwdList = new ArrayList<String>();
@@ -211,6 +211,28 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                 return;
             }
             switch (msg.what) {
+                case AppConfig.AUTO_LOGIN_SUCCESS:
+                    LoginMessage result = (LoginMessage) msg.obj;
+                    Intent autoLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
+                    autoLoginIntent.putExtra("message", result.getMessage());
+                    autoLoginIntent.putExtra("openId", result.getOpenid());
+                    autoLoginIntent.putExtra("uName", result.getUname());
+                    autoLoginIntent.putExtra("token", result.getGame_token());
+                    autoLoginIntent.putExtra("url", Utils.toBase64url(result.getShow_url_after_login()));
+                    autoLoginIntent.putExtra("type", AppConfig.AUTO_LOGIN_SUCCESS);
+                    startActivity(autoLoginIntent);
+                    getActivity().finish();
+
+
+                    break;
+                case AppConfig.FLAG_FAIL:
+                    String resultmsg = (String) msg.obj;
+                    showMsg(resultmsg);
+                    JmSwitchLogin9Fragment.deleteAccount(getActivity(), true, account);
+                    AppConfig.ismobillg = false;
+                    Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(getActivity());
+                    replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
+                    break;
                 case AppConfig.CODE_SUCCESS:
                     flag = true;
                     new Thread(new Runnable() {
@@ -369,8 +391,8 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
 
     @Override
     public void onDestroy() {
-        if (OkCall != null) {
-            OkCall.cancel();
+        if (mautoLoginTask != null) {
+            mautoLoginTask.cancel();
         }
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
@@ -382,38 +404,41 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     }
 
     public void autoLogin(String logintoken, final String type) {
-        OkCall = JmhyApi.get().starlAutoLogin( logintoken, new ApiRequestListener() {
+        mautoLoginTask = JmhyApi.get().starlAutoLogin(logintoken, new ApiRequestListener() {
 
             @Override
             public void onSuccess(Object obj) {
-                LoginInfo loginInfo = (LoginInfo) obj;
-                Log.i("jimi", "账号" + loginInfo.getUname() + "类型" + type);
-                mSeference.saveTimeAndType(loginInfo.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), type);
+                if (obj != null) {
+                    LoginMessage loginMessage = (LoginMessage) obj;
 
-                mSeference.saveAccount(loginInfo.getUname(), "~~test",
-                        loginInfo.getLogin_token());
-                AppConfig.saveMap(loginInfo.getUname(), "~~test",
-                        loginInfo.getLogin_token());
-                Utils.saveUserToSd(getActivity());
-                Utils.saveTimeAndTypeToSd(getActivity());
-                Intent autoLoginIntent = new Intent(getActivity(), JmTopLoginTipActivity.class);
-                autoLoginIntent.putExtra("message", "登录成功");
-                autoLoginIntent.putExtra("openId", loginInfo.getOpenid());
-                autoLoginIntent.putExtra("uName", loginInfo.getUname());
-                autoLoginIntent.putExtra("token", loginInfo.getGame_token());
-                autoLoginIntent.putExtra("url", Utils.toBase64url(loginInfo.getShow_url_after_login()));
-                autoLoginIntent.putExtra("type", AppConfig.AUTO_LOGIN_SUCCESS);
-                startActivity(autoLoginIntent);
-                getActivity().finish();
+                    if (loginMessage.getCode().equals("0")) {
+                        Log.i("jimi", "账号" + loginMessage.getUname() + "类型" + type);
+                        mSeference.saveTimeAndType(loginMessage.getUname(), new SimpleDateFormat("MM月dd日 HH:mm:ss").format(new Date()), type);
+
+                        mSeference.saveAccount(loginMessage.getUname(), "~~test",
+                                loginMessage.getLogin_token());
+                        AppConfig.saveMap(loginMessage.getUname(), "~~test",
+                                loginMessage.getLogin_token());
+                        Utils.saveUserToSd(getActivity());
+                        Utils.saveTimeAndTypeToSd(getActivity());
+                        sendData(AppConfig.AUTO_LOGIN_SUCCESS, obj,
+                                handler);
+
+                    } else {
+                        sendData(AppConfig.FLAG_FAIL, loginMessage.getMessage(),
+                                handler);
+                    }
+                } else {
+
+                    sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
+                            handler);
+                }
             }
 
             @Override
             public void onError(int statusCode) {
-                showMsg(statusCode+"");
-                JmSwitchLogin9Fragment.deleteAccount(getActivity(), true, account);
-                AppConfig.ismobillg = false;
-                Fragment mJmUserLoginFragment = FragmentUtils.getJmUserLoginFragment(getActivity());
-                replaceFragmentToActivity(getFragmentManager(), mJmUserLoginFragment, AppConfig.resourceId(getActivity(), "content", "id"));
+                sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
+                        handler);
             }
         });
     }

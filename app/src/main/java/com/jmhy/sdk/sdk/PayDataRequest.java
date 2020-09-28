@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 
@@ -13,7 +12,7 @@ import com.jmhy.sdk.activity.JmpayActivity;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.bean.PayData;
+import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.Utils;
@@ -66,7 +65,7 @@ public class PayDataRequest {
                         // TODO Auto-generated method stub
                         PayData payData = (PayData) obj;
                         String url = Utils
-                                .toBase64url(payData.getO_content());
+                                .toBase64url(payData.getOcontent());
                         turnToIntent(url);
                     }
 

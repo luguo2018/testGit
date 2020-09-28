@@ -2,8 +2,8 @@ package com.jmhy.sdk.sdk;
 
 import com.huosdk.gson.Gson;
 import com.jmhy.sdk.activity.FloatUserInfoActivity;
-import com.jmhy.sdk.bean.InitInfo;
 import com.jmhy.sdk.model.InitExt;
+import com.jmhy.sdk.model.InitMsg;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.InitListener;
@@ -66,7 +66,7 @@ public class InitData {
                     @Override
                     public void onSuccess(Object obj) {
                         Log.i("jimi", "参数" + obj);
-                        InitInfo result = (InitInfo) obj;
+                        InitMsg result = (InitMsg) obj;
                         setInit(result);
                     }
 
@@ -91,60 +91,66 @@ public class InitData {
     /**
      * 赋值初始化信息
      */
-    public void setInit(InitInfo result) {
-        AppConfig.Token = result.getAccess_token();
-        AppConfig.iphoneidList = result.getCode_area_list();
-        AppConfig.USERAGREEMENTURL = Utils.toBase64url(result.getUser_agreement_url());
-        AppConfig.KEFU = Utils.toBase64url(result.getCustomer_service_url());
-        AppConfig.is_user_float_on = result.getIs_user_float_on() + "";
-        AppConfig.is_sdk_float_on = result.getIs_sdk_float_on() + "";
-        AppConfig.is_service_float_on = result.getIs_service_float_on() + "";
+    public void setInit(InitMsg result) {
 
-        AppConfig.is_visitor_on = result.getIs_visitor_on() + "";
-        AppConfig.is_visitor_on_phone = result.getIs_visitor_on_phone() + "";
-        AppConfig.is_auto_login_on = result.getIs_auto_login_on() + "";
-        AppConfig.is_log_on = result.getIs_log_on() + "";
-        AppConfig.is_reg_login_on = result.getIs_reg_login_on() + "";
-        AppConfig.FPWD = Utils.toBase64url(result.getForget_password_url());
-        AppConfig.add_global_script_url = Utils.toBase64url(result.getAdd_global_script_url());
-        AppConfig.switch_login = result.getSwitch_login() + "";
-        AppConfig.skin = result.getSkin();
-        AppConfig.ali_hot_fix = result.getAli_hot_fix();
         try {
-            AppConfig.sdkList = JsonUtils.beanToJson(result.getChannel_sdk_list());
-        } catch (JSONException e) {
+            AppConfig.Token = result.getAccess_token();
+            AppConfig.iphoneidList = result.getCode_area_list();
+            AppConfig.USERAGREEMENTURL = Utils.toBase64url(result.getUseragreementurl());
+            AppConfig.KEFU = Utils.toBase64url(result.getCustomerserviceurl());
+            AppConfig.is_user_float_on = result.getUser_float();
+            AppConfig.is_sdk_float_on = result.getSdk_float();
+            AppConfig.is_service_float_on = result.getService_float();
+
+            AppConfig.is_visitor_on = result.getVisitor();
+            AppConfig.is_visitor_on_phone = result.getIsvisitoronphone();
+            AppConfig.is_auto_login_on = result.getAuto_login();
+            AppConfig.is_log_on = result.getLog_on();
+            AppConfig.is_reg_login_on = result.getReg_login();
+            AppConfig.FPWD = Utils.toBase64url(result.getForgetpasswordurl());
+            AppConfig.add_global_script_url = Utils.toBase64url(result.getAddglobalscripturl());
+            AppConfig.switch_login = result.getSwitch_login();
+            AppConfig.skin = result.getSkin();
+            AppConfig.sdkList = result.getChannel_sdk_list();
+            AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
+            if (result.getMoblie_direct_login() != null && !result.getMoblie_direct_login().isEmpty() && !result.getMoblie_direct_login().equals("")) {
+
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(result.getMoblie_direct_login());
+                    AppConfig.oneKeyLogin_SecretKey = jsonObject.getString("clientSecret");
+                    Log.i("测试jimsdk", "一键登录key:" + AppConfig.oneKeyLogin_SecretKey);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            seference.savePreferenceData("game", "token", result.getAccess_token());
+            seference.savePreferenceData("game", "onlintiem", result.getOnlinereportinterval());
+            seference.savePreferenceData("game", "userfloat", result.getUser_float());
+            seference.savePreferenceData("game", "servicefloat", result.getService_float());
+            seference.savePreferenceData("game", "scripturl", Utils.toBase64url(result.getAddglobalscripturl()));
+
+            if (!result.getOnlinereportinterval().equals("0")) {
+                AppConfig.ONLIE_TIEM = Long.parseLong(result.getOnlinereportinterval());
+                Intent pushIntent = new Intent(context, PushService.class);
+                context.startService(pushIntent);
+                //Log.i("kk", "间隔时间"+ AppConfig.ONLIE_TIEM);
+            }
+            //SeferenceGame.getInstance(context).savePreferenceData("gameuser", "time", System.currentTimeMillis()+"");
+            String url = Utils.toBase64url(result.getShowurlafterint());
+            if (!TextUtils.isEmpty(url)) {
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("url", url);
+                intent.putExtra("notice", true);
+                intent.setClass(context, JmUserinfoActivity.class);
+                context.startActivity(intent);
+            }
+            listener.Success("success");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        AppConfig.h5GameUrl = Utils.toBase64url(result.getH5_game_url());
-        Log.i("测试jimsdk", "一键登录key:" + result.getMoblie_direct_login().toString());
-        if (result.getMoblie_direct_login() != null) {
-            AppConfig.oneKeyLogin_SecretKey = result.getMoblie_direct_login().getClientSecret();
-            Log.i("测试jimsdk", "一键登录key:" + AppConfig.oneKeyLogin_SecretKey);
-        }
-        seference.savePreferenceData("game", "token", result.getAccess_token());
-        seference.savePreferenceData("game", "onlintiem", result.getOnline_report_interval() + "");
-        seference.savePreferenceData("game", "userfloat", result.getIs_user_float_on() + "");
-        seference.savePreferenceData("game", "servicefloat", result.getIs_service_float_on() + "");
-        seference.savePreferenceData("game", "scripturl", Utils.toBase64url(result.getAdd_global_script_url()));
-
-        if (result.getOnline_report_interval() != 0) {
-            AppConfig.ONLIE_TIEM = Long.parseLong(result.getOnline_report_interval() + "");
-            Intent pushIntent = new Intent(context, PushService.class);
-            context.startService(pushIntent);
-        }
-        String url = Utils.toBase64url(result.getShow_url_after_init());
-        if (!TextUtils.isEmpty(url)) {
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                    Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("url", url);
-            intent.putExtra("notice", true);
-            intent.setClass(context, JmUserinfoActivity.class);
-            context.startActivity(intent);
-
-        }
-        listener.Success("success");
-
     }
-
 }

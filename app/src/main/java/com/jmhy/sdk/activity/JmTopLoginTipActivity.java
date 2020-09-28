@@ -29,40 +29,17 @@ import java.util.TimerTask;
  *  */
 public class JmTopLoginTipActivity extends JmBaseActivity {
 
-    private ApiAsyncTask mSmsTask;
-    private ApiAsyncTask mLoginmobileTask;
-    private ApiAsyncTask mGuestTask;
-    private String TAG = "jimisdk";
-    private Context mContext;
-    private Activity mActivity;
-
     private TextView mTvname;
-    private ApiAsyncTask mautoLoginTask;
     private View mBtback;
-    List<String> moreCountList = new ArrayList<>();
-    List<String> morePwdList = new ArrayList<>();
-    List<String> moreUidList = new ArrayList<>();
-    List<HashMap<String, String>> contentList = new ArrayList<>();
     TimerTask task;
     Timer timer;
-    String temUid,temUser,temPwd;
-    private final static int ShowSetAccount = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        //setContentView(AppConfig.resourceId(this, "jmautologin", "layout"));
-        mContext = this;
-        mActivity = this;
         AppConfig.skin9_is_switch = false;
-        switch (AppConfig.skin) {
-            case 9:
-                setContentView(AppConfig.resourceId(this, "jmautologin_9", "layout"));
-                break;
-            default:
-                setContentView(AppConfig.resourceId(this, "jmautologin_9", "layout"));
-        }
+        setContentView(AppConfig.resourceId(this, "jmautologin_9", "layout"));
         initView();
     }
 
@@ -85,7 +62,7 @@ public class JmTopLoginTipActivity extends JmBaseActivity {
     };
 
     private void initView() {
-        mTvname = (TextView) findViewById(AppConfig.resourceId(this, "tvusername", "id"));
+        mTvname =  findViewById(AppConfig.resourceId(this, "tvusername", "id"));
         mBtback = findViewById(AppConfig.resourceId(this, "btbacklogin", "id"));
         mBtback.setOnClickListener(backListener);
         String uName = getIntent().getStringExtra("uName");
@@ -116,36 +93,6 @@ public class JmTopLoginTipActivity extends JmBaseActivity {
         timer = new Timer();
         timer.schedule(task, 3000);//设置延迟3秒访问
     }
-
-    private Handler handler = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-
-                case AppConfig.FLAG_FAIL:
-
-                    String resultmsg = (String) msg.obj;
-                    showMsg(resultmsg);
-                    AppConfig.ismobillg = false;
-                    Intent intent = new Intent(JmTopLoginTipActivity.this, JmLoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-
-                case AppConfig.AUTO_LOGIN_SUCCESS:
-                    LoginMessage result = (LoginMessage) msg.obj;
-                    String url = Utils.toBase64url(result.getShow_url_after_login());
-                    turnToNotice(url);
-                    finish();
-                    break;
-                case ShowSetAccount:
-                    Fragment setAccount_fragment = Fragment.instantiate(mActivity, JmSetAccountActivity9.class.getName());
-                    addFragmentToActivity(getFragmentManager(), setAccount_fragment, AppConfig.resourceId(mActivity, "content", "id"));
-                    break;
-            }
-        }
-    };
 
 
 }

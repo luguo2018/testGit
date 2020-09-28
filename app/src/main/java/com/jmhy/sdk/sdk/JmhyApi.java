@@ -3,17 +3,10 @@ package com.jmhy.sdk.sdk;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.BuildConfig;
-import com.jmhy.sdk.bean.Guest;
-import com.jmhy.sdk.bean.InitInfo;
-import com.jmhy.sdk.bean.LoginInfo;
-import com.jmhy.sdk.bean.MobileUser;
-import com.jmhy.sdk.bean.PayData;
-import com.jmhy.sdk.bean.Registermsg;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
@@ -22,10 +15,15 @@ import com.jmhy.sdk.http.JSONParse;
 import com.jmhy.sdk.http.OkHttpException;
 import com.jmhy.sdk.http.ResponseCallback;
 import com.jmhy.sdk.http.OkHttpManager;
-import com.jmhy.sdk.http.Result;
+import com.jmhy.sdk.model.Guest;
 import com.jmhy.sdk.model.InitExt;
+import com.jmhy.sdk.model.InitMsg;
 import com.jmhy.sdk.model.LoginMessage;
+import com.jmhy.sdk.model.MobileUser;
+import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.model.OnlineMessage;
+import com.jmhy.sdk.model.PayData;
+import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.utils.DeviceInfo;
 import com.jmhy.sdk.utils.Utils;
 
@@ -142,12 +140,18 @@ public class JmhyApi {
         paramsdata.put("ext_data", ext_data);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        OkHttpManager.getInstance().postRequest(WebApi.ACTION_INIT, params, new ResponseCallback<Result<InitInfo>>() {
+        OkHttpManager.getInstance().postRequest(WebApi.ACTION_INIT, params, new ResponseCallback<String>() {
 
             @Override
-            public void onSuccess(Result<InitInfo> infoResult) {
-                Log.d("TAG", "onSuccess() called with: initInfoResult = [" + infoResult.toString() + "]");
-                listener.onSuccess(infoResult.getData());
+            public void onSuccess(String infoString) {
+                Log.d("TAG", "onSuccess() called with: initInfoString = [" + infoString.toString() + "]");
+                InitMsg initMsg = null;
+                try {
+                    initMsg = JSONParse.parseInitMsg(infoString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(initMsg);
             }
 
             @Override
@@ -181,10 +185,16 @@ public class JmhyApi {
         paramsdata.put("type", type);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_SMS, params, new ResponseCallback<Result>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_SMS, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result result) {
-                listener.onSuccess(result);
+            public void onSuccess(String data) {
+                Msg msg = null;
+                try {
+                    msg = JSONParse.parseRequestSMS(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(msg);
             }
 
             @Override
@@ -220,13 +230,14 @@ public class JmhyApi {
         params.put("context", toJson.toJson(paramsdata));
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_LOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(String String) {
+                MobileUser mobileUser = null;
                 try {
-                    MobileUser mobileUser = JSONParse.parseMobilelogin(result);
-                    listener.onSuccess(mobileUser);
+                    mobileUser = JSONParse.parseMobilelogin(String);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                listener.onSuccess(mobileUser);
 
             }
 
@@ -264,13 +275,15 @@ public class JmhyApi {
         params.put("context", toJson.toJson(paramsdata));
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_LOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(String String) {
+                MobileUser mobileUser = null;
                 try {
-                    MobileUser mobileUser = JSONParse.parseMobilelogin(result);
-                    listener.onSuccess(mobileUser);
+                    mobileUser = JSONParse.parseMobilelogin(String);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                listener.onSuccess(mobileUser);
+
             }
 
             @Override
@@ -301,10 +314,16 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USERREGISTER, params, new ResponseCallback<Result<Registermsg>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USERREGISTER, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<Registermsg> result) {
-                listener.onSuccess(result);
+            public void onSuccess(String data) {
+                Registermsg registermsg = null;
+                try {
+                    registermsg = JSONParse.parseuserRegister(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(registermsg);
             }
 
             @Override
@@ -342,11 +361,17 @@ public class JmhyApi {
         paramsdata.put("code", code + "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_REGISTER, params, new ResponseCallback<Result<Registermsg>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_PHONE_REGISTER, params, new ResponseCallback<String>() {
 
             @Override
-            public void onSuccess(Result<Registermsg> registermsgResult) {
-                listener.onSuccess(registermsgResult);
+            public void onSuccess(String data) {
+                Registermsg registermsg = null;
+                try {
+                    registermsg = JSONParse.parseuserRegister(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(registermsg);
             }
 
             @Override
@@ -373,33 +398,17 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_AUTOLOGIN, params, new ResponseCallback<Result<LoginInfo>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_AUTOLOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginInfo> loginInfoResult) {
-                listener.onSuccess(loginInfoResult.getData());
-                LoginInfo loginInfo = loginInfoResult.data;
-                if (!TextUtils.isEmpty(loginInfo.getH5_game_url())) {
-                    AppConfig.loginH5GameUrl = Utils.toBase64url(loginInfo.getH5_game_url());
+            public void onSuccess(String loginInfoString) {
+                LoginMessage loginMessage = null;
+                try {
+                    loginMessage = JSONParse.parseAutologin(loginInfoString);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                AppConfig.openid = loginInfo.getOpenid();
-                AppConfig.USERURL = Utils.toBase64url(loginInfo.getFloat_url_user_center());
-                AppConfig.GIFT = Utils.toBase64url(loginInfo.getFloat_url_gift_center());
-                AppConfig.float_url_home_center = Utils.toBase64url(loginInfo.getFloat_url_home_center());
-                if (loginInfo.getFloat_red_recommend() == 1) {
-                    AppConfig.showAccountTip = true;
-                    AppConfig.showGiftTip = false;
-                } else if (loginInfo.getFloat_red_recommend() == 2) {
-                    AppConfig.showAccountTip = false;
-                    AppConfig.showGiftTip = true;
-                } else if (loginInfo.getFloat_red_recommend() == 3) {
-                    AppConfig.showAccountTip = true;
-                    AppConfig.showGiftTip = true;
-                }
-                if (loginInfo.getShow_set_account() == 1) {
-                    AppConfig.skin9_show_setAccount = true;
-                } else {
-                    AppConfig.skin9_show_setAccount = false;
-                }
+                listener.onSuccess(loginMessage);
+
             }
 
             @Override
@@ -430,10 +439,16 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USRRLOGIN, params, new ResponseCallback<Result<LoginInfo>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_USRRLOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginInfo> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String data) {
+                LoginMessage loginMessage = null;
+                try {
+                    loginMessage = JSONParse.parseAutologin(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(loginMessage);
             }
 
             @Override
@@ -457,8 +472,14 @@ public class JmhyApi {
         params.put("context", "");
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_SET_ACCOUNT, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(String result) {
-                listener.onSuccess(result);
+            public void onSuccess(String data) {
+                Msg msg = null;
+                try {
+                    msg = JSONParse.parseRequestSMS(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(msg);
             }
 
             @Override
@@ -484,10 +505,16 @@ public class JmhyApi {
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
         params.put("context", "");
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GUEST, params, new ResponseCallback<Result<Guest>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GUEST, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<Guest> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String data) {
+                Guest  guest = null;
+                try {
+                    guest = JSONParse.parseGuestlogin(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(guest);
             }
 
             @Override
@@ -546,10 +573,16 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CREATE, params, new ResponseCallback<Result<PayData>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CREATE, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<PayData> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String data) {
+                PayData payData = null;
+                try {
+                    payData = JSONParse.parseCreate(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(payData);
             }
 
             @Override
@@ -632,9 +665,9 @@ public class JmhyApi {
         params.put("access_token", AppConfig.Token + "");
         params.put("time", System.currentTimeMillis() / 1000 + "");
         params.put("context", "");
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_LOGINOUT, params, new ResponseCallback<Result>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_LOGINOUT, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result o) {
+            public void onSuccess(String o) {
                 listener.onSuccess(o);
             }
 
@@ -720,10 +753,10 @@ public class JmhyApi {
         params.put("context", toJson.toJson(paramsdata));
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONLINE, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(String String) {
                 OnlineMessage onlineMessage = null;
                 try {
-                    onlineMessage = JSONParse.parseOnlineNotify(result);
+                    onlineMessage = JSONParse.parseOnlineNotify(String);
                     listener.onSuccess(onlineMessage);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -748,10 +781,10 @@ public class JmhyApi {
 
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONEKEYLOGIN, params, new ResponseCallback<Result<LoginMessage>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONEKEYLOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginMessage> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String String) {
+                listener.onSuccess(String);
             }
 
             @Override
@@ -777,10 +810,10 @@ public class JmhyApi {
         paramsdata.put("ext_data", "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GETTOKEN, params, new ResponseCallback<Result<LoginMessage>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_GETTOKEN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginMessage> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String String) {
+                listener.onSuccess(String);
             }
 
             @Override
@@ -801,10 +834,10 @@ public class JmhyApi {
         paramsdata.put("ext_data", "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_FLOATSTATE, params, new ResponseCallback<Result<LoginMessage>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_FLOATSTATE, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginMessage> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String String) {
+                listener.onSuccess(String);
             }
 
             @Override
@@ -825,10 +858,10 @@ public class JmhyApi {
         paramsdata.put("ext_data", "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CLEANNOTICE, params, new ResponseCallback<Result<LoginMessage>>() {
+        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_CLEANNOTICE, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(Result<LoginMessage> result) {
-                listener.onSuccess(result.getData());
+            public void onSuccess(String String) {
+                listener.onSuccess(String);
             }
 
             @Override

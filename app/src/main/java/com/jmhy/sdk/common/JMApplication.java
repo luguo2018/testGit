@@ -8,6 +8,7 @@ import android.util.Log;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
+import com.umeng.commonsdk.UMConfigure;
 
 public class JMApplication extends Application {
     private static final String TAG = "JMApplication";
@@ -19,5 +20,6 @@ public class JMApplication extends Application {
         //crashHandler.init(this);
         JiMiSDK.onApplicationOnCreate(this);
         Log.e(TAG, "onCreate: JMApplicationOnCreate");
+        UMConfigure.init(this, "UMAPPKEY", "JM", UMConfigure.DEVICE_TYPE_PHONE, null);
     }
 }
