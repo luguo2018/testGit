@@ -20,6 +20,6 @@ public class JMApplication extends Application {
         //crashHandler.init(this);
         JiMiSDK.onApplicationOnCreate(this);
         Log.e(TAG, "onCreate: JMApplicationOnCreate");
-        UMConfigure.init(this, "5f6d5c82906ad81117141fd1", "test", UMConfigure.DEVICE_TYPE_PHONE, null);
+        UMConfigure.init(this, "UMAPPKEY", "JM", UMConfigure.DEVICE_TYPE_PHONE, null);
     }
 }
