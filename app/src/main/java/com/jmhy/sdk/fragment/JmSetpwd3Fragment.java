@@ -2,8 +2,6 @@ package com.jmhy.sdk.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,8 @@ import android.widget.TextView;
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.http.Result;
 import com.jmhy.sdk.model.MobileUser;
 import com.jmhy.sdk.model.Registermsg;
 import com.jmhy.sdk.sdk.JmhyApi;
@@ -43,29 +41,7 @@ public class JmSetpwd3Fragment extends JmBaseFragment implements OnClickListener
 	private String code;
 	private String code_area;
 
-	private Handler handler = new Handler() {
 
-		@Override
-		public void handleMessage(Message msg) {
-			if(getActivity() == null || getActivity().isFinishing()){
-				return;
-			}
-			switch (msg.what) {
-			case AppConfig.FLAG_FAIL:
-				String resultmsg = (String) msg.obj;
-				showMsg(resultmsg);
-				break;
-			case AppConfig.REGISTER_SUCCESS:
-
-				Registermsg registermsg = (Registermsg) msg.obj;
-
-				toAutologin(registermsg);
-
-				getActivity().finish();
-
-			}
-		}
-	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,32 +125,21 @@ public class JmSetpwd3Fragment extends JmBaseFragment implements OnClickListener
 					
 					@Override
 					public void onSuccess(Object obj) {
-						// TODO Auto-generated method stub
-						if(obj!=null){
-						Registermsg registermsg = (Registermsg)obj;
-						if(registermsg.getCode().equals("0")){
+						Result<Registermsg> registermsgResult = (Result<Registermsg>) obj;
+						Registermsg registermsg = registermsgResult.data;
 						//	Log.i("kk","Auto"+registermsg.getAuto_login_token());
 							mSeference.saveAccount(user, "~~test",
 									registermsg.getAuto_login_token());
 							AppConfig.saveMap(user, "~~test",
 									registermsg.getAuto_login_token());
-							sendData(AppConfig.REGISTER_SUCCESS, obj,
-									handler);
-							
-						}else{
-							sendData(AppConfig.FLAG_FAIL, registermsg.getMessage(),
-									handler);
-						}
-						}else{
-							sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(getActivity(), "http_rror_msg"),
-									handler);
-						}
+						toAutologin(registermsg);
+						getActivity().finish();
 					}
 					
 					@Override
 					public void onError(int statusCode) {
-						// TODO Auto-generated method stub
-						sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"), handler);
+						showMsg(statusCode+"");
+
 					}
 				});
 		

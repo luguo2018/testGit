@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.Guest;
 import com.jmhy.sdk.model.Registermsg;

@@ -17,7 +17,6 @@ import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmLoginActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.MobileUser;
 import com.jmhy.sdk.model.Registermsg;
