@@ -74,6 +74,9 @@ public class FloatJsInterface {
 //		Intent viewIntent = new Intent("android.intent.action.VIEW",
 //				Uri.parse(url));
 //		activity.startActivity(viewIntent);
+
+//		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,"g3397081254","g3397081254","123123123");
+
 	}
 	@JavascriptInterface
 	public void JavaScriptToJumppassword() {
@@ -108,7 +111,7 @@ public class FloatJsInterface {
 	 */
 	@JavascriptInterface
 	public void JavascriptSetAccount(final String oldAccount, final String newAccount, final String newPassword) {
-		changeAccountUtil.changeAccount(activity,true,oldAccount,newAccount,newPassword,"");
+		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,oldAccount,newAccount,newPassword);
 	}
 
 	/**
@@ -116,7 +119,7 @@ public class FloatJsInterface {
 	 */
 	@JavascriptInterface
 	public void JavascriptChangePassword(final String account, final String password) {
-		changeAccountUtil.changeAccount(activity,true,account,account,password,"");
+		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,account,account,password);
 	}
 
 

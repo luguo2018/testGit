@@ -96,7 +96,7 @@ public class JsInterface {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				changeAccountUtil.changeAccount(activity,true,oldAccount,newAccount,newPassword,"");
+				changeAccountUtil.changeAccount(activity,null,true,oldAccount,newAccount,newPassword);
 			}
 		});
 	}
@@ -110,7 +110,7 @@ public class JsInterface {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				changeAccountUtil.changeAccount(activity,true,account,account,password,"");
+				changeAccountUtil.changeAccount(activity,null,true,account,account,password);
 			}
 		});
 	}

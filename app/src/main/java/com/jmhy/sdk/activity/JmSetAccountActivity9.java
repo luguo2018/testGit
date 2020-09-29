@@ -122,7 +122,7 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
             public void onSuccess(Object obj) {
                 Log.i("jimi","修改游客账号成功");
                 Toast.makeText(mActivity,"设置成功,请重新登录",Toast.LENGTH_SHORT).show();
-                changeAccountUtil.changeAccount(mActivity,false,"",edit_accpunt,edit_password,edit_confirm_password);
+                changeAccountUtil.changeAccount(mActivity,null,false,"",edit_accpunt,edit_password);
             }
 
             @Override

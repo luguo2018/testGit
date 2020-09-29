@@ -639,8 +639,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             mWindowManager.updateViewLayout(this, mWmParams);*/
             Log.e("JiMiSDK", "myfloatview removeFloatView");
 
-            mWindowManager.removeView(this);
             mWindowManager.removeView(hideView);
+            mWindowManager.removeView(this);
             mWindowManager = null;
             removeAllViews();
         } catch (Exception ex) {
@@ -838,7 +838,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             floatUserInfoActivity.setViews(url);
             floatUserInfoActivity.show();
         }
-        hide();
+        //皮肤9才隐藏，1-8点的时候是展开拓展菜单条
+        if (AppConfig.skin==9){
+            hide();
+        }
     }
     private PopupWindow popupWindow;
 
