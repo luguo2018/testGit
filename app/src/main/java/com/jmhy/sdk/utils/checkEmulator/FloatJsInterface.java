@@ -15,6 +15,7 @@ import com.jmhy.sdk.sdk.Loginout;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.MediaUtils;
+import com.jmhy.sdk.utils.PackageUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.utils.changeAccountUtil;
@@ -75,8 +76,6 @@ public class FloatJsInterface {
 //				Uri.parse(url));
 //		activity.startActivity(viewIntent);
 
-//		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,"g3397081254","g3397081254","123123123");
-
 	}
 	@JavascriptInterface
 	public void JavaScriptToJumppassword() {
@@ -104,6 +103,7 @@ public class FloatJsInterface {
 				AppConfig.isswitch=false;
 			}
 		});
+
 	}
 
 	/**
@@ -132,7 +132,28 @@ public class FloatJsInterface {
 				Uri.parse(url));
 		activity.startActivity(intent);
 	}
-	
+
+	/**
+	 * 跳转微信、QQ、微博
+	 */
+	@JavascriptInterface
+	public void turnToApp(String packageName){
+		if (PackageUtils.isInstall(activity,packageName)){
+			Intent intent = activity.getPackageManager().getLaunchIntentForPackage(packageName);
+			activity.startActivity(intent);
+		}else{
+			String tip="该软件";
+			if (packageName.equals("com.sina.weibo")){
+				tip="新浪微博";
+			}else if (packageName.equals("com.tencent.mobileqq")){
+				tip="腾讯qq";
+			}else if (packageName.equals("com.tencent.mm")){
+				tip="微信";
+			}
+			DialogUtils.showTip(activity,tip+"未安装，请安装后重试");
+		}
+	}
+
 	@JavascriptInterface
 	public void payNotify(String result){
 		//result=0 失败，1 成功

@@ -122,7 +122,7 @@ public class JiMiSDK {
 
 
 		final Activity activity = (Activity)context;
-		if(VERSION.SDK_INT <= VERSION_CODES.P){
+		if(VERSION.SDK_INT <= VERSION_CODES.Q){
 			List<String> permission = new ArrayList<>();
 			permission.add(Manifest.permission.READ_PHONE_STATE);
 			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
