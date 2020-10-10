@@ -139,6 +139,7 @@ public class InitData {
     public void setInit(InitMsg result) {
 
         try {
+            AppConfig.change_game_name = result.getChange_game_name();
             AppConfig.Token = result.getAccess_token();
             AppConfig.iphoneidList = result.getCode_area_list();
             AppConfig.USERAGREEMENTURL = Utils.toBase64url(result.getUseragreementurl());
