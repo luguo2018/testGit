@@ -99,6 +99,7 @@ public class AppConfig {
     public static int ali_hot_fix = 0;
     public static String float_icon_url;
     public static String web_loading_url ;
+    public static String change_game_name = "";
 
     public static void saveMap(String user, String pwd, String uid) {
         loginMap.put("user", user);

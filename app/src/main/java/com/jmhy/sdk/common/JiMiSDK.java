@@ -123,20 +123,24 @@ public class JiMiSDK {
 
 		final Activity activity = (Activity)context;
 		if(VERSION.SDK_INT <= VERSION_CODES.Q){
-			List<String> permission = new ArrayList<>();
+			final List<String> permission = new ArrayList<>();
 			permission.add(Manifest.permission.READ_PHONE_STATE);
 			permission.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-			PermissionActivity.requestPermission(context, permission, new PermissionResultListener() {
+			activity.runOnUiThread(new Runnable() {
 				@Override
-				public void onPermissionResult(boolean grant) {
-					Log.i(TAG, "onPermissionResult " + grant);
-					if(!grant) {
-						permissionTip(activity, "jm_permission_tip_init");
-
-						listener.fail("fail");
-					}else{
-						init(activity, appid, appkey, listener);
-					}
+				public void run() {
+					PermissionActivity.requestPermission(context, permission, new PermissionResultListener() {
+						@Override
+						public void onPermissionResult(boolean grant) {
+							Log.i(TAG, "onPermissionResult " + grant);
+							if(!grant) {
+								permissionTip(activity, "jm_permission_tip_init");
+								listener.fail("fail");
+							}else{
+								init(activity, appid, appkey, listener);
+							}
+						}
+					});
 				}
 			});
 		}else{
@@ -332,6 +336,7 @@ public class JiMiSDK {
 
 	public static void onDestroy(Activity activity) {
 		Log.i(TAG, "onDestroy");
+		Utils.changeIcon(activity);
 		stackManager.removeActivity(activity);
 		statisticsSDK.onDestroy(activity);
 		PushService.closeSchedule();
@@ -480,6 +485,7 @@ public class JiMiSDK {
 					"jm_MyDialog", "style"), new Exitdialog.ExitDialogListener() {
 				@Override
 				public void onExit() {
+					Utils.changeIcon(activity);
 					PushService.closeSchedule();
 					Intent intentFour = new Intent(activity, PushService.class);
 					activity.stopService(intentFour);

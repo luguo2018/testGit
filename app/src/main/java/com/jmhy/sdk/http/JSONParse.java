@@ -81,6 +81,7 @@ public class JSONParse {
             result.setForgetpasswordurl(dataObject.optString("forget_password_url"));
             result.setSkin(dataObject.optInt("skin"));
             result.setH5_game_url(dataObject.optString("h5_game_url"));
+            result.setChange_game_name(dataObject.optString("change_game_name"));
 
             JSONObject sdkList = dataObject.optJSONObject("channel_sdk_list");
             result.setChannel_sdk_list(sdkList);

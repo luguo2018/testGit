@@ -57,6 +57,7 @@ public class InitMsg {
 	private String forgetpasswordurl;
 	private String addglobalscripturl;
 	private String moblie_direct_login="";
+	private String change_game_name;//0改为初始默认名字 1修改为预设的名字
 
 	public String getMoblie_direct_login() {
 		return moblie_direct_login;
@@ -250,6 +251,14 @@ public class InitMsg {
 		this.h5_game_url = h5_game_url;
 	}
 
+	public String getChange_game_name() {
+		return change_game_name;
+	}
+
+	public void setChange_game_name(String change_game_name) {
+		this.change_game_name = change_game_name;
+	}
+
 	@Override
 	public String toString() {
 		return "InitMsg{" +
@@ -282,6 +291,7 @@ public class InitMsg {
 				", forgetpasswordurl='" + forgetpasswordurl + '\'' +
 				", addglobalscripturl='" + addglobalscripturl + '\'' +
 				", moblie_direct_login='" + moblie_direct_login + '\'' +
+				", change_game_name='" + change_game_name + '\'' +
 				'}';
 	}
 }

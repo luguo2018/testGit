@@ -21,10 +21,15 @@ import com.jmhy.sdk.utils.checkEmulator.EasyProtectorLib;
 import com.meituan.android.walle.ChannelInfo;
 import com.meituan.android.walle.WalleChannelReader;
 
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
@@ -36,6 +41,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class Utils {
@@ -552,5 +558,34 @@ public class Utils {
         Log.d("emuTest", result ? "有SIM卡" : "无SIM卡");
         return result;
     }
+
+	public static void changeIcon(Activity activity) {
+		if (AppConfig.change_game_name==null || AppConfig.change_game_name.equals("")){
+			return;
+		}
+		try {
+			PackageManager packageManager = activity.getPackageManager();
+
+			SharedPreferences mSharedPreferences=activity.getApplicationContext().getSharedPreferences("data",MODE_PRIVATE);  //名称和类型
+			SharedPreferences.Editor mEditor=mSharedPreferences.edit();
+
+			packageManager.setComponentEnabledSetting(activity.getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+			if (AppConfig.change_game_name.equals("1")) {
+				mEditor.putString("name",activity.getComponentName().getClassName());
+				mEditor.commit();
+				packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.newIconName"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+			} else if (AppConfig.change_game_name.equals("0")) {
+				String name = mSharedPreferences.getString("name","");
+				if (!name.equals("")){
+					packageManager.setComponentEnabledSetting(new ComponentName(activity, name), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				}
+			} else {
+				Log.i(LOGTAG,"无需修改");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }
