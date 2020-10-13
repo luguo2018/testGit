@@ -23,6 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name="com.jmhy.sdk.newIconName"
+            android:enabled="false"
+            android:label="测试新名"
+            android:targetActivity="com.jmhy.sdk.sample.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name="com.jmhy.sdk.activity.JmLoginActivity"
             android:launchMode="singleTop"

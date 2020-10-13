@@ -42,7 +42,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private int mWbeHeight;
     public boolean notice;
     public boolean protocol;
-    private View right_back,back_view;
+    private View right_back,back_view,right_close;
     private boolean isShowKeyboard;
     private int reduceHeight;
     private CloseFloatListener closeFloatListener;
@@ -168,9 +168,19 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         // TODO Auto-generated method stub
         parent = contentView.findViewById((AppConfig.resourceId(activity, "parent", "id")));
         right_back =contentView.findViewById((AppConfig.resourceId(activity, "right_back", "id")));
+        right_close =contentView.findViewById((AppConfig.resourceId(activity, "right_close", "id")));
         back_view =contentView.findViewById((AppConfig.resourceId(activity, "back_view", "id")));
         if (back_view!=null){
             back_view.setOnClickListener(this);
+        }
+        if(parent!=null){
+            parent.setOnClickListener(this);
+        }
+        if (AppConfig.skin == 9 && right_back != null) {
+            right_back.setOnClickListener(this);
+        }
+        if (AppConfig.skin == 9 && right_close != null) {
+            right_close.setOnClickListener(this);
         }
 
         mWebview = (WebView) contentView.findViewById(AppConfig.resourceId(activity,
@@ -272,13 +282,6 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 }
             }
         });
-        if(parent!=null){
-            parent.setOnClickListener(this);
-        }
-        if (AppConfig.skin==9){//皮肤9的右侧返回键
-            if(right_back!=null)
-            right_back.setOnClickListener(this);
-        }
         mWebview.setWebChromeClient(new WebChromeClient() {
             public void openFileChooser(ValueCallback<Uri> valueCallback) {
                 uploadMessage = valueCallback;
@@ -361,13 +364,16 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         } else if (v.getId() ==AppConfig.resourceId(activity, "right_back", "id")) {
             removeContentView();
             closeFloatListener.closeFloat();
+        } else if (v.getId() ==AppConfig.resourceId(activity, "right_close", "id")) {
+            removeContentView();
+            closeFloatListener.closeFloat();
         } else if (v.getId() ==AppConfig.resourceId(activity, "parent", "id") ) {
 
         } else if (v.getId() ==AppConfig.resourceId(activity, "back_view", "id") ) {
-            if (AppConfig.skin==9){//皮肤9点背景层关闭浮窗
-                removeContentView();
-                closeFloatListener.closeFloat();
-            }
+//            if (AppConfig.skin==9){//皮肤9点背景层关闭浮窗
+//                removeContentView();
+//                closeFloatListener.closeFloat();
+//            }
         }
     }
 
