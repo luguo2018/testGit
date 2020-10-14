@@ -111,7 +111,12 @@ public class FloatJsInterface {
 	 */
 	@JavascriptInterface
 	public void JavascriptSetAccount(final String oldAccount, final String newAccount, final String newPassword) {
-		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,oldAccount,newAccount,newPassword);
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				changeAccountUtil.changeAccount(activity,baseFloatActivity,true,oldAccount,newAccount,newPassword);
+			}
+		});
 	}
 
 	/**
@@ -119,7 +124,13 @@ public class FloatJsInterface {
 	 */
 	@JavascriptInterface
 	public void JavascriptChangePassword(final String account, final String password) {
-		changeAccountUtil.changeAccount(activity,baseFloatActivity,true,account,account,password);
+		Log.i("jimi","修改密码："+account+"---"+password);
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				changeAccountUtil.changeAccount(activity,baseFloatActivity,true,account,account,password);
+			}
+		});
 	}
 
 

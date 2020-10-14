@@ -32,8 +32,8 @@ public class FloatUtils {
     public static void destroyFloat() {
         if (mFloatView != null) {
             mFloatView.destroy();
+            mFloatView = null;
         }
-        mFloatView = null;
     }
 
     public static void hiddenTip(int index){

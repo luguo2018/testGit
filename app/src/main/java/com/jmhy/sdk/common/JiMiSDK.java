@@ -485,7 +485,6 @@ public class JiMiSDK {
 					"jm_MyDialog", "style"), new Exitdialog.ExitDialogListener() {
 				@Override
 				public void onExit() {
-					Utils.changeIcon(activity);
 					PushService.closeSchedule();
 					Intent intentFour = new Intent(activity, PushService.class);
 					activity.stopService(intentFour);
@@ -493,6 +492,7 @@ public class JiMiSDK {
 					FloatUtils.destroyFloat();
 					statisticsSDK.onExit();
 					exitlistener.ExitSuccess("success");
+					Utils.changeIcon(activity);
 				}
 
 				@Override

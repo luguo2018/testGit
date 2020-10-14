@@ -24,6 +24,7 @@ import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatJspayInterface;
+import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.JspayInterface;
 import com.jmhy.sdk.view.GifImageView;
 
@@ -112,7 +113,7 @@ public class FloatPayActivity extends BaseFloatActivity {
                 mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading",
                         "drawable"));
         }
-
+        mWebview.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         mWebview.setVerticalScrollBarEnabled(false);
         mWebview.getSettings().setSupportZoom(false);
         mWebview.getSettings().setSaveFormData(false);
@@ -228,6 +229,7 @@ public class FloatPayActivity extends BaseFloatActivity {
                     FloatPayActivity.this.parent = null;
                     jspayInterface = null;
                     contentView = null;
+                    FloatUtils.showFloat(activity);
                 }
             });
 

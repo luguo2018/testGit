@@ -21,7 +21,7 @@ public class Logindata {
             return;
         }
         if (AppConfig.isChangeGuestAccount) {//修改游客号后登录
-            if (AppConfig.change_new_password != null && !AppConfig.change_new_password.equals("")) {//有密码的情况  过去自动页面（XXX欢迎进入游戏）  拉登录接口
+            if (AppConfig.change_new_password != null && !AppConfig.change_new_password.equals("")&& !AppConfig.change_new_password.equals("undifend")) {//有密码的情况  过去自动页面（XXX欢迎进入游戏）  拉登录接口
                 Intent intent = new Intent(context, JmAutoLoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 context.startActivity(intent);

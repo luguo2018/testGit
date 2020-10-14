@@ -12,11 +12,11 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.jmhy.sdk.view.CornerCompatView
+    <com.jmhy.sdk.view.RoundShadowLayout
         android:layout_width="@dimen/jm_pay_width"
         android:layout_height="@dimen/jm_pay_height"
-        app:jm_radius="@dimen/jm_login_radius"
-        android:background="@color/jmfont_white" >
+        app:radius="@dimen/jm_login_radius"
+         >
 
         <WebView
             android:id="@+id/webview"
@@ -33,9 +33,9 @@
 
         <com.jmhy.sdk.view.GifImageView
             android:id="@+id/gif"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"/>
-    </com.jmhy.sdk.view.CornerCompatView>
+    </com.jmhy.sdk.view.RoundShadowLayout>
     </LinearLayout>
 </LinearLayout>

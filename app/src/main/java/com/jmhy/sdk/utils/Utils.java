@@ -569,13 +569,17 @@ public class Utils {
 			SharedPreferences mSharedPreferences=activity.getApplicationContext().getSharedPreferences("data",MODE_PRIVATE);  //名称和类型
 			SharedPreferences.Editor mEditor=mSharedPreferences.edit();
 
+			Log.i(LOGTAG,"查看AppConfig.change_game_name"+AppConfig.change_game_name+"activity.getComponentName()"+activity.getComponentName());
 			packageManager.setComponentEnabledSetting(activity.getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
 			if (AppConfig.change_game_name.equals("1")) {
+				Log.i(LOGTAG,"修改新入口com.jmhy.sdk.newIconName,原入口"+activity.getComponentName().getClassName());
 				mEditor.putString("name",activity.getComponentName().getClassName());
 				mEditor.commit();
 				packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.newIconName"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 			} else if (AppConfig.change_game_name.equals("0")) {
 				String name = mSharedPreferences.getString("name","");
+				Log.i(LOGTAG,"修改原入口"+name);
 				if (!name.equals("")){
 					packageManager.setComponentEnabledSetting(new ComponentName(activity, name), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 				}

@@ -18,10 +18,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.OkHttpManager;
 import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
 import com.jmhy.sdk.utils.MimeType;
@@ -119,6 +117,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                     uploadMessage=null;
                     uploadMessageAboveL=null;
                     contentView=null;
+                    closeFloatListener.closeFloat();
                 }
             });
 
@@ -236,7 +235,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 //layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(activity, "jm_login_height_4", "dimen"));
                 break;
         }
-
+        mWebview.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         mWebview.setVerticalScrollBarEnabled(false);
         mWebview.getSettings().setSupportZoom(false);
         mWebview.getSettings().setSaveFormData(false);

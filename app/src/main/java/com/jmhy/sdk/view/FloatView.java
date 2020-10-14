@@ -54,9 +54,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private WindowManager mWindowManager;
     private static Context mContext;
     private ObjectAnimator animator = null;
-
+    private FloatUserInfoActivity floatUserInfoActivity;
     private ImageView mIvFloatLogo;
     private LinearLayout mLlFloatMenu;
+    private View rootFloatView;
     private View mTvAccount;
     private View mTvkefu, mTvkefuLine;
     private View mTvGift, mTvGiftLine;
@@ -70,7 +71,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private FrameLayout mFlFloatLogo;
     private boolean mIsRight = false;// logo是否在右边
     private boolean mCanHide;// 是否允许隐藏
-    private boolean showFloatLogo;// 显示浮标
+    private boolean showFloatLogo = true;// 显示浮标
     private float mTouchStartX;
     private float mTouchStartY;
     private int mScreenWidth;
@@ -135,7 +136,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     }
                     break;
                 case SHOW_KEFU_FLOAT:
-                    if (showFloatLogo){//打开浮窗web页面时  不抖动浮标
+                    Log.i("jimisdk测试","断点1");
+                    if (floatUserInfoActivity!=null&&floatUserInfoActivity.isShow()){//打开浮窗web页面时  不抖动浮标
                         return;
                     }
 
@@ -156,9 +158,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     mWindowManager.updateViewLayout(view, mWmParams);
                     mCanHide=false;//有消息设置false不让悬浮窗隐藏到左边
                     mDraging = false;
-                    if (AppConfig.skin==9){
+                    Log.i("jimisdk测试","断点2");
+//                    if (AppConfig.skin==9){
                         startAnim();
-                    }
+//                    }
                     removeTimerTask();
                     break;
             }
@@ -307,7 +310,6 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     private View createView(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         // 从布局文件获取浮动窗口视图
-        View rootFloatView;
         Log.i(TAG, "AppConfig.skin == " + AppConfig.skin);
 
         switch (AppConfig.skin) {
@@ -337,7 +339,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         // 浮点图标
         mIvFloatLogo = (ImageView) rootFloatView.findViewById(AppConfig
                 .resourceId(context, "float_view_icon_imageView", "id"));
-
+        if (AppConfig.skin==9){
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
+            layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
+        }
         mLlFloatMenu = (LinearLayout) rootFloatView.findViewById(AppConfig
                 .resourceId(context, "ll_menu", "id"));
         mTvAccount = rootFloatView.findViewById(AppConfig
@@ -368,6 +373,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             @Override
             public void onClick(View arg0) {
                 turnToIntent(AppConfig.KEFU);
+                mLlFloatMenu.setVisibility(View.GONE);
                 hiddenTip(INDEX_KEFU);
             }
         });
@@ -392,11 +398,10 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
                 if (!mDraging) {
                     Utils.getSeferencegameuser(mContext);
-
+                    endAnimator();
                     if (AppConfig.skin == 9) {//点浮窗  允许悬浮窗隐藏到左边  开启计时器隐藏回左边   关闭动画 打开新客服url
                         mCanHide=true;
                         timerForHide();
-                        endAnimator();
 //                        turnToIntent(AppConfig.float_url_home_center);
 //                        String url="http://test.172jm.com/go/to?access_token="+AppConfig.Token+"&redirect_url=http://test.172jm.com/sdk_new/dist/#/home?fromGame=1";
 //                        String url="https://apisdk.5tc5.com/go/to?access_token="+AppConfig.Token+"&redirect_url=https%3A%2F%2Fapisdk.5tc5.com%2Fsdk_new%2Fdist%2F%23%2Fhome%3FfromGame%3D1";
@@ -638,8 +643,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
       /*      mWmParams.alpha = 0;
             mWindowManager.updateViewLayout(this, mWmParams);*/
             Log.e("JiMiSDK", "myfloatview removeFloatView");
-
-            mWindowManager.removeView(hideView);
+            if (hideView!=null){
+                mWindowManager.removeView(hideView);
+            }
             mWindowManager.removeView(this);
             mWindowManager = null;
             removeAllViews();
@@ -670,7 +676,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
 
-                if (mShowLoader) {
+				if (mShowLoader) {
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mFlFloatLogo.getLayoutParams();
                     layoutParams.width = DisplayUtil.dip2px(getContext(), fullWidth);
                     Log.i(TAG, "show");
@@ -685,7 +691,7 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     timerForHide();
 
                     mShowLoader = false;
-                }
+				 }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -808,13 +814,14 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
         removeFloatView();
     }
-    FloatUserInfoActivity floatUserInfoActivity;
+
     private void turnToIntent(String url) {
         if (TextUtils.isEmpty(url)) {
             String tip = AppConfig.getString(mContext, "function_not_open");
             Toast.makeText(mContext, tip, Toast.LENGTH_SHORT).show();
             return;
         }
+
 //        if (AppConfig.skin==9){
 //        }else {
 
@@ -832,9 +839,17 @@ public class FloatView extends FrameLayout implements OnTouchListener {
                     show();
                 }
             });
+             
+            if (floatUserInfoActivity.isShow()){
+                return;
+            }
             floatUserInfoActivity.setViews(url);
             floatUserInfoActivity.show();
         }else {
+            
+            if (floatUserInfoActivity.isShow()){
+                return;
+            }
             floatUserInfoActivity.setViews(url);
             floatUserInfoActivity.show();
         }
@@ -879,9 +894,9 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 
     private void refreshIconTip() {
         if (accountTip.getVisibility() == View.VISIBLE || giftTip.getVisibility() == View.VISIBLE || kefuTip.getVisibility() == View.VISIBLE) {
-            if (AppConfig.skin!=9) {
+           if (AppConfig.skin!=9) {
                 iconTip.setVisibility(VISIBLE);
-            }
+           }
         } else {
             iconTip.setVisibility(GONE);
         }
@@ -939,19 +954,18 @@ public class FloatView extends FrameLayout implements OnTouchListener {
     //实现先顺时针360度旋转然后逆时针360度旋转动画功能
     private void startAnim() {
         if (animator == null) {
-            animator = ObjectAnimator.ofFloat(mIvFloatLogo, "rotation", -30F, 30F, -30F);
+            animator = ObjectAnimator.ofFloat(AppConfig.skin==9?rootFloatView:mIvFloatLogo, "rotation", -15F, 15F, -15F);
             animator.setRepeatCount(ValueAnimator.INFINITE);
-            animator.setDuration(700);
+            animator.setDuration(400);
             animator.setInterpolator(new LinearInterpolator());
             animator.start();
         }
-
     }
 
     private void endAnimator() {
         if (animator != null) {
             animator.cancel();
-            animator = ObjectAnimator.ofFloat(mIvFloatLogo, "rotation", 0F, 0F);
+            animator = ObjectAnimator.ofFloat(AppConfig.skin==9?rootFloatView:mIvFloatLogo, "rotation", 0F, 0F);
             animator.setDuration(100);
             animator.start();
             animator.cancel();

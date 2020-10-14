@@ -7,12 +7,12 @@
     android:id="@+id/back_view"
     android:orientation="vertical" >
 
-    <com.jmhy.sdk.view.CornerCompatView
+    <com.jmhy.sdk.view.RoundShadowLayout
         android:id="@+id/content"
         android:layout_width="@dimen/jm_login_width"
         android:layout_height="@dimen/jm_login_height"
         android:background="@drawable/jm_base_login_bg_9"
-        app:jm_radius="17dp"
+        app:radius="17dp"
         >
 
         <WebView
@@ -22,8 +22,8 @@
 
         <com.jmhy.sdk.view.GifImageView
             android:id="@+id/gif"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center" />
-    </com.jmhy.sdk.view.CornerCompatView>
+    </com.jmhy.sdk.view.RoundShadowLayout>
 </LinearLayout>

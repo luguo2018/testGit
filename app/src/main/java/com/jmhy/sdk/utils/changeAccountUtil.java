@@ -17,12 +17,11 @@ public class changeAccountUtil {
         AppConfig.isShow = false;
 
         JiMiSDK.userlistenerinfo.onLogout("logout");
-        FloatUtils.destroyFloat();
         if (baseFloatActivity == null) {
             activity.finish();
         } else {
             baseFloatActivity.removeContentView();
         }
-
+        FloatUtils.destroyFloat();
     }
 }

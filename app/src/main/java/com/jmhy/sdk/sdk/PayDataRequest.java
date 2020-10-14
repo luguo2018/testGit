@@ -15,6 +15,7 @@ import com.jmhy.sdk.http.ApiRequestListener;
 import com.jmhy.sdk.model.PayData;
 import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.utils.DialogUtils;
+import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.Utils;
 
 public class PayDataRequest {
@@ -110,6 +111,7 @@ public class PayDataRequest {
             floatPayActivity.setViews(url);
             floatPayActivity.show();
         }
+        FloatUtils.destroyFloat();
     }
 
     public static void turnToIntent(Context context, String url) {

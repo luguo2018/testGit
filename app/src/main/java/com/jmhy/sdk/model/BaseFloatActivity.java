@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -39,6 +38,7 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
     public void show() {
         if (activity != null && contentView != null && !isShow) {
             activity.addContentView(contentView, lp);
+            isShow=true;
         } else {
             Toast.makeText(activity, "正在显示或者Activity为null", Toast.LENGTH_LONG).show();
         }
