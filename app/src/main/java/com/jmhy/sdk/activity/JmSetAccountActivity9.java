@@ -126,7 +126,7 @@ public class JmSetAccountActivity9 extends JmBaseActivity implements
             }
 
             @Override
-            public void onError(int statusCode) {
+            public void onError(int statusCode,String msg) {
                 showMsg(AppConfig.getString(mActivity, "http_rror_msg"));
             }
         });

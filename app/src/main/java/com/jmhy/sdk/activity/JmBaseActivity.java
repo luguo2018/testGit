@@ -33,7 +33,7 @@ public class JmBaseActivity extends Activity {
     public int appId;
     public Seference mSeference;
     public UserInfo mUserinfo;
-
+    public static FloatUserInfoActivity floatUserInfoActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -211,7 +211,8 @@ public class JmBaseActivity extends Activity {
 
     public void turnToNotice(final String url) {
         if (TextUtils.isEmpty(url)) {
-            // Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
+//             Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
+            Log.i("jimisdk","弹窗地址查看:"+url);
             return;
         }
 
@@ -227,7 +228,7 @@ public class JmBaseActivity extends Activity {
 //				intent.putExtra("notice", true);
 //				intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
 //				JiMiSDK.mContext.startActivity(intent);
-				FloatUserInfoActivity floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+				floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
                     @Override
                     public void closeFloat() {
                     }
@@ -237,6 +238,10 @@ public class JmBaseActivity extends Activity {
                 floatUserInfoActivity.show();
             }
         }, 1000);
+    }
+
+    public static FloatUserInfoActivity getNoticeActivity() {
+        return floatUserInfoActivity;
     }
 
     public void turnToSetAccount() {

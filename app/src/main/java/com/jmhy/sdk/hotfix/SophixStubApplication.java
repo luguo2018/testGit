@@ -2,6 +2,7 @@ package com.jmhy.sdk.hotfix;
 
 import android.content.Context;
 import android.support.annotation.Keep;
+
 import android.util.Log;
 
 import com.jmhy.sdk.common.JMApplication;
@@ -23,9 +24,11 @@ public class SophixStubApplication extends SophixApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 //         如果需要使用MultiDex，需要在此处调用。
-//         MultiDex.install(this);
+         //MultiDex.install(this);
         initSophix();
     }
+
+
     private void initSophix() {
         final SophixManager instance = SophixManager.getInstance();
         instance.setContext(this)

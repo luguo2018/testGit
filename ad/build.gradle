@@ -1,0 +1,85 @@
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
+
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //注意: SDK中使用的so文件支持五种架构：x86,x86_64,armeabi,armeabi-v7a,arm64-v8a 如果您应用中支持的架构超出这 五种，
+            // 请在build.gradle中使用abiFilters选择支持的架构。如下所示：
+            // ndk { // 设置支持的 SO 库构架，注意这里要根据你的实际情况来设置 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'armeabi' }
+            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+dependencies {
+//    api fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly files('libs/huosdk-gson-2.8.2.jar')
+    compileOnly files('libs/huosdk-union-okhttp-3.4.1.jar')
+    compileOnly files('libs/huosdk-union-okio-1.11.0.jar')
+
+    compileOnly files('libs/jm_sdk_20201017.jar')
+
+    implementation files('libs/adhost.jar')
+    implementation files('libs/open_ad_sdk.jar')
+    implementation files('libs/ttmd5-0.0.2-alpha.7.jar')
+//    testImplementation 'junit:junit:4.12'
+    //noinspection GradleCompatible
+//    implementation 'com.android.support:support-v4:24.2.0'
+//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+//    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+}
+
+
+task adJar(type: Jar, dependsOn: "assembleRelease") {
+    from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
+    destinationDir = file('build/libs')
+    //输出的jar路径
+    def fileName = "jm_ad_sdk.jar"
+    archiveName = fileName
+    exclude "**/BuildConfig.class"
+    exclude "**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+    //include "com/jmhy/sdk/statistics/JrttStatistics.class"
+
+    //只导入资源路径集下的部分资源
+    include "com/jmhy/sdk/ad/*"
+    include "com/jmhy/sdk/ad/callback/*"
+    include "com/jmhy/sdk/ad/http/*"
+}

@@ -237,7 +237,7 @@ public class JmpayActivity extends JmBaseActivity implements OnClickListener {
 	@Override
 	protected void onPause() {
 		mWebview.onPause();
-		mWebview.pauseTimers();
+//		mWebview.pauseTimers();
 		super.onPause();
 	}
 

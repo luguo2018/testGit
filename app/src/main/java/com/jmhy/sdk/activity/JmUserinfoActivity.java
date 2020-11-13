@@ -100,6 +100,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
                 setContentView(AppConfig.resourceId(this, "jm_protocol_skin9", "layout"));
             }
         }else if (notice) {
+            Log.i("jimi","userInfo加载notice"+AppConfig.skin);
             if (AppConfig.skin == 9) {
                 setContentView(AppConfig.resourceId(this, "jmnotice_skin9", "layout"));
             } else {
@@ -249,7 +250,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
                 //layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(this, "jm_login_height_4", "dimen"));
                 break;
         }
-
+        mWebview.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         mWebview.setVerticalScrollBarEnabled(false);
         mWebview.getSettings().setSupportZoom(false);
         mWebview.getSettings().setSaveFormData(false);
@@ -448,7 +449,7 @@ public class JmUserinfoActivity extends JmBaseActivity implements OnClickListene
     @Override
     protected void onPause() {
         mWebview.onPause();
-        mWebview.pauseTimers();
+//        mWebview.pauseTimers();
         super.onPause();
     }
 

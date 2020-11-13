@@ -71,7 +71,7 @@ public class PayDataRequest {
                     }
 
                     @Override
-                    public void onError(int statusCode) {
+                    public void onError(int statusCode,String msg) {
                         Activity activity = (Activity) mContext;
                         DialogUtils.showTip(activity, statusCode+"");
                     }

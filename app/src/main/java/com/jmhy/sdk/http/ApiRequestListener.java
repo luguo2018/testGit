@@ -25,5 +25,5 @@ public interface ApiRequestListener  {
 	 * @param statusCode
 	 *            error code
 	 */
-	void onError(int statusCode);
+	void onError(int statusCode,String msg);
 }

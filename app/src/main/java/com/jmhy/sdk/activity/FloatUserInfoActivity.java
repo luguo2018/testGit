@@ -1,6 +1,7 @@
 package com.jmhy.sdk.activity;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -20,7 +21,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.model.BaseFloatActivity;
+import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
 import com.jmhy.sdk.utils.MimeType;
 import com.jmhy.sdk.utils.checkEmulator.FloatJsInterface;
@@ -93,7 +96,41 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             }
         });
     }
-
+    public  void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            if (null == uploadMessage && null == uploadMessageAboveL)
+                return;
+            Uri result = data == null || resultCode != Activity.RESULT_OK ? null : data.getData();
+            if (uploadMessageAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (uploadMessage != null) {
+                uploadMessage.onReceiveValue(result);
+                uploadMessage = null;
+            }
+        }
+    }
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        if (requestCode != FILE_CHOOSER_RESULT_CODE || uploadMessageAboveL == null)
+            return;
+        Uri[] results = null;
+        if (resultCode == Activity.RESULT_OK) {
+            if (intent != null) {
+                String dataString = intent.getDataString();
+                ClipData clipData = intent.getClipData();
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
+                    }
+                }
+                if (dataString != null)
+                    results = new Uri[]{Uri.parse(dataString)};
+            }
+        }
+        uploadMessageAboveL.onReceiveValue(results);
+        uploadMessageAboveL = null;
+    }
     @Override
     public void removeContentView() {
         super.removeContentView();
@@ -103,6 +140,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 @Override
                 public void run() {
                     Log.d(TAG, "removeContentView: threadName" + Thread.currentThread().getName());
+                    Log.i("jimi","断点错误查看："+contentView);
+                    Log.i("jimi","断点错误查看2："+contentView.getParent());
                     ViewParent parent = contentView.getParent();
                     ViewGroup viewGroup = (ViewGroup) parent;
                     ViewGroup viewGroup1 = (ViewGroup) contentView;
@@ -146,6 +185,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 layout_id=AppConfig.resourceId(activity, "jm_protocol_skin9", "layout");
             }
         } else if (notice) {
+            Log.i("jimi","float加载notice"+AppConfig.skin);
             if (AppConfig.skin == 9) {
                 layout_id=AppConfig.resourceId(activity, "jmnotice_skin9", "layout");
             } else {
@@ -235,6 +275,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 //layoutParams.height = (int)getResources().getDimension(AppConfig.resourceId(activity, "jm_login_height_4", "dimen"));
                 break;
         }
+        mWebview.setBackgroundColor(0); // 设置背景色
         mWebview.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         mWebview.setVerticalScrollBarEnabled(false);
         mWebview.getSettings().setSupportZoom(false);
@@ -244,7 +285,23 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         mWebview.getSettings().setBuiltInZoomControls(false);
         mWebview.getSettings().setSupportZoom(false);
         mWebview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);// 默认不使用缓存！
-        mWebview.addJavascriptInterface(new FloatJsInterface(activity, this), "jimiJS");
+        mWebview.addJavascriptInterface(new FloatJsInterface(activity, this, new FloatJsInterface.WebAdListener() {
+            @Override
+            public void end(String var1) {
+                Log.i("jimi","加载广告回调成功");
+                mWebview.loadUrl("javascript:adEndCallBack()");
+            }
+
+            @Override
+            public void error(String var1) {
+                mWebview.loadUrl("javascript:adEndCallBack(" + var1 + ")");
+            }
+
+            @Override
+            public void close() {
+//                removeContentView();
+            }
+        }), "jimiJS");
         mWebview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         // 修复一些机型webview无法点击****/
         mWebview.requestFocus(View.FOCUS_DOWN);
@@ -264,7 +321,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.i(TAG, "shouldOverrideUrlLoading " + url);
+                Log.i(TAG, "shouldOverrideUrlLoading 123 " + url+"\n"+url.startsWith("alipays://platformapi/startApp"));
                 if (url.startsWith("weixin://wap/pay")) {
                     Intent intent = null;
 
@@ -275,8 +332,19 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                         e.printStackTrace();
                     }
                     return true;
-                } else {
+                }else if (url.startsWith("alipays://platformapi/startApp")) {
+                    
+                    try {
+                        
+                        Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        view.getContext().startActivity(intent);
 
+                        refreshPay();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                }else {
                     return super.shouldOverrideUrlLoading(view, url);
                 }
             }
@@ -376,6 +444,14 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
         }
     }
 
+    private void refreshPay() {
+        String url = WebApi.BASE_HOST + "/pay_back/info?access_token={access_token}&billno={billno}";
+        url = url.replace("{access_token}", AppConfig.Token);
+        url = url.replace("{billno}", PayDataRequest.getmPayInfo().getCporderid());
+        mWebview.loadUrl(url);
+
+        Log.i(TAG, "url = " + url);
+    }
 
     public interface CloseFloatListener {
 

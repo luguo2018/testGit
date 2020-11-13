@@ -156,7 +156,7 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                 case oneKeyLoginFail:
                     Log.i("jimi测试查看", "" + msg.obj);
                     Toast.makeText(getActivity(), msg.obj + "", Toast.LENGTH_SHORT).show();
-//                    view.setVisibility(View.VISIBLE);
+                    view.setVisibility(View.VISIBLE);
                     break;
                 case AppConfig.FLAG_FAIL:
                     String resultmsg = (String) msg.obj;
@@ -292,7 +292,7 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                         }
 
                         @Override
-                        public void onError(int statusCode) {
+                        public void onError(int statusCode,String msg) {
                             // TODO Auto-generated method stub
                             Log.i("jimisdk", "一键登录校验失败" + statusCode);
 
@@ -373,12 +373,9 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                     }
 
                     @Override
-                    public void onError(int statusCode) {
+                    public void onError(int statusCode,String msg) {
                         // TODO Auto-generated method stub
-                        sendData(
-                                AppConfig.FLAG_FAIL,
-                                AppConfig.getString(getActivity(),
-                                        "http_rror_msg"), handler);
+                        sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
                     }
                 });
 
@@ -416,18 +413,17 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
                         sendData(AppConfig.FLAG_FAIL, guest.getMessage(), handler);
                     }
                 } else {
+                    Log.i("jimi","异常 封号");
                     sendData(AppConfig.FLAG_FAIL, AppConfig.getString(
                             getActivity(), "http_rror_msg"), handler);
                 }
             }
 
             @Override
-            public void onError(int statusCode) {
+            public void onError(int statusCode,String msg) {
                 // TODO Auto-generated method stub
-                sendData(
-                        AppConfig.FLAG_FAIL,
-                        AppConfig.getString(getActivity(),
-                                "http_rror_msg"), handler);
+                Log.i("jimi","异常"+statusCode+msg);
+                sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
             }
         });
     }

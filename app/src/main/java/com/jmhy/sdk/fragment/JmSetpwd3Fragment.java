@@ -137,7 +137,7 @@ public class JmSetpwd3Fragment extends JmBaseFragment implements OnClickListener
 					}
 					
 					@Override
-					public void onError(int statusCode) {
+					public void onError(int statusCode,String msg) {
 						showMsg(statusCode+"");
 
 					}

@@ -5,17 +5,17 @@ android {
     compileSdkVersion 29
     buildToolsVersion '29.0.2'
 
-
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
         ndk {
             //选择要添加的对应cpu类型的.so库。
             //热修复支持五种
-            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
+           abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
         }
     }
 
@@ -46,25 +46,16 @@ android {
 
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
-    implementation files('libs/huosdk-gson-2.8.2.jar')
-    implementation files('libs/huosdk-union-okhttp-3.4.1.jar')
-    implementation files('libs/huosdk-union-okio-1.11.0.jar')
-    implementation files('libs/alicloud-android-hotfix-3.2.15.jar')
-    implementation files('libs/alicloud-android-ut-5.4.3.jar')
-    implementation files('libs/alicloud-android-utdid-2.5.1-proguard.jar')
-    implementation files('libs/alicloud-android-utils-1.1.6.4.jar')
-    implementation files('libs/asms.jar')
-    implementation files('libs/crash_build.jar')
-    implementation files('libs/crashsdk-3.2.0.4.jar')
-    implementation files('libs/umeng-common-9.1.6.jar')
-//    implementation files('libs/jrtt.jar')
-    testImplementation 'junit:junit:4.12'
-//    api files('libs/RangersAppLog-Lite-cn-3.3.12.aar')
-//    implementation 'com.android.support:appcompat-v7:27.1.1'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-//    implementation 'com.meituan.robust:robust:0.4.99'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+//    implementation 'com.umeng.umsdk:huawei-basetb:2.6.3.306'
+//    implementation 'com.umeng.umsdk:huawei-pushtb:2.6.3.306'
+//    implementation 'com.umeng.umsdk:huawei-umengaccs:1.2.4'
+//    implementation 'com.umeng.umsdk:vivo-push:2.3.5'
+//    implementation 'com.umeng.umsdk:vivo-umengaccs:1.1.0'
+    implementation project(':ad')
+    implementation project(':push')
 }
 
 task assembleJar(type: Jar, dependsOn: "assembleRelease") {
@@ -77,7 +68,8 @@ task assembleJar(type: Jar, dependsOn: "assembleRelease") {
     exclude "**/BuildConfig\$*.class"
     exclude "**/R.class"
     exclude "**/R\$*.class"
-    //include "com/jmhy/sdk/statistics/JrttStatistics.class"
+    exclude "com/jmhy/sdk/utils/MiitHelper.class"
+    exclude "com/jmhy/sdk/statistics/*.class"
 
     //只导入资源路径集下的部分资源
     include "com/**/*.class"
@@ -159,6 +151,18 @@ task assembleJrtt524Jar(type: Jar, dependsOn: "assembleRelease") {
     from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
     destinationDir = file('build/libs')
     archiveName = 'jrtt_5.2.4.jar'
+    exclude "**/BuildConfig.class"
+    exclude "**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+    //只导入资源路径集下的部分资源
+    include "com/jmhy/sdk/statistics/*"
+}
+
+task assembleBaiduJar(type: Jar, dependsOn: "assembleRelease") {
+    from './build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
+    destinationDir = file('build/libs')
+    archiveName = 'bd.jar'
     exclude "**/BuildConfig.class"
     exclude "**/BuildConfig\$*.class"
     exclude "**/R.class"

@@ -33,7 +33,7 @@ import com.jmhy.sdk.utils.Utils;
 public class JmBaseFragment extends Fragment implements View.OnTouchListener {
     public Seference mSeference;
     public UserInfo mUserinfo;
-
+    private FloatUserInfoActivity floatUserInfoActivity;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -78,6 +78,7 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
         intent.setClass(getActivity(), JmUserinfoActivity.class);
 
         startActivity(intent);
+//        turnToIntent(AppConfig.KEFU);
     }
 
     public void removeFragmentToActivity(FragmentManager fragmentManager, Fragment fragment) {
@@ -203,11 +204,14 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
             // Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
             return;
         }
-        FloatUserInfoActivity floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
-            @Override
-            public void closeFloat() {
-            }
-        });
+        if (floatUserInfoActivity == null) {
+
+            floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+                @Override
+                public void closeFloat() {
+                }
+            });
+        }
         floatUserInfoActivity.notice = true;
         floatUserInfoActivity.setViews(url);
         floatUserInfoActivity.show();
@@ -223,11 +227,13 @@ public class JmBaseFragment extends Fragment implements View.OnTouchListener {
         JiMiSDK.handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                FloatUserInfoActivity floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
-                    @Override
-                    public void closeFloat() {
-                    }
-                });
+                if (floatUserInfoActivity == null) {
+                    floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+                        @Override
+                        public void closeFloat() {
+                        }
+                    });
+                }
                 floatUserInfoActivity.notice = true;
                 floatUserInfoActivity.setViews(url);
                 floatUserInfoActivity.show();

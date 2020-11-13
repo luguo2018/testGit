@@ -1,6 +1,7 @@
 package com.jmhy.sdk.http;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseResponse;
@@ -61,7 +62,9 @@ public class JSONParse {
             result.setLog_on(dataObject.optString("is_log_on"));
             result.setIsvisitoronphone(dataObject.optString("is_visitor_on_phone"));
             result.setSwitch_login(dataObject.optString("switch_login"));
+            result.setSwitch_login(dataObject.optString("switch_login"));
             JSONArray jsonArray = dataObject.optJSONArray("code_area_list");
+            AppConfig.ali_hot_fix = dataObject.optInt("ali_hot_fix");
             for (int i = 0; i < jsonArray.length(); i++) {
                 String value = (String) jsonArray.opt(i);
                 codelist.add(value);
@@ -90,6 +93,8 @@ public class JSONParse {
             result.setMoblie_direct_login(dataObject.optString("moblie_direct_login"));
             AppConfig.float_icon_url =Utils.toBase64url(dataObject.optString("float_icon_url"));
             AppConfig.web_loading_url=Utils.toBase64url(dataObject.optString("web_loading_url"));
+            Log.i("jimi","测试数据查看123："+dataObject.optString("ad_app_id"));
+            AppConfig.ad_app_id=dataObject.optString("ad_app_id");
         }
         return result;
     }

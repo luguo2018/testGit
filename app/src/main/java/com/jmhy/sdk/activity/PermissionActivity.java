@@ -110,19 +110,22 @@ public class PermissionActivity extends Activity {
     }
 
     private void show(final List<String> list) {
-        state1.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
-        state2.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
-        for (int i=0;i<list.size();i++){
-            if (list.get(i).equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                state1.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+        if (mView != null &&  (mView.getVisibility() == View.VISIBLE) ) {
+            state1.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
+            state2.setImageResource(AppConfig.resourceId(this, "jm_permission_on2", "drawable"));
+            for (int i=0;i<list.size();i++){
+                if (list.get(i).equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    state1.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+                }
+
+                if (list.get(i).equals(Manifest.permission.READ_PHONE_STATE)) {
+                    state2.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
+                }
             }
 
-            if (list.get(i).equals(Manifest.permission.READ_PHONE_STATE)) {
-                state2.setImageResource(AppConfig.resourceId(this, "jm_permission_off2", "drawable"));
-            }
+            mView.setVisibility(View.VISIBLE);
         }
 
-        mView.setVisibility(View.VISIBLE);
     }
     private void init(final List<String> list) {
         state1 = (ImageView) findViewById(AppConfig.resourceId(this, "state1", "id"));

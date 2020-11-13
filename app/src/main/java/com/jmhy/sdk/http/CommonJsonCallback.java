@@ -63,6 +63,7 @@ public class CommonJsonCallback<T> implements Callback {
     }
 
     private void handleResponse(Object responseObj) {
+        Log.i("jimi","obj查看"+responseObj);
         if (responseObj == null && responseObj.toString().trim().equals("")) {
             mListener.onFailure(new OkHttpException(NETWORK_ERROR, NETWORK_MSG));
             return;

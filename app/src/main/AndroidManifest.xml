@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jmhy.sdk">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -16,6 +16,16 @@
 
     <uses-permission android:name="com.asus.msa.SupplementaryDID.ACCESS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+
+    <!-- 以下为需要的基本权限，需要自行添加至您的AndroidManifest文件中 start-->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application>
         <!--联通电信授权⻚。 使用弹窗模式必须添加！！！-->
         <activity
@@ -38,7 +48,47 @@
             android:exported="false"
             android:launchMode="singleTop" />
 
-      
+
+
+        <!--百度-->
+        <activity
+            android:name="com.baidu.xenv.XenvActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="standard"
+            android:theme="@android:style/Theme.Translucent" >
+            <intent-filter>
+                <action android:name="com.baidu.action.Xenv.VIEW" />
+
+                <category android:name="com.baidu.category.xenv" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.baidu.xenv.XenvService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.baidu.action.Xenv.VIEW" />
+
+                <category android:name="com.baidu.category.xenv" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="com.baidu.xenv.XenvProvider"
+            android:authorities="${applicationId}.xenv.ac.provider"
+            android:exported="false"
+            tools:replace="android:authorities" />
+
+        <!-- 百度-->
+        <meta-data
+            android:name="baiduAppId"
+            android:value="baiduAppId=10879" />
+        <meta-data
+            android:name="baiduAppKey"
+            android:value="baiduAppKey=6a44b21da97e16ee917994956b1bbea2" />
 
     </application>
 </manifest>

@@ -169,7 +169,12 @@ public class FloatView extends FrameLayout implements OnTouchListener {
         }
 
     };
-
+    public FloatUserInfoActivity getFloatUserInfoActivity(){
+        if (floatUserInfoActivity!=null){
+            return  floatUserInfoActivity;
+        }
+        return null;
+    }
     public FloatView(Context context) {
         super(context);
         init(context);
@@ -406,7 +411,8 @@ public class FloatView extends FrameLayout implements OnTouchListener {
 //                        String url="http://test.172jm.com/go/to?access_token="+AppConfig.Token+"&redirect_url=http://test.172jm.com/sdk_new/dist/#/home?fromGame=1";
 //                        String url="https://apisdk.5tc5.com/go/to?access_token="+AppConfig.Token+"&redirect_url=https%3A%2F%2Fapisdk.5tc5.com%2Fsdk_new%2Fdist%2F%23%2Fhome%3FfromGame%3D1";
 //                        String url="https://apisdk.5tc5.com/go/to?access_token="+AppConfig.Token+"&redirect_url=https%3A%2F%2Fapisdk.5tc5.com%2Fcommunity%2Fdist%2Fhome.html%3FfromGame%3D1%26showSetPre%3D1";
-//                        AppConfig.float_url_home_center=url;
+//                        AppConfig.float_url_home_center="http://192.168.3.167:8081/";
+
                         Log.i("jimi测试url：",AppConfig.float_url_home_center);
                         turnToIntent(AppConfig.float_url_home_center);
                     } else {

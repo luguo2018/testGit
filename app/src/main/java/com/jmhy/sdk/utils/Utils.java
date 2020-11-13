@@ -26,6 +26,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -34,6 +35,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -302,6 +304,19 @@ public class Utils {
 		return params;
 	}
 
+	public static String getPropertiesAdAppId(Context context) {
+		Log.i(LOGTAG, "getSdkParams getProperties");
+
+		Properties properties = new Properties();
+		try {
+			properties.load(context.getAssets().open("jmhy.properties"));
+			return properties.getProperty("adAppId", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
 	/*public static String getChannel(Context context) {
 		ApplicationInfo appinfo = context.getApplicationInfo();
 		String sourceDir = appinfo.sourceDir;
@@ -560,6 +575,7 @@ public class Utils {
     }
 
 	public static void changeIcon(Activity activity) {
+		Log.i("jimi","修改状态AppConfig.change_game_name："+AppConfig.change_game_name);
 		if (AppConfig.change_game_name==null || AppConfig.change_game_name.equals("")){
 			return;
 		}
@@ -570,18 +586,44 @@ public class Utils {
 			SharedPreferences.Editor mEditor=mSharedPreferences.edit();
 
 			Log.i(LOGTAG,"查看AppConfig.change_game_name"+AppConfig.change_game_name+"activity.getComponentName()"+activity.getComponentName());
-			packageManager.setComponentEnabledSetting(activity.getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+			Intent intent = new Intent();
+			intent.setClassName(activity.getPackageName(), "com.jmhy.sdk.template.LauncherActivity");
+			String name = mSharedPreferences.getString("gameLauncherName","");
 
 			if (AppConfig.change_game_name.equals("1")) {
-				Log.i(LOGTAG,"修改新入口com.jmhy.sdk.newIconName,原入口"+activity.getComponentName().getClassName());
-				mEditor.putString("name",activity.getComponentName().getClassName());
+				if (packageManager.resolveActivity(intent, 0) == null) {
+					// 说明系统中不存在这个activity
+					Log.i(LOGTAG,"状态1 启动类不存在"+intent);
+					if (name.equals("")){
+						mEditor.putString("gameLauncherName",activity.getComponentName().getClassName());
+					}
+					packageManager.setComponentEnabledSetting(activity.getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+					Log.i(LOGTAG,"状态1 禁用并储存游戏启动类名"+activity.getComponentName().getClassName());
+				}else{
+					Log.i(LOGTAG,"状态1 启动类存在"+intent);
+					//有修改启动类的情况入口为com.jmhy.sdk.template.LauncherActivity
+					if (name.equals("")){
+						mEditor.putString("gameLauncherName","com.jmhy.sdk.template.LauncherActivity");
+					}
+					packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.template.LauncherActivity"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+					Log.i(LOGTAG,"状态1 禁用并存储jimi启动类名com.jmhy.sdk.template.LauncherActivity");
+				}
 				mEditor.commit();
 				packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.newIconName"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 			} else if (AppConfig.change_game_name.equals("0")) {
-				String name = mSharedPreferences.getString("name","");
-				Log.i(LOGTAG,"修改原入口"+name);
+				Log.i(LOGTAG,"状态0 原入口"+name);
 				if (!name.equals("")){
+					Log.i(LOGTAG,"状态0 禁用newIconName，开启原入口"+name);
+					packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.newIconName"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 					packageManager.setComponentEnabledSetting(new ComponentName(activity, name), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+				}else{//name存储的入口类名被清了   判断有无template.LauncherActivity  有则开启他
+					if (packageManager.resolveActivity(intent, 0) == null) {
+						Log.i(LOGTAG,"状态0 启动类不存在");
+					}else{
+						Log.i(LOGTAG,"状态0 com.jmhy.sdk.template.LauncherActivity存在"+intent);
+						packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.newIconName"), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+						packageManager.setComponentEnabledSetting(new ComponentName(activity, "com.jmhy.sdk.template.LauncherActivity"), PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+					}
 				}
 			} else {
 				Log.i(LOGTAG,"无需修改");
@@ -591,5 +633,24 @@ public class Utils {
 		}
 	}
 
+	public static String getMetaValue(Context context, String metaKey) {
+		Bundle metaData = null;
+		String metaValue = null;
+		if (context == null || metaKey == null) {
+			return null;
+		}
+		try {
+			ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
+					context.getPackageName(), PackageManager.GET_META_DATA);
+			if (null != ai) {
+				metaData = ai.metaData;
+			}
+			if (null != metaData) {
+				metaValue = metaData.getString(metaKey);
+			}
+		} catch (NameNotFoundException e) {
+		}
+		return metaValue;// xxx
+	}
 
 }

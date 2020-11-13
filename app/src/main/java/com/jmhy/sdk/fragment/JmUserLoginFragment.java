@@ -283,12 +283,9 @@ public class JmUserLoginFragment extends JmBaseFragment implements
 					}
 
 					@Override
-					public void onError(int statusCode) {
+					public void onError(int statusCode,String msg) {
 						// TODO Auto-generated method stub
-						sendData(
-								AppConfig.FLAG_FAIL,
-								AppConfig.getString(getActivity(),
-										"http_rror_msg"), handler);
+						sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
 					}
 				});
 	}
@@ -564,12 +561,9 @@ public class JmUserLoginFragment extends JmBaseFragment implements
 					}
 
 					@Override
-					public void onError(int statusCode) {
+					public void onError(int statusCode,String msg) {
 						// TODO Auto-generated method stub
-						sendData(
-								AppConfig.FLAG_FAIL,
-								AppConfig.getString(getActivity(),
-										"http_rror_msg"), handler);
+						sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
 					}
 				});
 	}
@@ -605,12 +599,9 @@ public class JmUserLoginFragment extends JmBaseFragment implements
 					}
 
 					@Override
-					public void onError(int statusCode) {
+					public void onError(int statusCode,String msg) {
 						// TODO Auto-generated method stub
-						sendData(
-								AppConfig.FLAG_FAIL,
-								AppConfig.getString(getActivity(),
-										"http_rror_msg"), handler);
+						sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
 					}
 				});
 

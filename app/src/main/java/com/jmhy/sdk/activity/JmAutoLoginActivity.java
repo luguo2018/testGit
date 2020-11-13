@@ -179,7 +179,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
                 }
 
                 @Override
-                public void onError(int statusCode) {
+                public void onError(int statusCode,String msg) {
                     // TODO Auto-generated method stub
                     sendData(AppConfig.FLAG_FAIL, AppConfig.getString(mContext, "http_rror_msg"), handler);
                 }
@@ -329,7 +329,7 @@ public class JmAutoLoginActivity extends JmBaseActivity {
             }
 
             @Override
-            public void onError(int statusCode) {
+            public void onError(int statusCode,String msg) {
                 sendData(AppConfig.FLAG_FAIL,  AppConfig.getString(JmAutoLoginActivity.this, "http_rror_msg"),
                         handler);
             }

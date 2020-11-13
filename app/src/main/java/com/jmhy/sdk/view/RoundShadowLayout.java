@@ -15,17 +15,27 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.jmhy.sdk.R;
 import com.jmhy.sdk.config.AppConfig;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
-
+/**
+ * Created by wudengwei
+ * on 2019/3/7
+ */
 public class RoundShadowLayout extends FrameLayout {
     //two radius values [X, Y]. The corners are ordered top-left, top-right, bottom-right, bottom-left
     private float[] radiusArray = new float[8];

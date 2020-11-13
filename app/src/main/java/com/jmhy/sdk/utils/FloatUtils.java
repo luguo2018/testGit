@@ -7,12 +7,17 @@ import com.jmhy.sdk.view.FloatView;
 
 public class FloatUtils {
     private static FloatView mFloatView;
-
+    public static FloatView getmFloatView(){
+        if (mFloatView!=null){
+            return  mFloatView;
+        }
+        return null;
+    }
     public static void showFloat(Activity activity) {
         if(mFloatView == null){
             mFloatView = new FloatView(activity);
-            mFloatView.show();
         }
+        mFloatView.show();
     }
 
     public static void showFloatRedDot() {

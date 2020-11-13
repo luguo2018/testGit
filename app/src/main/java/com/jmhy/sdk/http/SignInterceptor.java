@@ -10,11 +10,14 @@ import com.huosdk.huounion.sdk.okhttp3.Request;
 import com.huosdk.huounion.sdk.okhttp3.RequestBody;
 import com.huosdk.huounion.sdk.okhttp3.Response;
 import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.utils.MD5Utils;
 import com.jmhy.sdk.utils.SecurityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -43,7 +46,7 @@ public class SignInterceptor implements Interceptor {
                 }
                 URI uri = originRequest.url().uri();
                 //合并新老参数
-                Map<String, String> newFormBodyParamMap = getSignParamMap("POST", uri.getPath(), formBodyParamMap);
+                Map<String, String> newFormBodyParamMap = AppConfig.is_ad_sign?getEncryStr(AppConfig.agent,  formBodyParamMap):getSignParamMap("POST", uri.getPath(), formBodyParamMap);
                 if (newFormBodyParamMap != null) {
                     FormBody.Builder bodyBuilder = new FormBody.Builder();
                     for (Map.Entry<String, String> entry : newFormBodyParamMap.entrySet()) {
@@ -73,12 +76,41 @@ public class SignInterceptor implements Interceptor {
                 append("context=").append(paramMap.get("context").toString()).append("&");
         paramBuffer.append("appkey=").append(AppConfig.appKey);
         String paramStr = paramBuffer.toString();
+//        String sign = SecurityUtils.getMD5Str(paramStr.toLowerCase());
         String sign = SecurityUtils.getMD5Str(paramStr.toLowerCase());
         paramMap.put("sign", sign);
         Log.e("TAG", "paramStr: ==="+paramStr);
         Log.e("TAG", "sign: ==="+sign);
         return paramMap;
     }
+
+    public static Map<String, String> getEncryStr(String appkey, TreeMap<String, String> treeMap) {
+        AppConfig.is_ad_sign=false;
+        StringBuffer buf = new StringBuffer(appkey);
+        buf = buf.reverse();
+        String md5Key=MD5Utils.md5(buf.toString()).toLowerCase();
+        StringBuilder encodeSB = new StringBuilder();
+        StringBuilder sortSB = new StringBuilder();
+
+        try {
+            Iterator var4 = treeMap.entrySet().iterator();
+
+            while(var4.hasNext()) {
+                Map.Entry<String, String> entry = (Map.Entry)var4.next();
+                String key = (String)entry.getKey();
+                String value = entry.getValue() == null ? "" : (String)entry.getValue();
+                sortSB.append(key).append("=").append(value).append("&");
+                encodeSB.append(key).append("=").append(URLEncoder.encode(value, "UTF-8")).append("&");
+            }
+        } catch (UnsupportedEncodingException var8) {
+            var8.printStackTrace();
+        }
+
+        String sign = MD5Utils.md5(sortSB.append(md5Key).toString().toLowerCase());
+        treeMap.put("sign", sign);
+        return treeMap;
+    }
+
     public static String urlencode(String data) {
         try {
             return URLEncoder.encode(data, "utf-8")

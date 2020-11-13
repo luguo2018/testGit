@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".demo.demoActivity">
+
+    <Button
+        android:id="@+id/initbt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="初始化" />
+
+    <Button
+        android:id="@+id/quanpin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="安卓按钮" />
+
+    <Button
+        android:id="@+id/jili"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ios按钮" />
+
+</LinearLayout>

@@ -40,7 +40,8 @@ public abstract class BaseFloatActivity implements View.OnClickListener {
             activity.addContentView(contentView, lp);
             isShow=true;
         } else {
-            Toast.makeText(activity, "正在显示或者Activity为null", Toast.LENGTH_LONG).show();
+//            Toast.makeText(activity, "正在显示或者Activity为null", Toast.LENGTH_LONG).show();
+            Log.i("jimi","正在显示或者activity为null,activity:"+activity+"，contentView:"+contentView+",isShow:"+isShow);
         }
     }
 

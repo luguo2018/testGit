@@ -219,6 +219,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
                     autoLoginIntent.putExtra("uName", result.getUname());
                     autoLoginIntent.putExtra("token", result.getGame_token());
                     autoLoginIntent.putExtra("url", Utils.toBase64url(result.getShow_url_after_login()));
+                    autoLoginIntent.putExtra("noticeUrl", Utils.toBase64url(result.getShow_url_after_login()));
                     autoLoginIntent.putExtra("type", AppConfig.AUTO_LOGIN_SUCCESS);
                     startActivity(autoLoginIntent);
                     getActivity().finish();
@@ -436,9 +437,8 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
             }
 
             @Override
-            public void onError(int statusCode) {
-                sendData(AppConfig.FLAG_FAIL, AppConfig.getString(getActivity(), "http_rror_msg"),
-                        handler);
+            public void onError(int statusCode,String msg) {
+                sendData(AppConfig.FLAG_FAIL, msg.equals("")?AppConfig.getString(getActivity(), "http_rror_msg"):msg, handler);
             }
         });
     }

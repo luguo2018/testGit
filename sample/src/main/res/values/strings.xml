@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">极米sdk竖屏</string>
+    <string name="app_name">极米sdk竖屏修改版</string>
     <string name="app_name_landscape">极米sdk横屏</string>
     <string name="init">init</string>
     <string name="login">login</string>

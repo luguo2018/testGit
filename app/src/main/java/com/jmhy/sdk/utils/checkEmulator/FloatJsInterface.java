@@ -2,16 +2,21 @@ package com.jmhy.sdk.utils.checkEmulator;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
+import com.jmhy.sdk.activity.JmBaseActivity;
 import com.jmhy.sdk.activity.JmCommunityActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.ad.JmAdSdk;
+import com.jmhy.sdk.ad.callback.AdListener;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.model.BaseFloatActivity;
-import com.jmhy.sdk.sdk.Loginout;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.MediaUtils;
@@ -19,6 +24,7 @@ import com.jmhy.sdk.utils.PackageUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.Utils;
 import com.jmhy.sdk.utils.changeAccountUtil;
+import com.jmhy.sdk.view.AdTipDialog;
 
 /**
  * 创建人luow
@@ -29,11 +35,13 @@ public class FloatJsInterface {
 	
 	private Seference mSeference;
 	private BaseFloatActivity baseFloatActivity;
-	public FloatJsInterface(Activity activity, BaseFloatActivity baseFloatActivity) {
+	private WebAdListener adListener;
+	public FloatJsInterface(Activity activity, BaseFloatActivity baseFloatActivity, WebAdListener webAdListener) {
 		this.activity = activity;
 		mSeference = new Seference(activity);
 		this.baseFloatActivity = baseFloatActivity;
-		
+		this.adListener=webAdListener;
+
 	}
 
 	@JavascriptInterface
@@ -51,9 +59,12 @@ public class FloatJsInterface {
     }
 	@JavascriptInterface
     public  void closeWebView(){
+		Log.i("jimisdk","关闭网页");
+//		adListener.close();
 		if(baseFloatActivity!=null){
 			baseFloatActivity.removeContentView();
     	}
+
 	}
 	
 	@JavascriptInterface
@@ -77,6 +88,23 @@ public class FloatJsInterface {
 //		activity.startActivity(viewIntent);
 
 	}
+
+	/**
+	 * 保存图片，url需过base64
+	 * @param url
+	 */
+	@JavascriptInterface
+	public void JavascriptSaveBase64Image(String url){
+		try {
+			byte[] decode = Base64.decode(url.split(",")[1], Base64.DEFAULT);
+			Bitmap bitmap = BitmapFactory.decodeByteArray(decode, 0, decode.length);
+			MediaUtils.saveImage(activity, bitmap);
+			DialogUtils.showTip(activity,AppConfig.getString(activity, "float_snapshot_save"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
 	@JavascriptInterface
 	public void JavaScriptToJumppassword() {
 		/*Intent intent = new Intent();
@@ -90,7 +118,6 @@ public class FloatJsInterface {
 	@JavascriptInterface
 	public void JavascriptSwitchUser() {
 		//Log.i("kk","切换");
-
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -101,9 +128,17 @@ public class FloatJsInterface {
 
 				AppConfig.skin9_is_switch=true;
 				AppConfig.isswitch=false;
+
+				if (JmBaseActivity.getNoticeActivity()!=null){
+					JmBaseActivity.getNoticeActivity().removeContentView();
+				};
 			}
 		});
 
+//		String appId="5112188";
+//		String adId="945546866";
+//		String data="警告！警告！\n 警告！警告！\n 警告！警告！\n 警告！警告！\n 警告！警告！\n 世界即将毁灭！ \n 请观看广告拯救世界";
+//		loadAd(adId,data);
 	}
 
 	/**
@@ -208,17 +243,58 @@ public class FloatJsInterface {
 		activity.startActivity(intent);
 	}
 
-	/*@JavascriptInterface
-	public void hiddenTip(final String type){
+	/**
+	 * load广告
+	 */
+	@JavascriptInterface
+	public void loadAd(final String adId, final String data, final String gameId){
+		final String adAppId=AppConfig.ad_app_id;
+		if (adAppId.equals("")){
+			adListener.error("apk not adAppId");
+			return;
+		}
+
+		Log.i("jimi","广告appId"+adAppId+"广告id："+adId+"gameId"+gameId);
+
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if(TextUtils.equals("account", type)){
-					FloatUtils.hiddenTip(FloatView.INDEX_ACCOUNT);
-				}else if(TextUtils.equals("gift", type)){
-					FloatUtils.hiddenTip(FloatView.INDEX_GIFT);
+
+				if (data!=null&&!data.equals("")){
+					AdTipDialog exitdialog = new AdTipDialog(activity, AppConfig.resourceId(activity, "jm_MyDialog", "style"),data, new AdTipDialog.AdTipDialogListener() {
+						@Override
+						public void onStratAd() {
+							JmAdSdk.init(activity.getApplicationContext(), adAppId);
+							JmAdSdk.loadAd(activity, adAppId, adId,AppConfig.openid, gameId,new AdListener() {
+								@Override
+								public void Success(Object var1) {
+									Log.i("jimi","加载广告回调开始");
+									adListener.end("end");
+								}
+
+								@Override
+								public void fail(String var1) {
+									Log.i("jimi","加载广告回调异常"+var1);
+									adListener.error(var1);
+								}
+							});
+						}
+					});
+					exitdialog.show();
 				}
 			}
 		});
-	}*/
+
+
+
+	}
+
+	public interface WebAdListener {
+		void end(String var1);
+
+		void error(String var1);
+
+		void close();
+	}
+
 }

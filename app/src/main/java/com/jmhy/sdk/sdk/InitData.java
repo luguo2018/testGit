@@ -115,8 +115,8 @@ public class InitData {
                     }
 
                     @Override
-                    public void onError(int statusCode) {
-                        Log.i("jimi","初始化异常"+statusCode);
+                    public void onError(int statusCode,String msg) {
+                        Log.i("jimi","初始化异常"+statusCode+msg);
                         DialogUtils.showTip((Activity) context, statusCode + "");
                     }
                 });

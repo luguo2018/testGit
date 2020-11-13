@@ -24,6 +24,7 @@ allprojects {
             //所有的module的repositories下把library module中的libs目录添加到依赖关系中
             dirs project(':app').file('libs')
         }
+        maven { url 'https://dl.bintray.com/umsdk/release' }
     }
 }
 

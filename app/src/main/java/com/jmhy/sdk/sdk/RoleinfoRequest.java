@@ -74,7 +74,7 @@ public class RoleinfoRequest {
                     }
 
                     @Override
-                    public void onError(int statusCode) {
+                    public void onError(int statusCode,String msg) {
                         // TODO Auto-generated method stub
 
                     }

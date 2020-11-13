@@ -25,7 +25,6 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatJspayInterface;
 import com.jmhy.sdk.utils.FloatUtils;
-import com.jmhy.sdk.utils.JspayInterface;
 import com.jmhy.sdk.view.GifImageView;
 
 public class FloatPayActivity extends BaseFloatActivity {

@@ -1,5 +1,6 @@
 package com.jmhy.sdk.push;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.jmhy.sdk.activity.FloatUserInfoActivity;
+import com.jmhy.sdk.activity.JmBaseActivity;
 import com.jmhy.sdk.activity.JmUserinfoActivity;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
@@ -57,6 +60,7 @@ public class PushService extends Service {
         super.onCreate();
         //Log.i("kk", "onCreate = "+ AppConfig.ONLIE_TIEM);
         long period = AppConfig.ONLIE_TIEM * 1000;
+//        long period = 5 * 1000;
 
         if (timer == null) {
             timer = new Timer();
@@ -203,7 +207,9 @@ public class PushService extends Service {
                                 }
                             }
                             try {
-                                if (!msg.getChannel_event().equals("")) {
+                                Log.i("jimi","msg.getChannel_event()"+msg.getChannel_event()+"长度"+msg.getChannel_event().length());
+                                //msg.getChannel_event()无内容时为[]  这俩括号长度为2
+                                if (msg.getChannel_event() != null && !msg.getChannel_event().equals("")&&msg.getChannel_event().length()>2) {
                                     JSONObject data = new JSONObject(msg.getChannel_event());
 
                                     JSONObject pay = new JSONObject(data.getString("pay"));
@@ -240,15 +246,17 @@ public class PushService extends Service {
                     }
 
                     @Override
-                    public void onError(int statusCode) {
+                    public void onError(int statusCode,String msg) {
                         Log.i(TAG, "onError = " + statusCode);
 
                     }
                 });
     }
 
+    FloatUserInfoActivity floatUserInfoActivity;
 
     public void turnToNotice(final String url) {
+
         if (TextUtils.isEmpty(url)) {
             // Toast.makeText(mContext, "此功能暂未开通", Toast.LENGTH_SHORT).show();
             return;
@@ -257,14 +265,35 @@ public class PushService extends Service {
         JiMiSDK.handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                intent.putExtra("url", url);
-                intent.putExtra("notice", true);
-                intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
-                JiMiSDK.mContext.startActivity(intent);
+//                Intent intent = new Intent();
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+//                        Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                intent.putExtra("url", url);
+//                intent.putExtra("notice", true);
+//                intent.setClass(JiMiSDK.mContext, JmUserinfoActivity.class);
+//                JiMiSDK.mContext.startActivity(intent);
+                if (JmBaseActivity.getNoticeActivity()!=null){
+                    floatUserInfoActivity=JmBaseActivity.getNoticeActivity();
+                }
+                else{
+                    if (floatUserInfoActivity == null) {
+                        floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+                            @Override
+                            public void closeFloat() {
+                            }
+                        });
+                    }
+                }
+                Log.i("jimi","查看浮窗"+floatUserInfoActivity+"----显示状态："+floatUserInfoActivity.isShow());
+                if (floatUserInfoActivity.isShow()){
+                    return;
+                }
+                floatUserInfoActivity.notice = true;
+                floatUserInfoActivity.setViews(url);
+                floatUserInfoActivity.show();
             }
         }, 1000);
     }
+
+
 }

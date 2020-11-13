@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.BuildConfig;
+import com.jmhy.sdk.common.JMApplication;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
@@ -129,6 +130,7 @@ public class JmhyApi {
         paramsdata.put("time", System.currentTimeMillis() / 1000 + "");
         paramsdata.put("is_charged", deviceInfo.getIs_charged() + "");
         paramsdata.put("oaid", JiMiSDK.mOaid);
+        paramsdata.put("push_token", AppConfig.push_token);
 
         String ext_data = "q=" + (ext.qq ? 1 : 0) +
                 "&wc=" + (ext.wechat ? 1 : 0) +
@@ -157,7 +159,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
 
             }
         });
@@ -200,7 +202,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -244,7 +246,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -289,7 +291,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -329,7 +331,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -377,7 +379,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -414,7 +416,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -454,7 +456,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -485,7 +487,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -520,7 +522,9 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                e.printStackTrace();
+                Log.i("jimi","异常"+e);
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -588,7 +592,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -645,7 +649,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -674,7 +678,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -766,7 +770,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -784,13 +788,19 @@ public class JmhyApi {
         params.put("context", toJson.toJson(paramsdata));
         Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONEKEYLOGIN, params, new ResponseCallback<String>() {
             @Override
-            public void onSuccess(String String) {
-                listener.onSuccess(String);
+            public void onSuccess(String data) {
+                LoginMessage loginMessage = null;
+                try {
+                    loginMessage = JSONParse.parseOneKeylogin(data);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listener.onSuccess(loginMessage);
             }
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -819,7 +829,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -843,7 +853,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;
@@ -867,7 +877,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
-                listener.onError(e.getEcode());
+                listener.onError(e.getEcode(),e.getEmsg());
             }
         });
         return call;

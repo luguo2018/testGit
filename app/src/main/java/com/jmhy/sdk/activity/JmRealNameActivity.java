@@ -253,7 +253,7 @@ public class JmRealNameActivity extends JmBaseActivity implements OnClickListene
 	@Override
 	protected void onPause() {
 		mWebview.onPause();
-		mWebview.pauseTimers();
+//		mWebview.pauseTimers();
 		super.onPause();
 	}
 
