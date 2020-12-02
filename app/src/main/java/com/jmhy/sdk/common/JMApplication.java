@@ -1,5 +1,6 @@
 package com.jmhy.sdk.common;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -20,6 +21,8 @@ import org.android.agoo.oppo.OppoRegister;
 import org.android.agoo.vivo.VivoRegister;
 import org.android.agoo.xiaomi.MiPushRegistar;
 
+import java.util.List;
+
 public class JMApplication extends Application {
     private static final String TAG = "JMApplication";
     public static Class<JMApplication> clazz = JMApplication.class;
@@ -36,6 +39,7 @@ public class JMApplication extends Application {
     public static String baiduAppId;
     public static String baiduAppKey;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -43,7 +47,19 @@ public class JMApplication extends Application {
 //        DealCrash crashHandler = DealCrash.getInstance();
 //        crashHandler.init(this);
         baiduInit(this);
-        JiMiSDK.onApplicationOnCreate(this);
+
+        //因为项目集成了友盟推送，友盟推送自己会创建一个进程，加上app默认的进程，一共就有2个进程了，导致Application的onCreate执行2次，线程也就创建了2次。
+        //判断当前进程为自己的进程才走一次init取参初始化数据sdk
+        String processName = getProcessName(this,android.os.Process.myPid());
+        Log.e(TAG, "全局初始化"+processName+"当前包名："+this.getPackageName());
+        if(processName != null){
+            boolean defaultProcess = processName.equals(this.getPackageName());
+            if(defaultProcess){
+                //当前应用的初始化
+                JiMiSDK.onApplicationOnCreate(this);
+            }
+        }
+
         Log.e(TAG, "onCreate: JMApplicationOnCreate" + this.getPackageName());
         if (getPushParam()) {
             initUmengSDK(this);
@@ -153,6 +169,20 @@ public class JMApplication extends Application {
             e.printStackTrace();
             Log.i(TAG, "push error:" + e);
         }
+    }
+
+    public static String getProcessName(Context cxt, int pid) {
+        ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+        if (runningApps == null) {
+            return null;
+        }
+        for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+            if (procInfo.pid == pid) {
+                return procInfo.processName;
+            }
+        }
+        return null;
     }
 
 }

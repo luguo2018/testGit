@@ -58,7 +58,7 @@ public class InitData {
     /**
      * 初始化接口
      */
-    public void initHttp() {
+     public void initHttp() {
         InitExt ext = new InitExt();
         ext.wechat = PackageUtils.isInstall(context, "com.tencent.mm");
         ext.qq = PackageUtils.isInstall(context, "com.tencent.mobileqq");
@@ -117,7 +117,7 @@ public class InitData {
                     @Override
                     public void onError(int statusCode,String msg) {
                         Log.i("jimi","初始化异常"+statusCode+msg);
-                        DialogUtils.showTip((Activity) context, statusCode + "");
+//                        DialogUtils.showTip((Activity) context, statusCode + "");
                     }
                 });
     }

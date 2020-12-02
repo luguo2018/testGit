@@ -62,7 +62,6 @@ public class JSONParse {
             result.setLog_on(dataObject.optString("is_log_on"));
             result.setIsvisitoronphone(dataObject.optString("is_visitor_on_phone"));
             result.setSwitch_login(dataObject.optString("switch_login"));
-            result.setSwitch_login(dataObject.optString("switch_login"));
             JSONArray jsonArray = dataObject.optJSONArray("code_area_list");
             AppConfig.ali_hot_fix = dataObject.optInt("ali_hot_fix");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -93,8 +92,13 @@ public class JSONParse {
             result.setMoblie_direct_login(dataObject.optString("moblie_direct_login"));
             AppConfig.float_icon_url =Utils.toBase64url(dataObject.optString("float_icon_url"));
             AppConfig.web_loading_url=Utils.toBase64url(dataObject.optString("web_loading_url"));
-            Log.i("jimi","测试数据查看123："+dataObject.optString("ad_app_id"));
             AppConfig.ad_app_id=dataObject.optString("ad_app_id");
+
+            AppConfig.notice_screen_scale = dataObject.optString("notice_screen_scale","");
+            AppConfig.notice_wh_scale = dataObject.optString("notice_wh_scale","");
+            AppConfig.float_landscape_w = dataObject.optString("float_landscape_w","");
+            AppConfig.float_portrait_w = dataObject.optString("float_portrait_w","");
+
         }
         return result;
     }

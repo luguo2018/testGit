@@ -24,16 +24,22 @@ public class UserInfo {
 	private File file_name;
 
 	public UserInfo() {
-		if(VERSION.SDK_INT < VERSION_CODES.P){
+		try {
+			if (VERSION.SDK_INT < VERSION_CODES.P) {
+				dir = new File(Environment.getExternalStorageDirectory(), "jmsdk");
+			} else {
+				dir = new File(JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "jmsdk");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 			dir = new File(Environment.getExternalStorageDirectory(), "jmsdk");
-		}else{
-			dir = new File(JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "jmsdk");
+			Log.i("jimi", dir+"文件读取错误" + e);
 		}
+
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		file_name = new File(dir, "jmsdk");
-
 		Log.i("UserInfo", "file = " + file_name.getAbsolutePath());
 	}
 

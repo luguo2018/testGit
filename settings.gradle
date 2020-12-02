@@ -1,1 +1,1 @@
-include ':app', ':ad', ':sample', ':push'
+include ':app', ':ad', ':sample', ':push',':logSdk'

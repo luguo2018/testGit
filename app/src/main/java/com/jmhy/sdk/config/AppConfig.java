@@ -103,6 +103,10 @@ public class AppConfig {
     public static boolean is_ad_sign = false;
     public static String ad_app_id ;
     public static String push_token = "";
+    public static String notice_screen_scale ;//  （弹窗屏幕比例 如0.8  横屏为高度0.8 竖屏为宽度0.8）
+    public static String notice_wh_scale ;//  （弹窗宽高比例，如1.0  则是正方形）
+    public static String float_landscape_w ;// （浮窗横屏宽度，如1.2  为高度1.2倍）【横屏用】
+    public static String float_portrait_w ;// （浮窗竖屏宽度  如0.8 为屏幕宽的0.8）【竖屏用】
 
     public static void saveMap(String user, String pwd, String uid) {
         loginMap.put("user", user);

@@ -304,13 +304,13 @@ public class Utils {
 		return params;
 	}
 
-	public static String getPropertiesAdAppId(Context context) {
+	public static String getPropertiesParams(Context context,String key) {
 		Log.i(LOGTAG, "getSdkParams getProperties");
 
 		Properties properties = new Properties();
 		try {
 			properties.load(context.getAssets().open("jmhy.properties"));
-			return properties.getProperty("adAppId", "");
+			return properties.getProperty(key, "");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

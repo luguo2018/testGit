@@ -3,11 +3,13 @@ package com.jmhy.sdk.activity;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.model.BaseFloatActivity;
 import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
+import com.jmhy.sdk.utils.HasNotchInScreenUtil;
 import com.jmhy.sdk.utils.MimeType;
 import com.jmhy.sdk.utils.checkEmulator.FloatJsInterface;
 import com.jmhy.sdk.view.GifImageView;
@@ -36,6 +39,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private WebView mWebview;
     private GifImageView mGifImageView;
     private View parent;
+    private View right_view;
     private String mUrl;
     private ValueCallback<Uri[]> uploadMessageAboveL;
     private ValueCallback<Uri> uploadMessage;
@@ -205,6 +209,10 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             AndroidBug5497Workaround.assistActivity(activity);
         }
         // TODO Auto-generated method stub
+        right_view = contentView.findViewById((AppConfig.resourceId(activity, "right_view", "id")));
+        if (right_view!=null&&activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            right_view.setVisibility(View.GONE);
+        }
         parent = contentView.findViewById((AppConfig.resourceId(activity, "parent", "id")));
         right_back =contentView.findViewById((AppConfig.resourceId(activity, "right_back", "id")));
         right_close =contentView.findViewById((AppConfig.resourceId(activity, "right_close", "id")));
@@ -226,6 +234,92 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                 "webview", "id"));
         mGifImageView = (GifImageView) contentView.findViewById(AppConfig.resourceId(activity,
                 "gif", "id"));
+
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        int widthPixels = outMetrics.widthPixels;
+        int heightPixels = outMetrics.heightPixels;
+        HasNotchInScreenUtil utils=new HasNotchInScreenUtil();
+        if (utils.hasNotchInScreen(activity)){
+            int higth=utils.getNotchHigth();
+        }
+        Log.i("jimi测试","是否存在刘海屏："+utils.hasNotchInScreen(activity)+"刘海屏高度："+utils.getNotchHigth());
+
+        FrameLayout.LayoutParams linearParams2 = (FrameLayout.LayoutParams) mWebview.getLayoutParams();
+
+        if (AppConfig.skin==9){
+            //服务端字段控制弹窗、浮窗宽高，有值才设置
+            if (notice){
+                if (!AppConfig.notice_screen_scale.equals("") && !AppConfig.notice_wh_scale.equals("")) {
+                    if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏 高度占满 宽度为屏幕* （服务端返回0.8）
+                        linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.notice_screen_scale));
+                        linearParams2.height = (int) (linearParams2.width * Float.parseFloat(AppConfig.notice_wh_scale));
+                    } else {//横屏弹窗  高度为屏幕高的* （例服务端返0.8）； 宽度为高度的 *  （例服务端返1.0 宽高相同正方形显示）
+                        linearParams2.width = (int) (linearParams2.height * Float.parseFloat(AppConfig.notice_wh_scale));
+                        linearParams2.height = (int) (heightPixels * Float.parseFloat(AppConfig.notice_screen_scale));
+                    }
+                    mWebview.setLayoutParams(linearParams2);
+                    mGifImageView.setLayoutParams(linearParams2);
+                }
+            }
+            else{
+
+                if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏  有值设置服务端的数值  无返回时设置默认0.7宽度
+                    if (!AppConfig.float_portrait_w.equals("")) {
+                        linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.float_portrait_w));
+                    }else{
+                        linearParams2.width = (int) (widthPixels * 0.75);
+                    }
+                    linearParams2.height = heightPixels;
+                    mWebview.setLayoutParams(linearParams2);
+                    mGifImageView.setLayoutParams(linearParams2);
+                } else {//横屏  有值才设置
+                    if (!AppConfig.float_landscape_w.equals("")) {
+                        linearParams2.width = (int) (heightPixels * Float.parseFloat(AppConfig.float_landscape_w));
+                        linearParams2.height = heightPixels;
+                        mWebview.setLayoutParams(linearParams2);
+                        mGifImageView.setLayoutParams(linearParams2);
+                    }
+                }
+            }
+        }
+        else{
+            if (notice){
+                if (!AppConfig.notice_screen_scale.equals("") && !AppConfig.notice_wh_scale.equals("")) {
+                    if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏 高度占满 宽度为屏幕* （服务端返回0.8）
+                        linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.notice_screen_scale));
+                        linearParams2.height = (int) (linearParams2.width * Float.parseFloat(AppConfig.notice_wh_scale));
+                    } else {//横屏弹窗  高度为屏幕高的* （例服务端返0.8）； 宽度为高度的 *  （例服务端返1.0 宽高相同正方形显示）
+                        linearParams2.width = (int) (linearParams2.height * Float.parseFloat(AppConfig.notice_wh_scale));
+                        linearParams2.height = (int) (heightPixels * Float.parseFloat(AppConfig.notice_screen_scale));
+                    }
+                    mWebview.setLayoutParams(linearParams2);
+                    mGifImageView.setLayoutParams(linearParams2);
+                }
+            }
+            else{
+
+                if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏  有值设置服务端的数值  无返回时设置默认0.7宽度
+                    if (!AppConfig.float_portrait_w.equals("")) {
+                        linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.float_portrait_w));
+                    }else{
+                        linearParams2.width = (int) (widthPixels * 0.75);
+                    }
+                    linearParams2.height = linearParams2.width;
+                    mWebview.setLayoutParams(linearParams2);
+                    mGifImageView.setLayoutParams(linearParams2);
+                } else {//横屏  有值才设置
+                    if (!AppConfig.float_landscape_w.equals("")) {
+                        linearParams2.width = (int) (heightPixels * Float.parseFloat(AppConfig.float_landscape_w));
+                        linearParams2.height = heightPixels;
+                        mWebview.setLayoutParams(linearParams2);
+                        mGifImageView.setLayoutParams(linearParams2);
+                    }
+                }
+            }
+        }
+
+
         switch (AppConfig.skin) {
             case 9:
                 mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_9",
@@ -435,9 +529,12 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
             removeContentView();
             closeFloatListener.closeFloat();
         } else if (v.getId() ==AppConfig.resourceId(activity, "parent", "id") ) {
-
+            if (AppConfig.skin==9&&activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){//皮肤9 竖屏  点背景层关闭浮窗
+                removeContentView();
+                closeFloatListener.closeFloat();
+            }
         } else if (v.getId() ==AppConfig.resourceId(activity, "back_view", "id") ) {
-//            if (AppConfig.skin==9){//皮肤9点背景层关闭浮窗
+//            if (AppConfig.skin==9&&activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){//皮肤9 竖屏  点背景层关闭浮窗
 //                removeContentView();
 //                closeFloatListener.closeFloat();
 //            }
