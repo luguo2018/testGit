@@ -268,7 +268,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                     if (!AppConfig.float_portrait_w.equals("")) {
                         linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.float_portrait_w));
                     }else{
-                        linearParams2.width = (int) (widthPixels * 0.75);
+                        linearParams2.width = (int) (widthPixels * 0.85);
                     }
                     linearParams2.height = heightPixels;
                     mWebview.setLayoutParams(linearParams2);

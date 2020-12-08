@@ -132,14 +132,21 @@ public class JmhyApi {
         paramsdata.put("oaid", JiMiSDK.mOaid);
         paramsdata.put("push_token", AppConfig.push_token);
 
+        paramsdata.put("isApplication", JMApplication.isApplication);
+        Log.i("JiMiSDK", "JMApplication.isApplication  -->  " + JMApplication.isApplication);
+
+        if (JMApplication.isApplication){
+            JMApplication.isApplication = false;
+        }
+
         String ext_data = "q=" + (ext.qq ? 1 : 0) +
                 "&wc=" + (ext.wechat ? 1 : 0) +
                 "&ali=" + (ext.alipay ? 1 : 0) +
                 "&mn=" + (ext.isEmu ? 1 : 0) +
                 "&mn2=" + (ext.isEmu2 ? 1 : 0) +
                 "&sim=" + (ext.isHasSimCard ? 1 : 0);
-        Log.i("JiMiSDK", "ext_data  -->  " + ext_data);
 
+        Log.i("JiMiSDK", "ext_data  -->  " + ext_data);
         paramsdata.put("ext_data", ext_data);
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));

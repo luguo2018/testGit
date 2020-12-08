@@ -2,10 +2,13 @@ package com.jmhy.sdk.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -15,12 +18,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jmhy.sdk.ad.BuildConfig;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 
@@ -40,12 +45,12 @@ public class PermissionActivity extends Activity {
     private final static int REQUEST_PERMISSION = 0x01;
     private final static int REQUEST_FLOAT = 0x02;
     private List<String> list;
-    private TextView confirm_tv;
+    private TextView confirm_tv,centent_tv;
     private ImageView state1,state2;
     private View mView;
     private Timer mTimer;
     private TimerTask mTimerTask;
-
+    private boolean toSetting=false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,8 +95,15 @@ public class PermissionActivity extends Activity {
                         }
                     }
                     Log.i("jimi","权限测试:"+list);
-                    show(list);
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            show(list);
+                        }
+                    };
 
+//                    show(list);
                     if (list.size()>0){
 
                     }else{
@@ -129,12 +141,43 @@ public class PermissionActivity extends Activity {
     private void init(final List<String> list) {
         state1 = (ImageView) findViewById(AppConfig.resourceId(this, "state1", "id"));
         state2 = (ImageView) findViewById(AppConfig.resourceId(this, "state2", "id"));
+        centent_tv = (TextView) findViewById(AppConfig.resourceId(this, "centent_tv", "id"));
         confirm_tv = (TextView) findViewById(AppConfig.resourceId(this, "confirm_tv", "id"));
         confirm_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (list.size() > 0) {
-                    ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+                if(toSetting){
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                    intent.setData(Uri.fromParts("package", getPackageName(), null));
+//                    startActivity(intent);
+
+
+                    String brand = Build.BRAND;//手机厂商
+                    if (TextUtils.equals(brand.toLowerCase(), "redmi") || TextUtils.equals(brand.toLowerCase(), "xiaomi")) {
+                        gotoMiuiPermission();//小米
+                    } else if (TextUtils.equals(brand.toLowerCase(), "meizu")) {
+                        gotoMeizuPermission();
+                    } else if (TextUtils.equals(brand.toLowerCase(), "huawei") || TextUtils.equals(brand.toLowerCase(), "honor")) {
+                        gotoHuaweiPermission();
+                    } else if (TextUtils.equals(brand.toLowerCase(), "Sony")) {
+                        gotoSuoNiPermission();
+                    } else if (TextUtils.equals(brand.toLowerCase(), "OPPO") ) {
+                        gotoOPPOPermission();
+                    } else if (TextUtils.equals(brand.toLowerCase(), "LG")) {
+                        gotoLGPermission();
+                    } else if (TextUtils.equals(brand.toLowerCase(), "Letv")) {
+                        gotoLeShiPermission();
+                    } else {
+                        startActivity(getAppDetailSettingIntent());
+                    }
+
+
+                }else{
+                    toSetting=true;
+                    if (list.size() > 0) {
+                        ActivityCompat.requestPermissions(PermissionActivity.this, toStringFormat(list), REQUEST_PERMISSION);
+                    }
                 }
                 mView.setVisibility(View.GONE);
                 removeTimer();
@@ -166,19 +209,31 @@ public class PermissionActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.i("jimi","权限测试"+requestCode+"\n"+permissions+"\n"+grantResults);
+        Log.i("jimi","权限测试"+requestCode+"\n"+permissions[0]+"\n"+grantResults[0]);
         if (requestCode == REQUEST_PERMISSION) {
             for (int grant : grantResults) {
                 if (grant != PackageManager.PERMISSION_GRANTED) {
+                    centent_tv.setTextColor(Color.RED);
+                    centent_tv.setText("为确保您能正常使用,需开启以下权限,请点击授权前往设置界面授予下列权限:");
 
                     list.clear();
                     for (String permission : permissionList) {
+//                        Intent intent = new Intent();
+//                        intent.setAction("android.permission.READ_PHONE_STATE");
+//                        intent.setData(Uri.fromParts("package", getPackageName(), null));
+//                        this.startActivity(intent);
                         if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
                             list.add(permission);
                         }
                     }
                     show(list);
+//
 
+//                    finish();
+//                    Intent intent = new Intent();
+//                    intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+//                    intent.setData(Uri.fromParts("package", getPackageName(), null));
+//                    startActivity(intent);
                     return;
                 }
             }
@@ -287,4 +342,154 @@ public class PermissionActivity extends Activity {
     public interface PermissionResultListener {
         void onPermissionResult(boolean grant);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        onPermissionRequestResult(true);
+    }
+
+
+    /**
+     * 跳转到miui的权限管理页面
+     */
+    private void gotoMiuiPermission() {
+        try { // MIUI 8
+            Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+            localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
+            localIntent.putExtra("extra_pkgname", getPackageName());
+            startActivity(localIntent);
+        } catch (Exception e) {
+            try { // MIUI 5/6/7
+                Intent localIntent = new Intent("miui.intent.action.APP_PERM_EDITOR");
+                localIntent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+                localIntent.putExtra("extra_pkgname", getPackageName());
+                startActivity(localIntent);
+            } catch (Exception e1) { // 否则跳转到应用详情
+                startActivity(getAppDetailSettingIntent());
+            }
+        }
+    }
+
+    /**
+     * 跳转到魅族的权限管理系统
+     */
+    private void gotoMeizuPermission() {
+        try {
+            Intent intent = new Intent("com.meizu.safe.security.SHOW_APPSEC");
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.putExtra("packageName", getPackageName());
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+    }
+
+    /**
+     * 华为的权限管理页面
+     */
+    private void gotoHuaweiPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");//华为权限管理
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+    /**
+     * 索尼的权限管理页面
+     */
+    private void gotoSuoNiPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            ComponentName comp = new ComponentName("com.sonymobile.cta", "com.sonymobile.cta.SomcCTAMainActivity");
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+
+    /**
+     * OPPO的权限管理页面
+     */
+    private void gotoOPPOPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            ComponentName comp = new ComponentName("com.color.safecenter", "com.color.safecenter.permission.PermissionManagerActivity");
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+
+    /**
+     * LG的权限管理页面
+     */
+    private void gotoLGPermission() {
+        try {
+            Intent intent = new Intent("android.intent.action.MAIN");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            ComponentName comp = new ComponentName("com.android.settings", "com.android.settings.Settings$AccessLockSummaryActivity");
+            intent.setComponent(comp);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+
+    /**
+     * 乐视的权限管理页面
+     */
+    private void gotoLeShiPermission() {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("packageName", BuildConfig.APPLICATION_ID);
+            ComponentName comp = new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.PermissionAndApps");
+            intent.setComponent(comp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startActivity(getAppDetailSettingIntent());
+        }
+
+    }
+
+    /**
+     * 获取应用详情页面intent（如果找不到要跳转的界面，也可以先把用户引导到系统设置页面）
+     *
+     * @return
+     */
+    private Intent getAppDetailSettingIntent() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        return localIntent;
+    }
+
 }

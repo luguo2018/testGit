@@ -38,6 +38,7 @@ public class JMApplication extends Application {
 
     public static String baiduAppId;
     public static String baiduAppKey;
+    public static boolean isApplication=true;
 
 
     @Override

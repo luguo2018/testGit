@@ -30,6 +30,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/centent_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/jm_login_icon_width"
