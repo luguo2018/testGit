@@ -117,6 +117,7 @@ public class JiMiSDK {
      * 初始化接口
      */
     public static void initInterface(final Context context, final int appid, final String appkey, final InitListener listener) {
+        JMApplication.isApplication=false;
         if (init) {
             Log.w(TAG, "sdk already init");
             return;
@@ -249,7 +250,9 @@ public class JiMiSDK {
 //					AppConfig.skin = 8;
                     Log.i(TAG, "初始化接口 version : " + AppConfig.SDK_VER + ", skin : " + AppConfig.skin);
                     Log.i(TAG, "init success");
-                    init = true;
+                    if(!JMApplication.isApplication){
+                        init = true;
+                    }
                     listener.Success(msg);
                     statisticsSDK.initInterface(mContext, AppConfig.sdkList);
                     //初始化成功去调用查询是否有热更新接口

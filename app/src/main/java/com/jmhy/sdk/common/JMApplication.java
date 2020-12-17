@@ -57,6 +57,7 @@ public class JMApplication extends Application {
             boolean defaultProcess = processName.equals(this.getPackageName());
             if(defaultProcess){
                 //当前应用的初始化
+                isApplication=true;
                 JiMiSDK.onApplicationOnCreate(this);
             }
         }

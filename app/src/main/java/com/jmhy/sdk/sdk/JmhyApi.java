@@ -135,10 +135,6 @@ public class JmhyApi {
         paramsdata.put("isApplication", JMApplication.isApplication);
         Log.i("JiMiSDK", "JMApplication.isApplication  -->  " + JMApplication.isApplication);
 
-        if (JMApplication.isApplication){
-            JMApplication.isApplication = false;
-        }
-
         String ext_data = "q=" + (ext.qq ? 1 : 0) +
                 "&wc=" + (ext.wechat ? 1 : 0) +
                 "&ali=" + (ext.alipay ? 1 : 0) +
