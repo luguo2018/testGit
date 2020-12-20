@@ -187,12 +187,13 @@ public class JiMiSDK {
 
             try {
                 JLibrary.InitEntry(context.getApplicationContext());
+                MiitHelper miitHelper = new MiitHelper(appIdsUpdater);
+                miitHelper.getDeviceIds(context.getApplicationContext());
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            MiitHelper miitHelper = new MiitHelper(appIdsUpdater);
-            miitHelper.getDeviceIds(context.getApplicationContext());
+
 
         } else {
             Log.i(TAG, "mOaid---" + mOaid);
@@ -644,37 +645,25 @@ public class JiMiSDK {
 
     public static void onApplicationOnCreate(
             final Application application) {
-        Log.i(TAG, "==== onApplicationOnCreate =====  ");
+        Log.i(TAG, "==== onApplicationOnCreate =====  "+application.getApplicationContext()+"----"+application);
 
         final String appId = Utils.getPropertiesParams(application, "appid");
         final String appKey = Utils.getPropertiesParams(application, "appkey");
         Log.i("jimi","全局jimi：appid"+appId+"\n appkey"+appKey);
-        init(application, Integer.parseInt(appId), appKey, new InitListener() {
-            @Override
-            public void Success(String msg) {//全局初始化成功,用接口返回的参数初始化数据sdk
-                Log.i("jimi","全局初始化成功,数据sdk初始化"+msg);
-                statisticsSDK.initInterface(application,  AppConfig.sdkList);
-            }
 
-            @Override
-            public void fail(String msg) {//全局初始化失败，用打包生成的配置文件里的数据sdk参数初始化数据sdk
-                Log.i("jimi","全局初始化失败"+msg);
-                JSONObject logConfig = ConfigUtils.getConfigData(application.getApplicationContext());
-                if (logConfig == null) {
-                    Log.i(TAG, "no log config in config.json");
-                    return;
-                }
+        JSONObject logConfig = ConfigUtils.getConfigData(application.getApplicationContext());
+        if (logConfig == null) {
+            Log.i(TAG, "no log config in config.json");
+            return;
+        }
 
-                JSONObject obj = logConfig.optJSONObject("channel_sdk_list");
-                if (obj == null) {
-                    Log.i(TAG, "no gdt params in config.json");
-                    return;
-                }
-                Log.i(TAG, "gdt params == " + obj.toString());
+        JSONObject obj = logConfig.optJSONObject("channel_sdk_list");
+        if (obj == null) {
+            Log.i(TAG, "no gdt params in config.json");
+            return;
+        }
+        Log.i(TAG, "gdt params == " + obj.toString());
 
-                statisticsSDK.initInterface(application.getApplicationContext(), obj);
-            }
-        });
-
+        statisticsSDK.initInterface(application.getApplicationContext(), obj);
     }
 }
