@@ -1,34 +1,29 @@
 package com.jmhy.sdk.sdk;
 
-import com.huosdk.gson.Gson;
-import com.jmhy.sdk.activity.FloatUserInfoActivity;
-import com.jmhy.sdk.common.JiMiSDK;
-import com.jmhy.sdk.model.InitExt;
-import com.jmhy.sdk.model.InitMsg;
-import com.jmhy.sdk.utils.DialogUtils;
-import com.jmhy.sdk.activity.JmUserinfoActivity;
-import com.jmhy.sdk.common.InitListener;
-import com.jmhy.sdk.config.AppConfig;
-import com.jmhy.sdk.http.ApiRequestListener;
-import com.jmhy.sdk.push.PushService;
-import com.jmhy.sdk.utils.FloatUtils;
-import com.jmhy.sdk.utils.JsonUtils;
-import com.jmhy.sdk.utils.MediaUtils;
-import com.jmhy.sdk.utils.PackageUtils;
-import com.jmhy.sdk.utils.SecurityUtils;
-import com.jmhy.sdk.utils.Seference;
-import com.jmhy.sdk.utils.Utils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.jmhy.sdk.activity.JmUserinfoActivity;
+import com.jmhy.sdk.common.InitListener;
+import com.jmhy.sdk.common.JiMiSDK;
+import com.jmhy.sdk.config.AppConfig;
+import com.jmhy.sdk.http.ApiRequestListener;
+import com.jmhy.sdk.model.InitExt;
+import com.jmhy.sdk.model.InitMsg;
+import com.jmhy.sdk.push.PushService;
+import com.jmhy.sdk.utils.DialogUtils;
+import com.jmhy.sdk.utils.MediaUtils;
+import com.jmhy.sdk.utils.PackageUtils;
+import com.jmhy.sdk.utils.SecurityUtils;
+import com.jmhy.sdk.utils.Seference;
+import com.jmhy.sdk.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +62,7 @@ public class InitData {
         //判断是否模拟器
         ext.isEmu = Utils.isEmulator(context);
         ext.isEmu2 = Utils.checkIsRunningInEmulator(context);
+        ext.isEmu3 = Utils.hasHardKey(context);
         ext.isHasSimCard = Utils.ishasSimCard(context);
         JmhyApi.get().startInit(context,
                 ver_id, ext, new ApiRequestListener() {
@@ -117,7 +113,7 @@ public class InitData {
                     @Override
                     public void onError(int statusCode,String msg) {
                         Log.i("jimi","初始化异常"+statusCode+msg);
-//                        DialogUtils.showTip((Activity) context, statusCode + "");
+                        DialogUtils.showTip((Activity) context, "初始化失败,请重试。msg:"+msg + ",code:"+statusCode);
                     }
                 });
     }

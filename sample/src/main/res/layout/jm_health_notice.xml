@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/bg"
+    android:background="#ffffff"
+    tools:context=".SplashActivity">
+    <TextView
+        android:id="@+id/version_tv"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text=""
+        android:textColor="#999999"
+        tools:text="版本号：1.0.0"/>
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_weight="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="健康游戏公告"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="   抵制不良游戏，拒绝盗版游戏。"
+            android:textColor="#504A4A"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="   注意自我保护，谨防受骗上当。"
+            android:textColor="#504A4A"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="   适度游戏益脑，沉迷游戏伤身。"
+            android:textColor="#504A4A"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="   合理安排时间，享受健康生活。"
+            android:textColor="#504A4A"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

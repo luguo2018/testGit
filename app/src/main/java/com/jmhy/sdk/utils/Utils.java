@@ -30,7 +30,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
@@ -480,12 +480,17 @@ public class Utils {
      */
     public static boolean isEmulator(Context context) {
         //return notHasLightSensorManager(context) ;
+		Log.i("ext_data","Android_ID_Utils.notHasBlueTooth():"+Android_ID_Utils.notHasBlueTooth()
+				+"\n Android_ID_Utils.notHasLightSensorManager()："+Android_ID_Utils.notHasLightSensorManager(context)
+				+"\n Android_ID_Utils.isFeatures():"+Android_ID_Utils.isFeatures()
+				+"\n Android_ID_Utils.checkIsNotRealPhone()："+Android_ID_Utils.checkIsNotRealPhone()
+				+"\n Android_ID_Utils.checkPipes()："+Android_ID_Utils.checkPipes());
         if(Android_ID_Utils.notHasBlueTooth()
                 ||Android_ID_Utils.notHasLightSensorManager(context)
                 ||Android_ID_Utils.isFeatures()
-                ||Android_ID_Utils.checkIsNotRealPhone()
-                ||Android_ID_Utils.checkPipes()){
-            return true;
+				||Android_ID_Utils.checkIsNotRealPhone()
+				||Android_ID_Utils.checkPipes()){
+			return true;
         }
         return false;
     }
@@ -501,6 +506,22 @@ public class Utils {
     }
 
 
+	/**
+	 * 是否能拨号 弃用、平板模拟器都不能拨号 被判一起了
+	 * @param context
+	 * @return
+	 */
+	public static boolean canCallPhone(Context context) {
+		return Android_ID_Utils.canCallPhone(context);
+	}
+
+	/*
+	* 判断是否有硬键盘（外接键盘）
+	* */
+	public static boolean hasHardKey(Context context) {
+		Configuration config = context.getResources().getConfiguration();
+		return !(config.keyboard == Configuration.KEYBOARD_NOKEYS || config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES);
+	}
 	/**
 	 * 判断是否存在光传感器来判断是否为模拟器
 	 * 部分真机也不存在温度和压力传感器。其余传感器模拟器也存在。

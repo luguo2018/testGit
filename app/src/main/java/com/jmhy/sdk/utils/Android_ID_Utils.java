@@ -2,11 +2,16 @@ package com.jmhy.sdk.utils;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Build;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.umeng.commonsdk.debug.E;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +20,25 @@ import java.io.InputStreamReader;
 
 class Android_ID_Utils {
 
+
+    /*
+     * 是否可以跳转到拨号页面，以此判断是否为模拟器
+     * 不能拨号 为模拟器
+     * */
+    public static boolean canCallPhone(Context context) {
+        try {
+            String url = "tel:" + "123456";
+            Intent intent = new Intent();
+            intent.setData(Uri.parse(url));
+            intent.setAction(Intent.ACTION_DIAL);
+            Log.i("ext_data","拨号否？"+(intent.resolveActivity(context.getPackageManager()) != null));
+            return intent.resolveActivity(context.getPackageManager()) != null;// 是否可以跳转到拨号页面
+        } catch (Exception e) {
+            Log.i("ext_data","异常"+e);
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     /*
 
@@ -74,11 +98,25 @@ class Android_ID_Utils {
      */
     public static boolean checkIsNotRealPhone() {
         String cpuInfo = readCpuInfo();
+        Log.i("ext_data-cpuInfo","cpuInfo(cpuInfo.contains(\"intel\")："+(cpuInfo.contains("intel")));
         if ((cpuInfo.contains("intel") || cpuInfo.contains("amd"))) {
             return true;
         }
         return false;
     }
+
+    //检测手机运营商家
+    public static boolean CheckOperatorNameAndroid(Context context) {
+        String szOperatorName = ((TelephonyManager) context.getSystemService("phone")).getNetworkOperatorName();
+
+        if (szOperatorName.toLowerCase().equals("android") == true) {
+            Log.v("Result:", "Find Emulator by OperatorName!");
+            return true;
+        }
+        Log.v("Result:", "Not Find Emulator by OperatorName!");
+        return false;
+    }
+
     /*
      *用途:根据CPU是否为电脑来判断是否为模拟器(子方法)
      *返回:String
@@ -99,6 +137,8 @@ class Android_ID_Utils {
             responseReader.close();
             result = sb.toString().toLowerCase();
         } catch (IOException ex) {
+            ex.printStackTrace();
+            Log.i("ext_data-cpuInfo","获取失败"+ex);
         }
         return result;
     }
@@ -108,6 +148,7 @@ class Android_ID_Utils {
      *返回:true 为模拟器
      */
     private static String[] known_pipes = {"/dev/socket/qemud", "/dev/qemu_pipe"};
+
     public static boolean checkPipes() {
         for (int i = 0; i < known_pipes.length; i++) {
             String pipes = known_pipes[i];
