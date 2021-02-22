@@ -38,6 +38,9 @@ public class InitData {
     private String ver_id;
     private Seference seference;
     private File file;
+    private static boolean isFirstInit=true;
+    private String TAG="JimiInitData";
+
     public InitData(Context context, String ver_id, InitListener listener) {
         this.context = context;
         this.ver_id = ver_id;
@@ -54,7 +57,7 @@ public class InitData {
      * 初始化接口
      */
      public void initHttp() {
-        InitExt ext = new InitExt();
+        final InitExt ext = new InitExt();
         ext.wechat = PackageUtils.isInstall(context, "com.tencent.mm");
         ext.qq = PackageUtils.isInstall(context, "com.tencent.mobileqq");
         ext.alipay = PackageUtils.isInstall(context, "com.eg.android.AlipayGphone");
@@ -64,11 +67,14 @@ public class InitData {
         ext.isEmu2 = Utils.checkIsRunningInEmulator(context);
         ext.isEmu3 = Utils.hasHardKey(context);
         ext.isHasSimCard = Utils.ishasSimCard(context);
-        JmhyApi.get().startInit(context,
-                ver_id, ext, new ApiRequestListener() {
+        startInitRequest(ext);
+     }
+
+    private void startInitRequest(final InitExt ext) {
+        JmhyApi.get().startInit(context, ver_id, ext, new ApiRequestListener() {
                     @Override
                     public void onSuccess(Object obj) {
-                        Log.i("jimi", "参数" + obj);
+                        Log.i(TAG, "参数" + obj);
                         InitMsg result = (InitMsg) obj;
                         setInit(result);
 
@@ -92,7 +98,7 @@ public class InitData {
                                     String path = MediaUtils.getImagePath(AppConfig.	float_icon_url, context);
                                     MediaUtils.copyFile(path, icon_file.toString());
                                 }else{
-                                    Log.i("jimi","icon_file文件存在"+icon_file);
+                                    Log.i(TAG,"icon_file文件存在"+icon_file);
                                 }
 
                                 loading_file = new File(file + "/" + md5_loading_url_name + ".gif");
@@ -100,7 +106,7 @@ public class InitData {
                                     String path =MediaUtils.getImagePath(AppConfig.web_loading_url, context);
                                     MediaUtils.copyFile(path, loading_file.toString());
                                 }else{
-                                    Log.i("jimi","loading_file文件存在"+loading_file);
+                                    Log.i(TAG,"loading_file文件存在"+loading_file);
                                 }
 
 
@@ -112,8 +118,13 @@ public class InitData {
 
                     @Override
                     public void onError(int statusCode,String msg) {
-                        Log.i("jimi","初始化异常"+statusCode+msg);
-                        DialogUtils.showTip((Activity) context, msg);
+                        Log.i(TAG,(isFirstInit?"是":"非")+"第一次初始化异常,code:"+statusCode+",msg:"+msg);
+                        if (isFirstInit){//初始化第一次失败，重发一次
+                            isFirstInit=false;
+                            startInitRequest(ext);
+                        }else{
+                            DialogUtils.showTip((Activity) context, msg);
+                        }
                     }
                 });
     }

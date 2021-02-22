@@ -206,7 +206,7 @@ public class JiMiSDK {
             public void run() {
                 init(appid, appkey, listener);
             }
-        }, 0);
+        }, 1000);
 
 
     }

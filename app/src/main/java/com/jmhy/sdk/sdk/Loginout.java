@@ -15,6 +15,8 @@ public class Loginout {
     public static Context mContext;
 
     public static Loginout getInstatnce(Context context) {
+        //2021-2-22新增，切换之后清空缓存角色数据
+        RoleinfoRequest.getInstatnce(context, "", "", "", "", "", "", "", "", "", "", "");
         if (mLoginout == null) {
             mLoginout = new Loginout();
         }

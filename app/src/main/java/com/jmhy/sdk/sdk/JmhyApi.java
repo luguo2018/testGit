@@ -759,7 +759,21 @@ public class JmhyApi {
         paramsdata.put("ext", ext + "");
         HashmapToJson toJson = new HashmapToJson();
         params.put("context", toJson.toJson(paramsdata));
-        Call call = OkHttpManager.getInstance().postRequest(WebApi.ACTION_ONLINE, params, new ResponseCallback<String>() {
+        String url="";
+        try {
+            if(WebApi.ACTION_ONLINE==null){
+                url="https://apisdk.5tc5.com/v1/role/online";
+                Log.i("url为空","固定地址");
+            }else{
+                url=WebApi.ACTION_ONLINE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            url="https://apisdk.5tc5.com/v1/role/online";
+            Log.i("url异常","固定地址");
+        }
+
+        Call call = OkHttpManager.getInstance().postRequest(url, params, new ResponseCallback<String>() {
             @Override
             public void onSuccess(String String) {
                 OnlineMessage onlineMessage = null;
