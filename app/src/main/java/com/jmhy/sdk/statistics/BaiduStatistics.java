@@ -21,7 +21,7 @@ import org.json.JSONObject;
  */
 public class BaiduStatistics implements StatisticsSDK {
     private final static String TAG = BaiduStatistics.class.getSimpleName();
-    private Api api;
+    private BaiduApi api;
     static String appId;
     static String appKey;
     private String userId;
@@ -29,7 +29,7 @@ public class BaiduStatistics implements StatisticsSDK {
     @Override
     public void initInterface(Context context, JSONObject config) {
         Log.i(TAG, "init");
-        this.api = new Api();
+        this.api = new BaiduApi();
 
         Log.i(TAG, "init packageName = " + context.getPackageName());
         try {
@@ -39,8 +39,8 @@ public class BaiduStatistics implements StatisticsSDK {
             e.printStackTrace();
         }
 
-        Api.REPORT = WebApi.HOST + "/report/channel";
-        WebApi.HttpTypeMap.put(Api.REPORT, "post");
+        BaiduApi.REPORT = WebApi.HOST + "/report/channel";
+        WebApi.HttpTypeMap.put(BaiduApi.REPORT, "post");
         //end
 
         this.api.reportInit(appId,appKey);

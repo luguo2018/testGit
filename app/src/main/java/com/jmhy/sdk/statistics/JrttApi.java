@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class Api {
-    private static final String TAG = Api.class.getSimpleName();
+public class JrttApi {
+    private static final String TAG = JrttApi.class.getSimpleName();
     static String REPORT;
     public void reportPay(String openid, PaymentInfo paymentInfo, PayData payData, boolean success)
     {
@@ -38,8 +38,8 @@ public class Api {
             }else {
                 return;
             }
-            event.put("appKey", BaiduStatistics.appKey);
-            event.put("appId", BaiduStatistics.appId);
+            event.put("appName", JrttStatistics.appName);
+            event.put("appId", JrttStatistics.appId);
 
             account.put("roleId", paymentInfo.getRoleid());
             account.put("roleName", paymentInfo.getRolename());
@@ -88,8 +88,8 @@ public class Api {
             event.put("roleCTime", roleCTime);
             event.put("roleLevelMTime", roleLevelMTime);
             event.put("ext", ext);
-            event.put("appKey", BaiduStatistics.appKey);
-            event.put("appId", BaiduStatistics.appId);
+            event.put("appName", JrttStatistics.appName);
+            event.put("appId", JrttStatistics.appId);
 
             account.put("roleId", roleid);
             account.put("roleName", rolename);
@@ -113,8 +113,8 @@ public class Api {
         JSONObject event = new JSONObject();
         try
         {
-            event.put("appKey", BaiduStatistics.appKey);
-            event.put("appId", BaiduStatistics.appId);
+            event.put("appName", JrttStatistics.appName);
+            event.put("appId", JrttStatistics.appId);
         }
         catch (JSONException e)
         {
@@ -130,8 +130,8 @@ public class Api {
         {
             event.put("method", method);
             event.put("success", success ? 1 : 0);
-            event.put("appKey", BaiduStatistics.appKey);
-            event.put("appId", BaiduStatistics.appId);
+            event.put("appName", JrttStatistics.appName);
+            event.put("appId", JrttStatistics.appId);
         }
         catch (JSONException e)
         {
@@ -145,8 +145,8 @@ public class Api {
 //        JSONObject event = new JSONObject();
 //        try
 //        {
-//            event.put("appKey", BaiduStatistics.appKey);
-//            event.put("appId", BaiduStatistics.appId);
+//            event.put("appName", JrttStatistics.appName);
+//            event.put("appId", JrttStatistics.appId);
 //        }
 //        catch (JSONException e)
 //        {
@@ -160,8 +160,8 @@ public class Api {
 //        JSONObject event = new JSONObject();
 //        try
 //        {
-//            event.put("appKey", BaiduStatistics.appKey);
-//            event.put("appId", BaiduStatistics.appId);
+//            event.put("appName", JrttStatistics.appName);
+//            event.put("appId", JrttStatistics.appId);
 //        }
 //        catch (JSONException e)
 //        {
@@ -176,8 +176,8 @@ public class Api {
 //        try
 //        {
 //            event.put("activity", activity.getClass().getName());
-//            event.put("appKey", BaiduStatistics.appKey);
-//            event.put("appId", BaiduStatistics.appId);
+//            event.put("appName", JrttStatistics.appName);
+//            event.put("appId", JrttStatistics.appId);
 //        }
 //        catch (JSONException e)
 //        {
@@ -192,8 +192,8 @@ public class Api {
 //        try
 //        {
 //            event.put("activity", activity.getClass().getName());
-//            event.put("appKey", BaiduStatistics.appKey);
-//            event.put("appId", BaiduStatistics.appId);
+//            event.put("appName", JrttStatistics.appName);
+//            event.put("appId", JrttStatistics.appId);
 //        }
 //        catch (JSONException e)
 //        {
@@ -202,14 +202,13 @@ public class Api {
 //        report(openid, "pause", event, null);
     }
 
-    public void reportInit(String appId, String appkey)
+    public void reportInit(String appId, String appName)
     {
         JSONObject event = new JSONObject();
         try
         {
-            event.put("channel", "baidu");
-            event.put("baiduAppId", appId);
-            event.put("baiduAppKey", appkey);
+            event.put("appName", appName);
+            event.put("appId", appId);
         }
         catch (JSONException e)
         {
@@ -253,13 +252,14 @@ public class Api {
         {
             e.printStackTrace();
         }
+
         OkHttpManager.getInstance().postRequest(REPORT, params, new ResponseCallback<String>() {
             public void onSuccess(String o) {
-                Log.i(Api.TAG, "report onSuccess");
+                Log.i(JrttApi.TAG, "report onSuccess");
             }
 
             public void onFailure(OkHttpException e) {
-                Log.i(Api.TAG, "report onError " + e.getEmsg());
+                Log.i(JrttApi.TAG, "report onError " + e.getEmsg());
             }
         });
     }

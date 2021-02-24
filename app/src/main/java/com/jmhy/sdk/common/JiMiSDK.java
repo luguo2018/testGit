@@ -647,11 +647,8 @@ public class JiMiSDK {
             final Application application) {
         Log.i(TAG, "==== onApplicationOnCreate =====  "+application.getApplicationContext()+"----"+application);
 
-        final String appId = Utils.getPropertiesParams(application, "appid");
-        final String appKey = Utils.getPropertiesParams(application, "appkey");
-        Log.i("jimi","全局jimi：appid"+appId+"\n appkey"+appKey);
-
         JSONObject logConfig = ConfigUtils.getConfigData(application.getApplicationContext());
+
         if (logConfig == null) {
             Log.i(TAG, "no log config in config.json");
             return;
@@ -659,10 +656,10 @@ public class JiMiSDK {
 
         JSONObject obj = logConfig.optJSONObject("channel_sdk_list");
         if (obj == null) {
-            Log.i(TAG, "no gdt params in config.json");
+            Log.i(TAG, "no config params in config.json");
             return;
         }
-        Log.i(TAG, "gdt params == " + obj.toString());
+        Log.i(TAG, "config params == " + obj.toString());
 
         statisticsSDK.initInterface(application.getApplicationContext(), obj);
     }
