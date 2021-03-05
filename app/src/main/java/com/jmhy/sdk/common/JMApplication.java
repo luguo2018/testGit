@@ -100,6 +100,10 @@ public class JMApplication extends Application {
 
     private boolean getPushParam() {
         try {
+            Log.i(TAG,"--------"+Utils.getMetaValue(this, "umeng_appKey"));
+            if(Utils.getMetaValue(this, "umeng_appKey")==null){
+                return false;
+            }
             umeng_appKey = Utils.getMetaValue(this, "umeng_appKey").replaceAll("umeng_appKey=", "");
             umeng_messageSecret = Utils.getMetaValue(this, "umeng_messageSecret").replaceAll("umeng_messageSecret=", "");
             xiaomi_id = Utils.getMetaValue(this, "xiaomi_id").replaceAll("xiaomi_id=", "");
@@ -121,7 +125,7 @@ public class JMApplication extends Application {
     }
 
     private void initUmengSDK(final Context context) {
-        UMConfigure.setLogEnabled(true);
+        UMConfigure.setLogEnabled(false);
         UMConfigure.init(context, umeng_appKey, "jm", UMConfigure.DEVICE_TYPE_PHONE, umeng_messageSecret);
         PushAgent mPushAgent = PushAgent.getInstance(this);
 //        mPushAgent.setResourcePackageName("com.jmhy.sdk.common");

@@ -170,9 +170,11 @@ public class InitData {
 
                 JSONObject jsonObject = null;
                 try {
-                    jsonObject = new JSONObject(result.getMoblie_direct_login());
-                    AppConfig.oneKeyLogin_SecretKey = jsonObject.getString("clientSecret");
-                    Log.i("测试jimsdk", "一键登录key:" + AppConfig.oneKeyLogin_SecretKey);
+                    if (result.getMoblie_direct_login().length() > 2) {
+                        jsonObject = new JSONObject(result.getMoblie_direct_login());
+                        AppConfig.oneKeyLogin_SecretKey = jsonObject.getString("clientSecret");
+                        Log.i("测试jimsdk", "一键登录key:" + AppConfig.oneKeyLogin_SecretKey);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
