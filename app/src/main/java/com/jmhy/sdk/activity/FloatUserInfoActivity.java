@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,6 +23,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
+import com.bumptech.glide.Glide;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
 import com.jmhy.sdk.model.BaseFloatActivity;
@@ -29,9 +32,11 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.AndroidBug5497Workaround;
 import com.jmhy.sdk.utils.HasNotchInScreenUtil;
 import com.jmhy.sdk.utils.MimeType;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.utils.checkEmulator.FloatJsInterface;
 import com.jmhy.sdk.view.GifImageView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class FloatUserInfoActivity extends BaseFloatActivity {
@@ -51,7 +56,7 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     private boolean isShowKeyboard;
     private int reduceHeight;
     private CloseFloatListener closeFloatListener;
-
+    private File file=null;
     public FloatUserInfoActivity(Activity activity,CloseFloatListener listener) {
         super(activity);
         this.closeFloatListener=listener;
@@ -171,6 +176,9 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
     public void show() {
         super.show();
     }
+
+    private File gifFile=null;
+
 
     @Override
     public boolean isShow() {
@@ -322,8 +330,10 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 
         switch (AppConfig.skin) {
             case 9:
-                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_9",
-                        "drawable"));
+                if (gifExists()) {//服务端控制loading图  无图不加载
+                    Glide.with(activity).load(file).into(mGifImageView);
+                }
+//                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_9", "drawable"));
                 break;
             case 8:
                 mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
@@ -539,6 +549,27 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
 //                closeFloatListener.closeFloat();
 //            }
         }
+    }
+
+    private boolean gifExists() {
+        if (AppConfig.web_loading_url==null || AppConfig.web_loading_url.equals("")){
+            return false;
+        }
+        String md5ResultString = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
+        if (file==null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            } else {
+                file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            file= new File(file + "/" + md5ResultString + ".gif");
+        }
+        if (file.exists()){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
     private void refreshPay() {

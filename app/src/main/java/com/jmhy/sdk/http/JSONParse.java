@@ -92,6 +92,7 @@ public class JSONParse {
             result.setMoblie_direct_login(dataObject.optString("moblie_direct_login"));
             AppConfig.float_icon_url =Utils.toBase64url(dataObject.optString("float_icon_url"));
             AppConfig.web_loading_url=Utils.toBase64url(dataObject.optString("web_loading_url"));
+            AppConfig.login_logo_url=Utils.toBase64url(dataObject.optString("login_logo_url"));
             AppConfig.ad_app_id=dataObject.optString("ad_app_id");
 
             AppConfig.notice_screen_scale = dataObject.optString("notice_screen_scale","");

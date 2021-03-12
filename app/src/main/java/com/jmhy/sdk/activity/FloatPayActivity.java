@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.config.WebApi;
@@ -27,7 +29,10 @@ import com.jmhy.sdk.sdk.PayDataRequest;
 import com.jmhy.sdk.utils.DialogUtils;
 import com.jmhy.sdk.utils.FloatJspayInterface;
 import com.jmhy.sdk.utils.FloatUtils;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.view.GifImageView;
+
+import java.io.File;
 
 public class FloatPayActivity extends BaseFloatActivity {
     private static final String TAG = "FloatPayActivity";
@@ -38,7 +43,7 @@ public class FloatPayActivity extends BaseFloatActivity {
     private String murl;
     private View parent;
     private FloatJspayInterface jspayInterface;
-
+    private File file;
     public FloatPayActivity(Activity activity) {
         super(activity);
     }
@@ -82,8 +87,9 @@ public class FloatPayActivity extends BaseFloatActivity {
         parent.setOnClickListener(this);
         switch (AppConfig.skin) {
             case 9:
-                mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_9",
-                        "drawable"));
+                if (gifExists()) {//服务端控制loading图  无图不加载
+                    Glide.with(activity).load(file).into(mGifImageView);
+                }
                 break;
             case 8:
                 mGifImageView.setGifResource(AppConfig.resourceId(activity, "jmloading_new",
@@ -269,4 +275,25 @@ public class FloatPayActivity extends BaseFloatActivity {
         mGifImageView.pause();
         mGifImageView.setVisibility(View.GONE);
     }
+    private boolean gifExists() {
+        if (AppConfig.web_loading_url==null || AppConfig.web_loading_url.equals("")){
+            return false;
+        }
+        String md5ResultString = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
+        if (file==null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            } else {
+                file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            file= new File(file + "/" + md5ResultString + ".gif");
+        }
+        if (file.exists()){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
 }

@@ -84,7 +84,8 @@ public class InitData {
                                 // TODO Auto-generated method stub
                                 String md5_float_url_name = SecurityUtils.getMD5Str(AppConfig.float_icon_url);
                                 String md5_loading_url_name = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
-                                File icon_file,loading_file;
+                                String logo_url = SecurityUtils.getMD5Str(AppConfig.login_logo_url);
+                                File icon_file,loading_file,logo_file;
                                 if (file==null) {
                                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                                         file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
@@ -109,7 +110,16 @@ public class InitData {
                                     Log.i(TAG,"loading_file文件存在"+loading_file);
                                 }
 
-
+                                if (AppConfig.login_logo_url != null && !AppConfig.login_logo_url.equals("")) {
+                                    logo_file = new File(file + "/" + logo_url + ".png");
+                                    if (!logo_file.exists()){
+                                        Log.i(TAG,"logo_file文件存储到"+logo_file);
+                                        String path =MediaUtils.getImagePath(AppConfig.login_logo_url, context);
+                                        MediaUtils.copyFile(path, logo_file.toString());
+                                    }else{
+                                        Log.i(TAG,"logo_file文件存在"+logo_file);
+                                    }
+                                }
 
                             }
                         }).start();

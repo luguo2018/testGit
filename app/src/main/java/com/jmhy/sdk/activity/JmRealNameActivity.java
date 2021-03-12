@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -24,11 +26,15 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
 import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.utils.JsInterface;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.view.CornerCompatView;
 import com.jmhy.sdk.view.GifImageView;
+
+import java.io.File;
 
 public class JmRealNameActivity extends JmBaseActivity implements OnClickListener {
 	private final static String TAG = JmRealNameActivity.class.getSimpleName();
@@ -52,6 +58,27 @@ public class JmRealNameActivity extends JmBaseActivity implements OnClickListene
 		JiMiSDK.stackManager.pushActivity(this);
 		intView();
 	}
+	private File file=null;
+	private boolean gifExists() {
+		if (AppConfig.web_loading_url==null || AppConfig.web_loading_url.equals("")){
+			return false;
+		}
+		String md5ResultString = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
+		if (file==null) {
+			if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+				file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+			} else {
+				file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+			}
+			file= new File(file + "/" + md5ResultString + ".gif");
+		}
+		if (file.exists()){
+			return true;
+		}else{
+			return false;
+		}
+
+	}
 
 	private void intView() {
 		Log.e("kk","JmuserinfoActivity intView");
@@ -63,8 +90,9 @@ public class JmRealNameActivity extends JmBaseActivity implements OnClickListene
 				"gif", "id"));
 		switch (AppConfig.skin){
 			case 9:
-				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_9",
-						"drawable"));
+				if (gifExists()) {//服务端控制loading图  无图不加载
+					Glide.with(this).load(file).into(mGifImageView);
+				}
 				break;
 			case 7:
 				mGifImageView.setGifResource(AppConfig.resourceId(this, "jmloading_red",

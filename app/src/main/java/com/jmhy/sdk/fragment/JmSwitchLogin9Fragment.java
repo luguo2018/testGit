@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,9 +21,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.adapter.SwitchAccountAdapter9;
+import com.jmhy.sdk.common.JiMiSDK;
 import com.jmhy.sdk.config.AppConfig;
 import com.jmhy.sdk.http.ApiAsyncTask;
 import com.jmhy.sdk.http.ApiRequestListener;
@@ -29,6 +33,7 @@ import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.utils.Seference;
 import com.jmhy.sdk.utils.UserInfo;
 import com.jmhy.sdk.utils.Utils;
@@ -37,6 +42,7 @@ import com.jmhy.sdk.view.DeleteDialog;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +68,7 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
     private TextView mIbcode, call_kefu, gray_phone_tv;
     private TextView mBtmobilelg;
     private LinearLayout mLinearUl;
-    private ImageView changeItem;
+    private ImageView changeItem,switch_logo;
     private TextView mTvistor;
     private ImageView mIvkefu, back;
     private TextView mTvagreement;
@@ -128,12 +134,42 @@ public class JmSwitchLogin9Fragment extends JmBaseFragment implements
         setListInfo(skin9_switch_showDelete);
     }
 
+    File file =null;
+    private boolean logoExists() {
+
+        if (AppConfig.login_logo_url == null || AppConfig.login_logo_url.equals("")) {
+            return false;
+        }
+        String md5ResultString = SecurityUtils.getMD5Str(AppConfig.login_logo_url);
+        if (file == null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            } else {
+                file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            file = new File(file + "/" + md5ResultString + ".png");
+        }
+        Log.i(TAG, "查看文件" + file);
+        if (file.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private void initView() {
         to_home_login = (TextView) getView().findViewById(AppConfig.resourceId(getActivity(), "to_home_login", "id"));
         to_home_login.setOnClickListener(this);
         myListView = (ListView) getView().findViewById(AppConfig.resourceId(getActivity(), "switch_listView", "id"));
         changeItem = (ImageView) getView().findViewById(AppConfig.resourceId(getActivity(), "changeItem", "id"));
+        switch_logo = (ImageView) getView().findViewById(AppConfig.resourceId(getActivity(), "switch_logo", "id"));
+        if (AppConfig.login_logo_url != null && !AppConfig.login_logo_url.equals("")) {
+            if (logoExists()){
+                Glide.with(getActivity()).load(file).into(switch_logo);
+            }
+        }
+
+
         complete = (TextView) getView().findViewById(AppConfig.resourceId(getActivity(), "changeItem_tv", "id"));
         complete.setOnClickListener(this);
         changeItem.setOnClickListener(this);

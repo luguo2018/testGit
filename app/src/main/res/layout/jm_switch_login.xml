@@ -22,11 +22,12 @@
             android:gravity="center_vertical">
 
             <ImageView
+                android:id="@+id/switch_logo"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/jm_skin9_logo_height"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/jm_logo_9" />
+                 />
         </RelativeLayout>
 
 

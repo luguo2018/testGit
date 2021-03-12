@@ -2,7 +2,9 @@ package com.jmhy.sdk.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.huosdk.huounion.sdk.okhttp3.Call;
 import com.jmhy.sdk.activity.JmTopLoginTipActivity;
 import com.jmhy.sdk.common.JiMiSDK;
@@ -29,10 +32,12 @@ import com.jmhy.sdk.model.LoginMessage;
 import com.jmhy.sdk.model.Msg;
 import com.jmhy.sdk.sdk.JmhyApi;
 import com.jmhy.sdk.utils.FragmentUtils;
+import com.jmhy.sdk.utils.SecurityUtils;
 import com.jmhy.sdk.utils.Utils;
 import com.mobile.auth.gatewayauth.PhoneNumberAuthHelper;
 import com.mobile.auth.gatewayauth.TokenResultListener;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +52,7 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
     private String TAG = "jimisdk";
     private View mBtuser;
     private TextView mIvregister;
-    private ImageView kefu_help, back;
+    private ImageView kefu_help, back,login_logo;
     private EditText mEdphone;
     private EditText mEdcode;
     private String iphone;
@@ -112,6 +117,28 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
             newIntView();
         }
     }
+    File file = null;
+    private boolean logoExists() {
+
+        if (AppConfig.login_logo_url == null || AppConfig.login_logo_url.equals("")) {
+            return false;
+        }
+        String md5ResultString = SecurityUtils.getMD5Str(AppConfig.login_logo_url);
+        if (file == null) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+            } else {
+                file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            file = new File(file + "/" + md5ResultString + ".png");
+        }
+        Log.i(TAG, "查看文件" + file);
+        if (file.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private void newIntView() {
 
@@ -124,6 +151,14 @@ public class JmLoginHomePage9Fragment extends JmBaseFragment implements
         mEdphone.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         kefu_help = (ImageView) getView().findViewById(AppConfig.resourceId(getActivity(), "kefu_help", "id"));
         back = (ImageView) getView().findViewById(AppConfig.resourceId(getActivity(), "back", "id"));
+        login_logo = (ImageView) getView().findViewById(AppConfig.resourceId(getActivity(), "login_logo", "id"));
+
+        if (AppConfig.login_logo_url != null && !AppConfig.login_logo_url.equals("")) {
+            if (logoExists()){
+                Glide.with(getActivity()).load(file).into(login_logo);
+            }
+        }
+
         if (mSeference.isExitData()) {
             back.setVisibility(View.VISIBLE);
         } else {

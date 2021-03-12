@@ -99,6 +99,7 @@ public class AppConfig {
     public static int ali_hot_fix = 0;
     public static String float_icon_url;
     public static String web_loading_url ;
+    public static String login_logo_url;
     public static String change_game_name = "";//0改为初始默认名字 1修改为预设的名字
     public static boolean is_ad_sign = false;
     public static String ad_app_id ;
