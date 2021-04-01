@@ -53,7 +53,7 @@ dependencies {
 //    implementation 'com.umeng.umsdk:huawei-basetb:2.6.3.306'1
 //    implementation 'com.umeng.umsdk:huawei-pushtb:2.6.3.306'
 //    implementation 'com.umeng.umsdk:huawei-umengaccs:1.2.4'
-//    implementation 'com.umeng.umsdk:vivo-push:2.3.5'
+//    implementation 'com.umeng.umsdk:vivo-push:2.3.5'AppConfig.LOGIN_SUCCESS:
 //    implementation 'com.umeng.umsdk:vivo-umengaccs:1.1.0'
     implementation project(':ad')
     implementation project(':push')

@@ -7,7 +7,7 @@ android {
     buildToolsVersion '28.0.3'
 
     defaultConfig {
-        applicationId "com.game.jm.qyz.xq"
+        applicationId "com.game.jmhy.test"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1

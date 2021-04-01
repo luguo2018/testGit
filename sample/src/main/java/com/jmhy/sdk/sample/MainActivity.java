@@ -1,11 +1,14 @@
 package com.jmhy.sdk.sample;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.game.qyz.jm.R;
+import com.jmhy.sdk.activity.FloatUserInfoActivity;
 import com.jmhy.sdk.common.ApiListenerInfo;
 import com.jmhy.sdk.common.ExitListener;
 import com.jmhy.sdk.common.InitListener;
@@ -32,14 +36,15 @@ import com.jmhy.sdk.model.PaymentInfo;
 import com.jmhy.sdk.utils.FloatUtils;
 import com.jmhy.sdk.utils.HasNotchInScreenUtil;
 import com.jmhy.sdk.utils.Utils;
-import com.jmhy.sdk.view.AdTipDialog;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends Activity {
     private final static String TAG = MainActivity.class.getSimpleName();
-    private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout,mHotFix;
+    private Button mBtninit, mBtnlogin, mBtninfo, mBtnpay, mBtnexit, mBtnserver, mBtnlevel, mBtnloginout, mHotFix;
     private Button force_exit;
     private LinearLayout mRoleLayout;
     Activity activity;
@@ -92,18 +97,64 @@ public class MainActivity extends Activity {
         }
     };
 
+//    public static boolean isPad() {
+//        boolean result = false;
+//        String mDeviceType = SystemPropertiesWrapper.get("ro.build.characteristics", "default");
+//        if (mDeviceType != null && mDeviceType.equalsIgnoreCase("tablet")) {
+//            result = true;
+//        }
+//        Log.d(TAG, "isPad:" + result);
+//        return result;
+//    }
+
+
+    //检测手机运营商家
+    public static boolean CheckOperatorNameAndroid(Context context) {
+        String szOperatorName = ((TelephonyManager) context.getSystemService("phone")).getNetworkOperatorName();
+
+        if (szOperatorName.toLowerCase().equals("android") == true) {
+            Log.v("Result:", "Find Emulator by OperatorName!");
+            return true;
+        }
+        Log.v("Result:", "Not Find Emulator by OperatorName!");
+        return false;
+    }
+
+    public static String CPUABI = null;
+
+    public static void getCPUABI() {
+        if (CPUABI == null) {
+            try {
+                String os_cpuabi = new BufferedReader(new InputStreamReader(Runtime.getRuntime().exec("getprop ro.product.cpu.abi").getInputStream())).readLine();
+                if (os_cpuabi.contains("x86")) {
+                    CPUABI = "x86";
+                } else if (os_cpuabi.contains("x86_64")) {
+                    CPUABI = "x86_64";
+                } else if (os_cpuabi.contains("armeabi-v7a") || os_cpuabi.contains("arm64-v8a")) {
+                    CPUABI = "armeabi-v7a";
+                } else {
+                    CPUABI = "armeabi";
+                }
+            } catch (Exception e) {
+                CPUABI = "armeabi";
+            }
+        }
+    }
+
+
+    FloatUserInfoActivity floatUserInfoActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Utils.getSdkParams(this);
+
+
         /************************
          *    onCreate调用       *
          *    生命周期记得哦^_^  *
          ************************/
-        HasNotchInScreenUtil utils=new HasNotchInScreenUtil();
 
         JiMiSDK.onCreate(this);
 
@@ -118,6 +169,9 @@ public class MainActivity extends Activity {
         mRoleLayout = findViewById(R.id.role_ll);
         force_exit = findViewById(R.id.force_exit);
         mHotFix=findViewById(R.id.hot_fix);
+        long time = System.currentTimeMillis() / 1000L;
+
+        Log.i("时间",time+"");
         /************************
          *    初始化接口调用        *
          *   接口在主线程调用哦^_^  *
@@ -125,13 +179,12 @@ public class MainActivity extends Activity {
         JiMiSDK.initInterface(MainActivity.this, appId, appKey, new InitListener() {
             @Override
             public void Success(String s) {
-                Toast.makeText(MainActivity.this, "初始化成功，gif:"+AppConfig.float_icon_url, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "初始化成功，gif:"+AppConfig.float_icon_url, Toast.LENGTH_SHORT).show();
                 String agent=AppConfig.agent;
                 Log.d(TAG, "init Success"+agent);
 
 
                 JiMiSDK.login(MainActivity.this, appId, appKey,login);
-
 
             }
 
@@ -141,6 +194,29 @@ public class MainActivity extends Activity {
                 Log.w(TAG, "init fail");
             }
         });
+        getCPUABI();
+        Log.i("检测ext_data_运营商","结果"+CheckOperatorNameAndroid(this));
+        String isEmu0 = Utils.hasHardKey(this)+"";
+        String isEmu = Utils.isEmulator(this)?"是":"不是";
+        String isEmu2 = Utils.checkIsRunningInEmulator(this)?"是":"不是";
+        String isEmu3 = Utils.canCallPhone(this)?"能":"不能";
+        String isHasSimCard = Utils.ishasSimCard(this)?"有":"无";
+        String isEmu4 = Utils.notHasLightSensorManager(this)?"是":"否";
+
+        String hasPhone="";
+        PackageManager pm = getPackageManager();
+        // FEATURE_CAMERA - 后置相机
+        // FEATURE_CAMERA_FRONT - 前置相机
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT) && !pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            Log.i("camera", "non-support");
+            hasPhone="没有";
+        } else {
+            Log.i("camera", "support");
+            hasPhone="有";
+        }
+
+
+        mHotFix.setText("无光传感器:"+isEmu4+"是否有外接（硬）键盘:"+isEmu0+"，检测isEmu3能否拨号:"+isEmu3+"，检测1:"+isEmu+"模拟器，检测2："+isEmu2+"模拟器,是否有SIM卡："+isHasSimCard);
 
         JiMiSDK.setUserListener(new UserApiListenerInfo(){
             @Override
@@ -235,7 +311,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 PaymentInfo paymentInfo = new PaymentInfo();
                 //单位分
-                paymentInfo.setAmount("1");
+                paymentInfo.setAmount("100");
                 paymentInfo.setBalance("100元宝");
                 paymentInfo.setCporderid(System.currentTimeMillis()+"");
                 paymentInfo.setExt(System.currentTimeMillis()+"");
@@ -302,40 +378,36 @@ public class MainActivity extends Activity {
         mBtnlevel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//                sendData("3");
-                final View rootFloatView = getLayoutInflater().inflate(AppConfig.resourceId(MainActivity.this, "jmlogin_main_9", "layout"), null);
-                rootFloatView.findViewById(AppConfig.resourceId(MainActivity.this, "jm_skin9_phone_login_btn", "id")).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.i("jimi","点击自定");
-                        getWindowManager().removeView(rootFloatView);
-                    }
-                });
-                WindowManager.LayoutParams layoutParams=new WindowManager.LayoutParams();
-                layoutParams.width= FrameLayout.LayoutParams.MATCH_PARENT;;
-                layoutParams.height= FrameLayout.LayoutParams.MATCH_PARENT;;
-                getWindowManager().addView(rootFloatView,layoutParams);
+                sendData("3");
             }
         });
 
-        final String data="警告！警告！\n 世界即将毁灭！ \n 请观看广告拯救世界 \n 1秒后开始广告";
         mHotFix.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AdTipDialog exitdialog = new AdTipDialog(activity, AppConfig.resourceId(activity, "jm_MyDialog", "style"),data, new AdTipDialog.AdTipDialogListener() {
-
-
-                    @Override
-                    public void onStratAd() {
-                        Toast.makeText(MainActivity.this,"我已经热更新好了",Toast.LENGTH_LONG).show();
-                    }
-
-                });
-                exitdialog.show();
-
+//                activity.overridePendingTransition(R.anim.transparent_out, R.anim.activity_out_right);
+                ts();
+                JiMiSDK.forceLogout("测试信息");
             }
         });
 
+    }
+
+    private void ts() {
+        JiMiSDK.handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("jimisdk", "写死打开地址-------------------------");
+                floatUserInfoActivity = new FloatUserInfoActivity((Activity) JiMiSDK.mContext, new FloatUserInfoActivity.CloseFloatListener() {
+                    @Override
+                    public void closeFloat() {
+                    }
+                });
+                floatUserInfoActivity.notice = true;
+                floatUserInfoActivity.setViews("http://192.168.25.62:8080/#/5436");
+                floatUserInfoActivity.show();
+            }
+        }, 1000);
     }
 
     private void sendData(String type) {

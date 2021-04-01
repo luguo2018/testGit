@@ -4,8 +4,8 @@
     <application
         android:name="com.jmhy.sdk.hotfix.SophixStubApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
-        android:label="测试base64"
+        android:icon="@drawable/newicon"
+        android:label="测试包1"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
         <meta-data

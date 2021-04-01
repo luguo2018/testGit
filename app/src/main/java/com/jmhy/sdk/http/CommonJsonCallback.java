@@ -22,6 +22,7 @@ public class CommonJsonCallback<T> implements Callback {
     protected final String NETWORK_MSG = "请求失败";
     protected final String JSON_MSG = "解析失败";
     protected final String RESULT_CODE = "code";
+    protected final String TAG = "jimiCallback";
     /**
      * 自定义异常类型
      */
@@ -42,7 +43,7 @@ public class CommonJsonCallback<T> implements Callback {
 
     @Override
     public void onFailure(Call call, final IOException e) {
-        Log.e("TAG", "请求失败=" + e.getMessage());
+        Log.e(TAG, "请求失败=" + e.getMessage());
         mDeliveryHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -63,7 +64,7 @@ public class CommonJsonCallback<T> implements Callback {
     }
 
     private void handleResponse(Object responseObj) {
-        Log.i("jimi","obj查看"+responseObj);
+        Log.e(TAG,"obj查看"+responseObj);
         if (responseObj == null && responseObj.toString().trim().equals("")) {
             mListener.onFailure(new OkHttpException(NETWORK_ERROR, NETWORK_MSG));
             return;
@@ -80,7 +81,7 @@ public class CommonJsonCallback<T> implements Callback {
                 Gson gson = new GsonBuilder().serializeNulls().create();
                 T obj = null;
                 String classType = mListener.getClass().getGenericSuperclass()+"";
-                Log.e("TAG", "handleResponse: classType"+classType);
+                Log.e(TAG, "handleResponse: classType"+classType);
 
                 if (!classType.contains("java.lang.String")) {
                     obj = gson.fromJson((String) responseObj, mListener.mType);
@@ -94,12 +95,12 @@ public class CommonJsonCallback<T> implements Callback {
                 }
             } else { //将服务端返回的异常回调到应用层去处理
                 mListener.onFailure(new OkHttpException(result.getInt(RESULT_CODE), result.get(ERROR_MSG) + ""));
-                Log.e("TAG", "onResponse处理失败");
+                Log.e(TAG, "onResponse处理失败");
             }
         } catch (Exception e) {
             e.printStackTrace();
             mListener.onFailure(new OkHttpException(OTHER_ERROR, e.getMessage()));
-            Log.e("TAG", "onResponse处理失败" + e.getMessage());
+            Log.e(TAG, "onResponse处理失败" + e.getMessage());
         }
     }
 }

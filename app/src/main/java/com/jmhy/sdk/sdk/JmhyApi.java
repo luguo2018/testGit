@@ -39,6 +39,7 @@ public class JmhyApi {
     private static JmhyApi instance;
 
     private final static int DEVICE = 1;// 安卓设备
+    private final static String TAG = "JimiApi";
 
     private DeviceInfo deviceInfo;
     private String signValidString;
@@ -150,7 +151,7 @@ public class JmhyApi {
 
             @Override
             public void onSuccess(String infoString) {
-                Log.d("TAG", "onSuccess() called with: initInfoString = [" + infoString.toString() + "]");
+                Log.d(TAG, "onSuccess() called with: initInfoString = [" + infoString.toString() + "]");
                 InitMsg initMsg = null;
                 try {
                     initMsg = JSONParse.parseInitMsg(infoString);
@@ -162,6 +163,7 @@ public class JmhyApi {
 
             @Override
             public void onFailure(OkHttpException e) {
+                Log.d(TAG, "OkHttpException e"+e.getEmsg()+"---"+e.getEcode());
                 listener.onError(e.getEcode(),e.getEmsg());
 
             }

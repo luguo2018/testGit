@@ -263,8 +263,8 @@ public class FloatUserInfoActivity extends BaseFloatActivity {
                         linearParams2.width = (int) (widthPixels * Float.parseFloat(AppConfig.notice_screen_scale));
                         linearParams2.height = (int) (linearParams2.width * Float.parseFloat(AppConfig.notice_wh_scale));
                     } else {//横屏弹窗  高度为屏幕高的* （例服务端返0.8）； 宽度为高度的 *  （例服务端返1.0 宽高相同正方形显示）
-                        linearParams2.width = (int) (linearParams2.height * Float.parseFloat(AppConfig.notice_wh_scale));
                         linearParams2.height = (int) (heightPixels * Float.parseFloat(AppConfig.notice_screen_scale));
+                        linearParams2.width = (int) (linearParams2.height * Float.parseFloat(AppConfig.notice_wh_scale));
                     }
                     mWebview.setLayoutParams(linearParams2);
                     mGifImageView.setLayoutParams(linearParams2);

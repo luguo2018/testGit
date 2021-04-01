@@ -77,57 +77,75 @@ public class InitData {
                         Log.i(TAG, "参数" + obj);
                         InitMsg result = (InitMsg) obj;
                         setInit(result);
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // TODO Auto-generated method stub
-                                String md5_float_url_name = SecurityUtils.getMD5Str(AppConfig.float_icon_url);
-                                String md5_loading_url_name = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
-                                String logo_url = SecurityUtils.getMD5Str(AppConfig.login_logo_url);
-                                File icon_file,loading_file,logo_file;
-                                if (file==null) {
-                                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                                        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
-                                    } else {
-                                        file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                        if (result.getCode().equals("0")){
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    String md5_float_url_name = SecurityUtils.getMD5Str(AppConfig.float_icon_url);
+                                    String md5_loading_url_name = SecurityUtils.getMD5Str(AppConfig.web_loading_url);
+                                    String logo_url = SecurityUtils.getMD5Str(AppConfig.login_logo_url);
+                                    File icon_file,loading_file,logo_file;
+                                    if (file==null) {
+                                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                                            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+                                        } else {
+                                            file = JiMiSDK.mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                                        }
                                     }
-                                }
 
-                                icon_file = new File(file + "/" + md5_float_url_name + ".gif");
-                                if (!icon_file.exists()){
-                                    String path = MediaUtils.getImagePath(AppConfig.	float_icon_url, context);
-                                    MediaUtils.copyFile(path, icon_file.toString());
-                                }else{
-                                    Log.i(TAG,"icon_file文件存在"+icon_file);
-                                }
-
-                                loading_file = new File(file + "/" + md5_loading_url_name + ".gif");
-                                if (!loading_file.exists()){
-                                    String path =MediaUtils.getImagePath(AppConfig.web_loading_url, context);
-                                    MediaUtils.copyFile(path, loading_file.toString());
-                                }else{
-                                    Log.i(TAG,"loading_file文件存在"+loading_file);
-                                }
-
-                                if (AppConfig.login_logo_url != null && !AppConfig.login_logo_url.equals("")) {
-                                    logo_file = new File(file + "/" + logo_url + ".png");
-                                    if (!logo_file.exists()){
-                                        Log.i(TAG,"logo_file文件存储到"+logo_file);
-                                        String path =MediaUtils.getImagePath(AppConfig.login_logo_url, context);
-                                        MediaUtils.copyFile(path, logo_file.toString());
+                                    icon_file = new File(file + "/" + md5_float_url_name + ".gif");
+                                    if (!icon_file.exists()){
+                                        String path = MediaUtils.getImagePath(AppConfig.	float_icon_url, context);
+                                        MediaUtils.copyFile(path, icon_file.toString());
                                     }else{
-                                        Log.i(TAG,"logo_file文件存在"+logo_file);
+                                        Log.i(TAG,"icon_file文件存在"+icon_file);
                                     }
-                                }
 
-                            }
-                        }).start();
+                                    loading_file = new File(file + "/" + md5_loading_url_name + ".gif");
+                                    if (!loading_file.exists()){
+                                        String path =MediaUtils.getImagePath(AppConfig.web_loading_url, context);
+                                        MediaUtils.copyFile(path, loading_file.toString());
+                                    }else{
+                                        Log.i(TAG,"loading_file文件存在"+loading_file);
+                                    }
+
+                                    if (AppConfig.login_logo_url != null && !AppConfig.login_logo_url.equals("")) {
+                                        logo_file = new File(file + "/" + logo_url + ".png");
+                                        if (!logo_file.exists()){
+                                            Log.i(TAG,"logo_file文件存储到"+logo_file);
+                                            String path =MediaUtils.getImagePath(AppConfig.login_logo_url, context);
+                                            MediaUtils.copyFile(path, logo_file.toString());
+                                        }else{
+                                            Log.i(TAG,"logo_file文件存在"+logo_file);
+                                        }
+                                    }
+
+                                }
+                            }).start();
+                        }
+                        else if(result.getCode().equals("999")){//code=999  直接杀死进程
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                        }
+                        else{//code不为0   提示msg 杀死进程
+                            JiMiSDK.forceLogout(result.getMessage());
+                        }
+
 
                     }
 
                     @Override
                     public void onError(int statusCode,String msg) {
+                        Log.e(TAG,"初始化异常,code:"+statusCode+",msg:"+msg);
+                        if(statusCode==999){//code=999  直接杀死进程
+                            android.os.Process.killProcess(android.os.Process.myPid());
+                            return;
+                        }
+                        else if (statusCode!=0){//code不为0   提示msg 杀死进程
+                            JiMiSDK.forceLogout(msg);
+                            return;
+                        }
+
                         Log.i(TAG,(isFirstInit?"是":"非")+"第一次初始化异常,code:"+statusCode+",msg:"+msg);
                         if (isFirstInit){//初始化第一次失败，重发一次
                             isFirstInit=false;
